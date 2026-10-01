@@ -383,20 +383,26 @@ render();
 }
 
 function render(cat=''){
+function normalize(s){
+return String(s||'')
+.toLocaleLowerCase('tr-TR')
+.normalize('NFD')
+}
 
-const query=q.value.toLowerCase();
+const query=normalize(q.value);
+
 
 let a=data.filter(x=>
 (!cat||x.category===cat)&&
 (!query||
-`${x.name} ${x.category} ${x.district} ${x.description}`
-.toLowerCase()
-.includes(query))
+normalize(x.name).includes(query)||
+normalize(x.category).includes(query)||
+normalize(x.district).includes(query)||
+normalize(x.description).includes(query)
+)
 );
 
 count.textContent=a.length+' ilan';
-
-cards.innerHTML=a.length?a.map(x=>
 `<div class="card">
 <div class="top">
 <div>
