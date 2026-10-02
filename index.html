@@ -477,7 +477,12 @@ return;
 }
 
 const r=await sb.from('businesses').insert(row);
-
+if(!r.error){
+await fetch('https://ntfy.sh/yakinis-basvuru-2026-muhsin',{
+method:'POST',
+body:`Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
+});
+}
 if(r.error){
 alert(r.error.message);
 return;
