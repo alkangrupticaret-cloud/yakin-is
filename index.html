@@ -387,10 +387,11 @@ function normalize(s){
 return String(s||'')
 .toLocaleLowerCase('tr-TR')
 .normalize('NFD')
+.replace(/[\u0300-\u036f]/g,'')
+.replace(/ı/g,'i');
 }
 
 const query=normalize(q.value);
-
 
 let a=data.filter(x=>
 (!cat||x.category===cat)&&
@@ -403,7 +404,15 @@ normalize(x.description).includes(query)
 );
 
 count.textContent=a.length+' ilan';
-`<div class="card">
+
+cards.innerHTML=a.map(x=>{
+const phone=String(x.phone||'').replace(/\D/g,'');
+const waPhone=phone.startsWith('90')
+?phone
+:(phone.startsWith('0')?'9'+phone:'90'+phone);
+
+return `
+<div class="card">
 <div class="top">
 <div>
 <div class="name">${esc(x.name)}</div>
@@ -414,8 +423,8 @@ count.textContent=a.length+' ilan';
 
 <div class="actions">
 <a class="wa"
-href="https://wa.me/9${x.phone.replace(/\D/g,'')}"
-target="_blank">
+href="https://wa.me/${waPhone}"
+target="_blank" rel="noopener">
 WhatsApp
 </a>
 
@@ -423,8 +432,8 @@ WhatsApp
 Ara
 </a>
 </div>
-</div>`
-).join(''):
+</div>`;
+}).join('') ||
 '<div class="empty">Bu aramada ilan bulunamadı.</div>';
 }
 
@@ -435,7 +444,12 @@ render(c);
 
 function quickSearch(c){
 q.value=c;
-render(c);
+render();
+}
+
+function showAll(){
+q.value='';
+render();
 }
 
 function openModal(){
