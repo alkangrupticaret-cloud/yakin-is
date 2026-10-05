@@ -1,36 +1,44 @@
 <!doctype html>
+
 <html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1d4ed8">
 <link rel="manifest" href="manifest.json">
-<title>Yakınİş — İhtiyacın, yakında.</title>
-
-<style>
+<title>Yakınİş — İhtiyacın, yakında.</title><style>
 *{box-sizing:border-box}
+
 body{
 margin:0;
 font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 background:#f6f8fc;
 color:#0f172a
 }
+
 header{
 background:linear-gradient(135deg,#0f172a,#1d4ed8);
 color:#fff;
 padding:28px 18px 42px
 }
-.wrap{max-width:720px;margin:auto}
+
+.wrap{
+max-width:720px;
+margin:auto
+}
+
 header h1{
 margin:0 0 7px;
 font-size:30px;
 letter-spacing:-.5px
 }
+
 header p{
 margin:0;
 color:#dbeafe;
 font-size:15px
 }
+
 .search{
 margin:-22px 16px 18px;
 background:#fff;
@@ -41,6 +49,7 @@ box-shadow:0 10px 28px #0f172a18;
 display:flex;
 gap:8px
 }
+
 .search input{
 flex:1;
 border:0;
@@ -49,7 +58,9 @@ font-size:16px;
 padding:10px;
 min-width:0
 }
-.search button,.submit{
+
+.search button,
+.submit{
 border:0;
 border-radius:11px;
 background:#2563eb;
@@ -57,12 +68,14 @@ color:#fff;
 padding:11px 16px;
 font-weight:750
 }
+
 .quick{
 display:flex;
 gap:8px;
 overflow:auto;
 padding:0 16px 5px
 }
+
 .quick button{
 border:1px solid #dbeafe;
 background:#eff6ff;
@@ -72,12 +85,14 @@ padding:8px 12px;
 white-space:nowrap;
 font-weight:650
 }
+
 .cats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 padding:14px 16px 0
 }
+
 .cat{
 background:#fff;
 border:1px solid #e2e8f0;
@@ -88,26 +103,31 @@ font-weight:650;
 cursor:pointer;
 box-shadow:0 4px 14px #0f172a0a
 }
+
 .cat span{
 display:block;
 font-size:25px;
 margin-bottom:5px
 }
+
 .section{
 padding:22px 16px 9px;
 display:flex;
 justify-content:space-between;
 align-items:center
 }
+
 .section h2{
 font-size:19px;
 margin:0
 }
+
 .cards{
 padding:0 16px;
 display:grid;
 gap:12px
 }
+
 .card{
 background:#fff;
 border-radius:16px;
@@ -115,20 +135,24 @@ padding:16px;
 border:1px solid #e2e8f0;
 box-shadow:0 5px 18px #0f172a0a
 }
+
 .top{
 display:flex;
 justify-content:space-between;
 gap:10px
 }
+
 .name{
 font-weight:750;
 font-size:17px
 }
+
 .meta{
 color:#64748b;
 font-size:14px;
 margin-top:4px
 }
+
 .tag{
 background:#dcfce7;
 color:#166534;
@@ -138,11 +162,13 @@ font-size:12px;
 font-weight:750;
 height:max-content
 }
+
 .actions{
 display:flex;
 gap:8px;
 margin-top:13px
 }
+
 .actions a{
 flex:1;
 text-align:center;
@@ -151,8 +177,26 @@ border-radius:10px;
 padding:10px;
 font-weight:650
 }
-.wa{background:#dcfce7;color:#166534}
-.call{background:#e0e7ff;color:#3730a3}
+
+.actions button{
+flex:1;
+border:0;
+border-radius:10px;
+padding:10px;
+font-weight:650;
+cursor:pointer
+}
+
+.wa{
+background:#dcfce7;
+color:#166534
+}
+
+.call{
+background:#e0e7ff;
+color:#3730a3
+}
+
 .empty{
 padding:32px 16px;
 text-align:center;
@@ -161,6 +205,7 @@ background:#fff;
 border:1px dashed #cbd5e1;
 border-radius:16px
 }
+
 .admin{
 margin:26px 16px;
 background:linear-gradient(135deg,#0f172a,#1e293b);
@@ -168,6 +213,7 @@ color:#fff;
 border-radius:18px;
 padding:18px
 }
+
 .admin button{
 margin-top:10px;
 width:100%;
@@ -175,6 +221,7 @@ padding:11px;
 border:0;
 border-radius:10px
 }
+
 .modal{
 position:fixed;
 inset:0;
@@ -183,114 +230,180 @@ display:none;
 align-items:flex-end;
 z-index:10
 }
+
 .box{
 background:#fff;
 width:100%;
 max-width:720px;
 margin:auto;
 border-radius:20px 20px 0 0;
-padding:20px
+padding:20px;
+max-height:92vh;
+overflow:auto
 }
-.box input,.box select,.box textarea{
+
+.box input,
+.box select,
+.box textarea{
 width:100%;
 padding:12px;
 margin:7px 0;
 border:1px solid #d1d5db;
-border-radius:10px
+border-radius:10px;
+font:inherit
 }
+
 .box button{
 width:100%;
 padding:12px;
 margin-top:8px
 }
+
 .close{
 background:#e5e7eb;
 border:0;
 border-radius:10px
 }
+
 .note{
 font-size:12px;
 color:#64748b;
 margin-top:10px
 }
-</style>
-</head>
 
-<body>
+.mfa-icon{
+font-size:42px;
+text-align:center;
+margin-bottom:8px
+}
 
-<header>
+.mfa-title{
+text-align:center;
+margin:0 0 6px
+}
+
+.mfa-text{
+text-align:center;
+color:#64748b;
+font-size:14px;
+margin:0 0 15px
+}
+
+.mfa-code{
+text-align:center;
+font-size:26px !important;
+letter-spacing:7px;
+font-weight:750
+}
+
+.success{
+background:#dcfce7;
+color:#166534;
+padding:10px;
+border-radius:10px;
+font-size:13px;
+margin-top:10px
+}
+
+.error{
+background:#fee2e2;
+color:#991b1b;
+padding:10px;
+border-radius:10px;
+font-size:13px;
+margin-top:10px
+}
+</style></head><body><header>
 <div class="wrap">
 <h1>📍 Yakınİş</h1>
 <p>İhtiyacın olan hizmeti yakınında bul.</p>
 </div>
-</header>
-
-<main class="wrap">
-
-<div class="search">
+</header><main class="wrap"><div class="search">
 <input id="q" placeholder="Hizmet veya ilçe ara...">
 <button onclick="render()">Ara</button>
-</div>
-
-<div class="quick">
-  <button onclick="showAll()">Tümü</button>
+</div><div class="quick">
+<button onclick="showAll()">Tümü</button>
 <button onclick="quickSearch('Tesisatçı')">🔧 Tesisatçı</button>
 <button onclick="quickSearch('Elektrikçi')">⚡ Elektrikçi</button>
 <button onclick="quickSearch('Temizlik')">🧹 Temizlik</button>
 <button onclick="quickSearch('Nakliye')">🚚 Nakliye</button>
-</div>
-
-<div class="cats" id="cats"></div>
-
-<div class="section">
+</div><div class="cats" id="cats"></div><div class="section">
 <h2>Hizmet verenler</h2>
 <span id="count"></span>
-</div>
-
-<div class="cards" id="cards"></div>
-
-<div class="admin">
-<b>İşletmeni eklemek ister misin?</b>
-<div style="opacity:.8;margin-top:5px">
+</div><div class="cards" id="cards"></div><div class="admin">
+<b>İşletmeni eklemek ister misin?</b><div style="opacity:.8;margin-top:5px">
 Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.
-</div>
-<button onclick="openModal()">+ İşletme Ekle</button>
-</div>
+</div><button onclick="openModal()">+ İşletme Ekle</button>
 
-<div style="margin:18px 16px 30px;text-align:center">
-<button onclick="openAdmin()" style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px">
+</div><div style="margin:18px 16px 30px;text-align:center">
+<button
+onclick="openAdmin()"
+style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px">
 Yönetici
 </button>
-</div>
+</div></main><!-- YÖNETİCİ MODALI --><div class="modal" id="adminModal"><div class="box"><!-- LOGIN --><div id="loginBox"><h2>Yakınİş Yönetim</h2><input
+id="ae"
+type="email"
+placeholder="Yönetici e-posta"
+autocomplete="username">
 
-</main>
+<input
+id="ap"
+type="password"
+placeholder="Şifre"
+autocomplete="current-password">
 
-<div class="modal" id="adminModal">
-<div class="box">
-<h2>Yakınİş Yönetim</h2>
+<button
+class="submit"
+onclick="adminLogin()">
+Giriş yap
+</button>
 
-<div id="loginBox">
-<input id="ae" type="email" placeholder="Yönetici e-posta">
-<input id="ap" type="password" placeholder="Şifre">
-<button class="submit" onclick="adminLogin()">Giriş yap</button>
-<button class="close" onclick="closeAdmin()">Kapat</button>
-<div id="amsg" class="note"></div>
-</div>
+<button
+class="close"
+onclick="closeAdmin()">
+Kapat
+</button>
 
-<div id="panel" style="display:none">
-<button class="close" onclick="adminLogout()">Çıkış</button>
-<div id="adminList" style="margin-top:12px"></div>
-</div>
+<div id="amsg" class="note"></div></div><!-- MFA --><div id="mfaBox" style="display:none"><div class="mfa-icon">🔐</div><h2 class="mfa-title">İki aşamalı doğrulama</h2><p class="mfa-text">
+Yönetici paneline devam etmek için
+Authenticator uygulamanızdaki 6 haneli kodu girin.
+</p><input
+id="mfaCode"
+class="mfa-code"
+type="text"
+inputmode="numeric"
+autocomplete="one-time-code"
+maxlength="6"
+placeholder="000000">
 
-</div>
-</div>
+<button
+class="submit"
+onclick="verifyMFA()">
+Kodu doğrula
+</button>
 
-<div class="modal" id="modal">
-<div class="box">
+<button
+class="close"
+onclick="cancelMFA()">
+İptal
+</button>
 
-<h2>İşletmeni ekle</h2>
+<div id="mfaMsg" class="note"></div></div><!-- PANEL --><div id="panel" style="display:none"><h2>Yönetim Paneli</h2><div class="success">
+🔐 MFA doğrulandı. Yönetici işlemleri aktif.
+</div><button
+class="close"
+onclick="adminLogout()">
+Çıkış
+</button>
 
-<input id="n" placeholder="İşletme adı">
+<div
+id="adminList"
+style="margin-top:12px">
+</div></div></div>
+</div><!-- İŞLETME EKLEME --><div class="modal" id="modal"><div class="box"><h2>İşletmeni ekle</h2><input
+id="n"
+placeholder="İşletme adı">
 
 <select id="c">
 <option>Tesisatçı</option>
@@ -300,70 +413,115 @@ Yönetici
 <option>Nakliye</option>
 <option>Özel Ders</option>
 <option>Diğer</option>
-</select>
+</select><input
+id="d"
+placeholder="İlçe / mahalle">
 
-<input id="d" placeholder="İlçe / mahalle">
-<input id="p" placeholder="Telefon (05xx...)" inputmode="tel">
+<input
+id="p"
+placeholder="Telefon (05xx...)"
+inputmode="tel">
 
-<textarea id="desc" placeholder="Kısaca hizmetlerini anlat"></textarea>
+<textarea
+id="desc"
+placeholder="Kısaca hizmetlerini anlat"></textarea><button
+class="submit"
+onclick="addBusiness()">
+İlan Gönder
+</button>
 
-<button class="submit" onclick="addBusiness()">İlan Gönder</button> 
-<button class="close" onclick="closeModal()">Vazgeç</button>
+<button
+class="close"
+onclick="closeModal()">
+Vazgeç
+</button>
 
 <div class="note">
 İlan önce beklemeye alınır; yönetici onayından sonra yayınlanır.
-</div>
+</div></div>
+</div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
 window.YAKINIS_CONFIG={
-SUPABASE_URL:'https://nbwvmhwpvsmyaijwdgag.supabase.co',
-SUPABASE_ANON_KEY:'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
+
+SUPABASE_URL:
+'https://nbwvmhwpvsmyaijwdgag.supabase.co',
+
+SUPABASE_ANON_KEY:
+'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
+
 };
 
+
 const cfg=window.YAKINIS_CONFIG||{};
+
 const sb=supabase.createClient(
 cfg.SUPABASE_URL,
 cfg.SUPABASE_ANON_KEY
 );
 
+
 const cats=[
+
 ['🔧','Tesisatçı'],
 ['⚡','Elektrikçi'],
 ['🧹','Temizlik'],
 ['🚗','Oto Yıkama'],
 ['🚚','Nakliye'],
 ['📚','Özel Ders']
+
 ];
 
+
 let data=[];
+
+
+/* MFA DEĞİŞKENLERİ */
+
+let mfaFactorId='';
+let mfaChallengeId='';
+
 
 const catsEl=document.getElementById('cats');
 const cards=document.getElementById('cards');
 const count=document.getElementById('count');
 const q=document.getElementById('q');
 
+
 function esc(s){
+
 return String(s||'').replace(/[&<>"']/g,m=>({
+
 '&':'&amp;',
 '<':'&lt;',
 '>':'&gt;',
 '"':'&quot;',
 "'":'&#39;'
+
 }[m]));
+
 }
 
+
+/* KATEGORİLER */
+
 function renderCats(){
+
 catsEl.innerHTML=cats.map(x=>
-`<div class="cat" onclick="filterCat('${x[1]}')">
+
+`<div
+class="cat"
+onclick="filterCat('${x[1]}')">
+
 <span>${x[0]}</span>${x[1]}
+
 </div>`
+
 ).join('');
+
 }
+
+
+/* İLANLARI YÜKLE */
 
 async function load(){
 
@@ -373,204 +531,847 @@ const r=await sb
 .eq('status','approved')
 .order('created_at',{ascending:false});
 
+
 if(r.error){
-cards.innerHTML='<div class="empty">Veriler yüklenemedi.</div>';
+
+cards.innerHTML=
+'<div class="empty">Veriler yüklenemedi.</div>';
+
 return;
+
 }
+
 
 data=r.data||[];
+
 render();
+
 }
 
+
+/* ARAMA */
+
 function render(cat=''){
+
 function normalize(s){
+
 return String(s||'')
 .toLocaleLowerCase('tr-TR')
 .normalize('NFD')
 .replace(/[\u0300-\u036f]/g,'')
 .replace(/ı/g,'i');
+
 }
+
 
 const query=normalize(q.value);
 
+
 let a=data.filter(x=>
+
 (!cat||x.category===cat)&&
+
 (!query||
+
 normalize(x.name).includes(query)||
+
 normalize(x.category).includes(query)||
+
 normalize(x.district).includes(query)||
+
 normalize(x.description).includes(query)
+
 )
+
 );
+
 
 count.textContent=a.length+' ilan';
 
+
 cards.innerHTML=a.map(x=>{
-const phone=String(x.phone||'').replace(/\D/g,'');
-const waPhone=phone.startsWith('90')
+
+const phone=
+String(x.phone||'').replace(/\D/g,'');
+
+const waPhone=
+phone.startsWith('90')
 ?phone
 :(phone.startsWith('0')?'9'+phone:'90'+phone);
 
+
 return `
+
 <div class="card">
+
 <div class="top">
+
 <div>
-<div class="name">${esc(x.name)}</div>
-<div class="meta">${esc(x.category)} · ${esc(x.district)}</div>
-</div>
-<div class="tag">Onaylı</div>
+
+<div class="name">
+${esc(x.name)}
 </div>
 
+<div class="meta">
+${esc(x.category)} · ${esc(x.district)}
+</div>
+
+</div>
+
+<div class="tag">
+Onaylı
+</div>
+
+</div>
+
+
 <div class="actions">
-<a class="wa"
+
+<a
+class="wa"
 href="https://wa.me/${waPhone}"
-target="_blank" rel="noopener">
+target="_blank"
+rel="noopener">
 WhatsApp
 </a>
 
-<a class="call" href="tel:${esc(x.phone)}">
+<a
+class="call"
+href="tel:${esc(x.phone)}">
 Ara
 </a>
+
 </div>
-</div>`;
+
+</div>
+
+`;
+
 }).join('') ||
-'<div class="empty">Bu aramada ilan bulunamadı.</div>';
+
+'<div class="empty">
+Bu aramada ilan bulunamadı.
+</div>';
+
 }
+
 
 function filterCat(c){
+
 q.value=c;
+
 render(c);
+
 }
+
 
 function quickSearch(c){
+
 q.value=c;
+
 render();
+
 }
+
 
 function showAll(){
+
 q.value='';
+
 render();
+
 }
+
+
+/* İŞLETME MODALI */
 
 function openModal(){
+
 document.getElementById('modal').style.display='flex';
+
 }
 
+
 function closeModal(){
+
 document.getElementById('modal').style.display='none';
+
 }
+
+
+/* İŞLETME EKLE */
 
 async function addBusiness(){
 
 const row={
+
 name:n.value.trim(),
+
 category:c.value,
+
 district:d.value.trim(),
+
 phone:p.value.trim(),
+
 description:desc.value.trim(),
+
 status:'pending'
+
 };
 
+
 if(!row.name||!row.district||!row.phone){
-alert('İşletme adı, ilçe ve telefon zorunlu.');
+
+alert(
+'İşletme adı, ilçe ve telefon zorunlu.'
+);
+
 return;
+
 }
 
-const r=await sb.from('businesses').insert(row);
-if(!r.error){
-await fetch('https://ntfy.sh/yakinis-basvuru-2026-muhsin',{
-method:'POST',
-body:`Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
-});
-}
+
+const r=await sb
+.from('businesses')
+.insert(row);
+
+
 if(r.error){
+
 alert(r.error.message);
+
 return;
+
 }
+
+
+/* YENİ BAŞVURU BİLDİRİMİ */
+
+try{
+
+await fetch(
+'https://ntfy.sh/yakinis-basvuru-2026-muhsin',
+{
+method:'POST',
+body:
+`Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
+}
+);
+
+}catch(e){
+
+console.log('Bildirim gönderilemedi.');
+
+}
+
 
 closeModal();
+
 
 n.value='';
 d.value='';
 p.value='';
 desc.value='';
 
-alert('İlanın alındı. Yönetici onayından sonra yayınlanacak.');
+
+alert(
+'İlanın alındı. Yönetici onayından sonra yayınlanacak.'
+);
+
 }
+
+
+/* =================================================
+   YÖNETİCİ / MFA
+================================================= */
+
+
+/* YÖNETİCİYİ AÇ */
 
 async function openAdmin(){
 
 document.getElementById('adminModal').style.display='flex';
 
+
+resetAdminMessages();
+
+
 const s=await sb.auth.getSession();
 
-if(s.data.session){
-showAdminPanel();
-}
+
+if(s.error||!s.data.session){
+
+showLoginBox();
+
+return;
+
 }
 
-function closeAdmin(){
-document.getElementById('adminModal').style.display='none';
+
+/*
+Mevcut oturumun MFA seviyesini kontrol ediyoruz.
+*/
+
+const aal=await sb.auth.mfa
+.getAuthenticatorAssuranceLevel();
+
+
+if(aal.error){
+
+showLoginBox();
+
+return;
+
 }
+
+
+/*
+aal2 ise kullanıcı daha önce MFA doğrulamış demektir.
+*/
+
+if(aal.data.currentLevel==='aal2'){
+
+showAdminPanel();
+
+return;
+
+}
+
+
+/*
+aal1 -> aal2 geçişi gerekiyorsa
+MFA ekranını göster.
+*/
+
+if(
+aal.data.currentLevel==='aal1' &&
+aal.data.nextLevel==='aal2'
+){
+
+await startMFA();
+
+return;
+
+}
+
+
+/*
+MFA faktörü bulunmuyorsa yönetim paneline
+izin vermiyoruz.
+*/
+
+showLoginBox();
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+'Bu yönetici hesabında MFA etkin değil. ' +
+'Önce Supabase Auth üzerinden MFA kurulmalıdır.' +
+'</div>';
+
+}
+
+
+/* LOGIN EKRANINI GÖSTER */
+
+function showLoginBox(){
+
+document.getElementById('loginBox').style.display='block';
+
+document.getElementById('mfaBox').style.display='none';
+
+document.getElementById('panel').style.display='none';
+
+}
+
+
+/* MFA EKRANINI GÖSTER */
+
+function showMFABox(){
+
+document.getElementById('loginBox').style.display='none';
+
+document.getElementById('mfaBox').style.display='block';
+
+document.getElementById('panel').style.display='none';
+
+}
+
+
+/* PANELİ GÖSTER */
+
+function showAdminPanel(){
+
+document.getElementById('loginBox').style.display='none';
+
+document.getElementById('mfaBox').style.display='none';
+
+document.getElementById('panel').style.display='block';
+
+loadAdmin();
+
+}
+
+
+/* YÖNETİCİ MODALINI KAPAT */
+
+function closeAdmin(){
+
+document.getElementById('adminModal').style.display='none';
+
+}
+
+
+/* ADMIN LOGIN */
 
 async function adminLogin(){
 
+const email=
+document.getElementById('ae').value.trim();
+
+const password=
+document.getElementById('ap').value;
+
+
+if(!email||!password){
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+'E-posta ve şifre zorunlu.' +
+'</div>';
+
+return;
+
+}
+
+
+document.getElementById('amsg').textContent=
+'Giriş kontrol ediliyor...';
+
+
 const r=await sb.auth.signInWithPassword({
-email:document.getElementById('ae').value,
-password:document.getElementById('ap').value
+
+email:email,
+
+password:password
+
 });
 
+
 if(r.error){
-document.getElementById('amsg').textContent=r.error.message;
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+esc(r.error.message) +
+'</div>';
+
 return;
+
 }
+
+
+/*
+Şifre doğru.
+Şimdi MFA seviyesini kontrol ediyoruz.
+*/
+
+const aal=await sb.auth.mfa
+.getAuthenticatorAssuranceLevel();
+
+
+if(aal.error){
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+esc(aal.error.message) +
+'</div>';
+
+return;
+
+}
+
+
+/*
+Zaten aal2 ise doğrudan panele geç.
+*/
+
+if(aal.data.currentLevel==='aal2'){
 
 showAdminPanel();
+
+return;
+
 }
 
-function showAdminPanel(){
-document.getElementById('loginBox').style.display='none';
-document.getElementById('panel').style.display='block';
-loadAdmin();
+
+/*
+MFA kayıtlıysa challenge başlat.
+*/
+
+if(aal.data.nextLevel==='aal2'){
+
+await startMFA();
+
+return;
+
 }
+
+
+/*
+MFA yoksa panel açılmaz.
+*/
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+'Bu yönetici hesabında doğrulanmış MFA faktörü bulunamadı.' +
+'</div>';
+
+}
+
+
+/* MFA CHALLENGE BAŞLAT */
+
+async function startMFA(){
+
+document.getElementById('mfaMsg').textContent=
+'Güvenlik doğrulaması hazırlanıyor...';
+
+
+const factors=
+await sb.auth.mfa.listFactors();
+
+
+if(factors.error){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+esc(factors.error.message) +
+'</div>';
+
+return;
+
+}
+
+
+/*
+TOTP faktörlerini al.
+*/
+
+const totpFactors=
+(factors.data.totp||[])
+.filter(x=>x.status==='verified');
+
+
+if(!totpFactors.length){
+
+showLoginBox();
+
+document.getElementById('amsg').innerHTML=
+'<div class="error">' +
+'Doğrulanmış Authenticator MFA faktörü bulunamadı.' +
+'</div>';
+
+return;
+
+}
+
+
+/*
+İlk doğrulanmış TOTP faktörünü kullanıyoruz.
+*/
+
+mfaFactorId=totpFactors[0].id;
+
+
+const challenge=
+await sb.auth.mfa.challenge({
+
+factorId:mfaFactorId
+
+});
+
+
+if(challenge.error){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+esc(challenge.error.message) +
+'</div>';
+
+return;
+
+}
+
+
+mfaChallengeId=
+challenge.data.id;
+
+
+document.getElementById('mfaCode').value='';
+
+document.getElementById('mfaMsg').textContent=
+'Authenticator uygulamanızdaki 6 haneli kodu girin.';
+
+
+showMFABox();
+
+
+setTimeout(()=>{
+
+document.getElementById('mfaCode').focus();
+
+},100);
+
+}
+
+
+/* MFA KODUNU DOĞRULA */
+
+async function verifyMFA(){
+
+const code=
+document.getElementById('mfaCode').value
+.replace(/\D/g,'');
+
+
+if(code.length!==6){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+'Lütfen 6 haneli doğrulama kodunu girin.' +
+'</div>';
+
+return;
+
+}
+
+
+if(!mfaFactorId||!mfaChallengeId){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.' +
+'</div>';
+
+return;
+
+}
+
+
+document.getElementById('mfaMsg').textContent=
+'Kod doğrulanıyor...';
+
+
+const result=
+await sb.auth.mfa.verify({
+
+factorId:mfaFactorId,
+
+challengeId:mfaChallengeId,
+
+code:code
+
+});
+
+
+if(result.error){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+esc(result.error.message) +
+'</div>';
+
+return;
+
+}
+
+
+/*
+MFA başarılı.
+Session artık aal2 olmalı.
+*/
+
+const aal=
+await sb.auth.mfa
+.getAuthenticatorAssuranceLevel();
+
+
+if(
+aal.error ||
+aal.data.currentLevel!=='aal2'
+){
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="error">' +
+'MFA doğrulandı ancak güvenlik seviyesi aal2 olarak alınamadı.' +
+'</div>';
+
+return;
+
+}
+
+
+/*
+Her şey başarılı.
+Yönetici panelini aç.
+*/
+
+document.getElementById('mfaMsg').innerHTML=
+'<div class="success">' +
+'✓ MFA doğrulandı.' +
+'</div>';
+
+
+setTimeout(()=>{
+
+showAdminPanel();
+
+},300);
+
+}
+
+
+/* MFA İPTAL */
+
+async function cancelMFA(){
+
+mfaFactorId='';
+
+mfaChallengeId='';
+
+await sb.auth.signOut();
+
+showLoginBox();
+
+document.getElementById('amsg').textContent=
+'Giriş iptal edildi.';
+
+}
+
+
+/* MESAJLARI TEMİZLE */
+
+function resetAdminMessages(){
+
+document.getElementById('amsg').textContent='';
+
+document.getElementById('mfaMsg').textContent='';
+
+document.getElementById('mfaCode').value='';
+
+mfaFactorId='';
+
+mfaChallengeId='';
+
+}
+
+
+/* ENTER İLE MFA DOĞRULAMA */
+
+document
+.getElementById('mfaCode')
+.addEventListener('keydown',function(e){
+
+if(e.key==='Enter'){
+
+verifyMFA();
+
+}
+
+});
+
+
+/* ADMIN İLANLARI */
 
 async function loadAdmin(){
 
-const box=document.getElementById('adminList');
+const box=
+document.getElementById('adminList');
+
 
 const r=await sb
 .from('businesses')
 .select('*')
 .order('created_at',{ascending:false});
 
+
 if(r.error){
-box.innerHTML='<div class="note">'+esc(r.error.message)+'</div>';
+
+box.innerHTML=
+'<div class="note">'+
+esc(r.error.message)+
+'</div>';
+
 return;
+
 }
 
+
 box.innerHTML=(r.data||[]).map(x=>
+
 `<div class="card">
+
 <b>${esc(x.name)}</b>
+
 <div class="meta">
-${esc(x.category)} · ${esc(x.district)} · ${esc(x.phone)} · ${esc(x.status)}
+
+${esc(x.category)}
+· ${esc(x.district)}
+· ${esc(x.phone)}
+· ${esc(x.status)}
+
 </div>
+
 
 <div class="actions">
 
-${x.status!=='approved'
-?`<button class="submit" onclick="setStatus('${x.id}','approved')">Onayla</button>`
-:''}
+${
+x.status!=='approved'
 
-${x.status!=='rejected'
-?`<button onclick="setStatus('${x.id}','rejected')">Reddet</button>`
-:''}
+?
 
-<button onclick="removeListing('${x.id}')">Sil</button>
+`<button
+class="submit"
+onclick="setStatus('${x.id}','approved')">
+Onayla
+</button>`
+
+:''
+
+}
+
+
+${
+x.status!=='rejected'
+
+?
+
+`<button
+onclick="setStatus('${x.id}','rejected')">
+Reddet
+</button>`
+
+:''
+
+}
+
+
+<button
+onclick="removeListing('${x.id}')">
+Sil
+</button>
 
 </div>
+
 </div>`
-).join('')||'<div class="empty">İlan yok.</div>';
+
+).join('') ||
+
+'<div class="empty">İlan yok.</div>';
+
 }
+
+
+/* DURUM DEĞİŞTİR */
 
 async function setStatus(id,status){
 
@@ -579,38 +1380,93 @@ const r=await sb
 .update({status})
 .eq('id',id);
 
-if(r.error) alert(r.error.message);
-else loadAdmin();
+
+if(r.error){
+
+alert(r.error.message);
+
+}else{
+
+loadAdmin();
+
 }
+
+}
+
+
+/* İLAN SİL */
 
 async function removeListing(id){
 
 if(!confirm('İlan silinsin mi?')) return;
+
 
 const r=await sb
 .from('businesses')
 .delete()
 .eq('id',id);
 
-if(r.error) alert(r.error.message);
-else loadAdmin();
+
+if(r.error){
+
+alert(r.error.message);
+
+}else{
+
+loadAdmin();
+
 }
+
+}
+
+
+/* ÇIKIŞ */
 
 async function adminLogout(){
 
 await sb.auth.signOut();
 
+
+mfaFactorId='';
+
+mfaChallengeId='';
+
+
 document.getElementById('panel').style.display='none';
+
+document.getElementById('mfaBox').style.display='none';
+
 document.getElementById('loginBox').style.display='block';
+
+document.getElementById('ae').value='';
+
+document.getElementById('ap').value='';
+
+document.getElementById('mfaCode').value='';
+
+document.getElementById('amsg').textContent='';
+
+document.getElementById('mfaMsg').textContent='';
+
 }
+
+
+/* BAŞLANGIÇ */
 
 renderCats();
+
 load();
 
-if('serviceWorker' in navigator){
-navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-</script>
 
-</body>
-</html>
+/* SERVICE WORKER */
+
+if('serviceWorker' in navigator){
+
+navigator.serviceWorker
+.register('sw.js')
+.catch(()=>{});
+
+}
+
+</script></body>
+  </html>
