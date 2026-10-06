@@ -6,8 +6,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1d4ed8">
 <link rel="manifest" href="manifest.json">
-<title>Yakınİş — İhtiyacın, yakında.</title><style>
-*{box-sizing:border-box}
+
+<title>Yakınİş — İhtiyacın, yakında.</title>
+
+<style>
+
+*{
+box-sizing:border-box
+}
 
 body{
 margin:0;
@@ -313,133 +319,384 @@ border-radius:10px;
 font-size:13px;
 margin-top:10px
 }
-</style></head><body><header>
-<div class="wrap">
-<h1>📍 Yakınİş</h1>
-<p>İhtiyacın olan hizmeti yakınında bul.</p>
-</div>
-</header><main class="wrap"><div class="search">
-<input id="q" placeholder="Hizmet veya ilçe ara...">
-<button onclick="render()">Ara</button>
-</div><div class="quick">
-<button onclick="showAll()">Tümü</button>
-<button onclick="quickSearch('Tesisatçı')">🔧 Tesisatçı</button>
-<button onclick="quickSearch('Elektrikçi')">⚡ Elektrikçi</button>
-<button onclick="quickSearch('Temizlik')">🧹 Temizlik</button>
-<button onclick="quickSearch('Nakliye')">🚚 Nakliye</button>
-</div><div class="cats" id="cats"></div><div class="section">
-<h2>Hizmet verenler</h2>
-<span id="count"></span>
-</div><div class="cards" id="cards"></div><div class="admin">
-<b>İşletmeni eklemek ister misin?</b><div style="opacity:.8;margin-top:5px">
-Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.
-</div><button onclick="openModal()">+ İşletme Ekle</button>
 
-</div><div style="margin:18px 16px 30px;text-align:center">
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="wrap">
+
+<h1>📍 Yakınİş</h1>
+
+<p>İhtiyacın olan hizmeti yakınında bul.</p>
+
+</div>
+</header>
+
+<main class="wrap">
+
+<div class="search">
+
+<input
+id="q"
+placeholder="Hizmet veya ilçe ara..."
+>
+
+<button onclick="render()">
+Ara
+</button>
+
+</div>
+
+
+<div class="quick">
+
+<button onclick="showAll()">
+Tümü
+</button>
+
+<button onclick="quickSearch('Tesisatçı')">
+🔧 Tesisatçı
+</button>
+
+<button onclick="quickSearch('Elektrikçi')">
+⚡ Elektrikçi
+</button>
+
+<button onclick="quickSearch('Temizlik')">
+🧹 Temizlik
+</button>
+
+<button onclick="quickSearch('Nakliye')">
+🚚 Nakliye
+</button>
+
+</div>
+
+
+<div
+class="cats"
+id="cats">
+</div>
+
+
+<div class="section">
+
+<h2>
+Hizmet verenler
+</h2>
+
+<span id="count"></span>
+
+</div>
+
+
+<div
+class="cards"
+id="cards">
+</div>
+
+
+<div class="admin">
+
+<b>
+İşletmeni eklemek ister misin?
+</b>
+
+<div style="opacity:.8;margin-top:5px">
+
+Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.
+
+</div>
+
+<button onclick="openModal()">
++ İşletme Ekle
+</button>
+
+</div>
+
+
+<div style="margin:18px 16px 30px;text-align:center">
+
 <button
 onclick="openAdmin()"
 style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px">
+
 Yönetici
+
 </button>
-</div></main><!-- YÖNETİCİ MODALI --><div class="modal" id="adminModal"><div class="box"><!-- LOGIN --><div id="loginBox"><h2>Yakınİş Yönetim</h2><input
+
+</div>
+
+</main>
+
+
+<!-- YÖNETİCİ MODALI -->
+
+<div
+class="modal"
+id="adminModal">
+
+<div class="box">
+
+
+<!-- LOGIN -->
+
+<div id="loginBox">
+
+<h2>
+Yakınİş Yönetim
+</h2>
+
+
+<input
 id="ae"
 type="email"
 placeholder="Yönetici e-posta"
-autocomplete="username">
+autocomplete="username"
+>
+
 
 <input
 id="ap"
 type="password"
 placeholder="Şifre"
-autocomplete="current-password">
+autocomplete="current-password"
+>
+
 
 <button
 class="submit"
 onclick="adminLogin()">
+
 Giriş yap
+
 </button>
+
 
 <button
 class="close"
 onclick="closeAdmin()">
+
 Kapat
+
 </button>
 
-<div id="amsg" class="note"></div></div><!-- MFA --><div id="mfaBox" style="display:none"><div class="mfa-icon">🔐</div><h2 class="mfa-title">İki aşamalı doğrulama</h2><p class="mfa-text">
+
+<div
+id="amsg"
+class="note">
+</div>
+
+</div>
+
+
+<!-- MFA -->
+
+<div
+id="mfaBox"
+style="display:none">
+
+<div class="mfa-icon">
+🔐
+</div>
+
+<h2 class="mfa-title">
+İki aşamalı doğrulama
+</h2>
+
+<p class="mfa-text">
+
 Yönetici paneline devam etmek için
 Authenticator uygulamanızdaki 6 haneli kodu girin.
-</p><input
+
+</p>
+
+
+<input
 id="mfaCode"
 class="mfa-code"
 type="text"
 inputmode="numeric"
 autocomplete="one-time-code"
 maxlength="6"
-placeholder="000000">
+placeholder="000000"
+>
+
 
 <button
 class="submit"
 onclick="verifyMFA()">
+
 Kodu doğrula
+
 </button>
+
 
 <button
 class="close"
 onclick="cancelMFA()">
+
 İptal
+
 </button>
 
-<div id="mfaMsg" class="note"></div></div><!-- PANEL --><div id="panel" style="display:none"><h2>Yönetim Paneli</h2><div class="success">
+
+<div
+id="mfaMsg"
+class="note">
+</div>
+
+</div>
+
+
+<!-- PANEL -->
+
+<div
+id="panel"
+style="display:none">
+
+<h2>
+Yönetim Paneli
+</h2>
+
+
+<div class="success">
+
 🔐 MFA doğrulandı. Yönetici işlemleri aktif.
-</div><button
+
+</div>
+
+
+<button
 class="close"
 onclick="adminLogout()">
+
 Çıkış
+
 </button>
+
 
 <div
 id="adminList"
 style="margin-top:12px">
-</div></div></div>
-</div><!-- İŞLETME EKLEME --><div class="modal" id="modal"><div class="box"><h2>İşletmeni ekle</h2><input
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- İŞLETME EKLEME -->
+
+<div
+class="modal"
+id="modal">
+
+<div class="box">
+
+<h2>
+İşletmeni ekle
+</h2>
+
+
+<input
 id="n"
-placeholder="İşletme adı">
+placeholder="İşletme adı"
+>
+
 
 <select id="c">
-<option>Tesisatçı</option>
-<option>Elektrikçi</option>
-<option>Temizlik</option>
-<option>Oto Yıkama</option>
-<option>Nakliye</option>
-<option>Özel Ders</option>
-<option>Diğer</option>
-</select><input
+
+<option>
+Tesisatçı
+</option>
+
+<option>
+Elektrikçi
+</option>
+
+<option>
+Temizlik
+</option>
+
+<option>
+Oto Yıkama
+</option>
+
+<option>
+Nakliye
+</option>
+
+<option>
+Özel Ders
+</option>
+
+<option>
+Diğer
+</option>
+
+</select>
+
+
+<input
 id="d"
-placeholder="İlçe / mahalle">
+placeholder="İlçe / mahalle"
+>
+
 
 <input
 id="p"
 placeholder="Telefon (05xx...)"
-inputmode="tel">
+inputmode="tel"
+>
+
 
 <textarea
 id="desc"
-placeholder="Kısaca hizmetlerini anlat"></textarea><button
+placeholder="Kısaca hizmetlerini anlat">
+</textarea>
+
+
+<button
 class="submit"
 onclick="addBusiness()">
+
 İlan Gönder
+
 </button>
+
 
 <button
 class="close"
 onclick="closeModal()">
+
 Vazgeç
+
 </button>
 
+
 <div class="note">
+
 İlan önce beklemeye alınır; yönetici onayından sonra yayınlanır.
-</div></div>
-</div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
 
 window.YAKINIS_CONFIG={
 
@@ -453,6 +710,7 @@ SUPABASE_ANON_KEY:
 
 
 const cfg=window.YAKINIS_CONFIG||{};
+
 
 const sb=supabase.createClient(
 cfg.SUPABASE_URL,
@@ -594,6 +852,7 @@ cards.innerHTML=a.map(x=>{
 const phone=
 String(x.phone||'').replace(/\D/g,'');
 
+
 const waPhone=
 phone.startsWith('90')
 ?phone
@@ -632,13 +891,18 @@ class="wa"
 href="https://wa.me/${waPhone}"
 target="_blank"
 rel="noopener">
+
 WhatsApp
+
 </a>
+
 
 <a
 class="call"
 href="tel:${esc(x.phone)}">
+
 Ara
+
 </a>
 
 </div>
@@ -792,16 +1056,20 @@ async function openAdmin(){
 
 document.getElementById('adminModal').style.display='flex';
 
-
 resetAdminMessages();
+
+showLoginBox();
 
 
 const s=await sb.auth.getSession();
 
 
-if(s.error||!s.data.session){
+if(s.error){
 
-showLoginBox();
+document.getElementById('amsg').innerHTML=
+'<div class="error">'+
+esc(s.error.message)+
+'</div>';
 
 return;
 
@@ -809,17 +1077,30 @@ return;
 
 
 /*
-Mevcut oturumun MFA seviyesini kontrol ediyoruz.
+Oturum yoksa giriş ekranında kal.
 */
 
-const aal=await sb.auth.mfa
-.getAuthenticatorAssuranceLevel();
-console.log('MFA DURUMU:', aal.data);
-alert(JSON.stringify(aal.data));
+if(!s.data.session){
+
+return;
+
+}
+
+
+/*
+Mevcut oturumun MFA seviyesini kontrol et.
+*/
+
+const aal=
+await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+
 
 if(aal.error){
 
-showLoginBox();
+document.getElementById('amsg').innerHTML=
+'<div class="error">'+
+esc(aal.error.message)+
+'</div>';
 
 return;
 
@@ -827,7 +1108,7 @@ return;
 
 
 /*
-aal2 ise kullanıcı daha önce MFA doğrulamış demektir.
+Zaten MFA doğrulandıysa doğrudan panel.
 */
 
 if(aal.data.currentLevel==='aal2'){
@@ -840,8 +1121,7 @@ return;
 
 
 /*
-aal1 -> aal2 geçişi gerekiyorsa
-MFA ekranını göster.
+Oturum var ancak MFA doğrulaması gerekiyorsa.
 */
 
 if(
@@ -857,16 +1137,12 @@ return;
 
 
 /*
-MFA faktörü bulunmuyorsa yönetim paneline
-izin vermiyoruz.
+MFA durumu uygun değilse giriş ekranında kal.
 */
 
-showLoginBox();
-
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-'Bu yönetici hesabında MFA etkin değil. ' +
-'Önce Supabase Auth üzerinden MFA kurulmalıdır.' +
+'<div class="error">'+
+'Yönetici hesabı için MFA doğrulaması gerekiyor.'+
 '</div>';
 
 }
@@ -929,6 +1205,7 @@ async function adminLogin(){
 const email=
 document.getElementById('ae').value.trim();
 
+
 const password=
 document.getElementById('ap').value;
 
@@ -936,8 +1213,8 @@ document.getElementById('ap').value;
 if(!email||!password){
 
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-'E-posta ve şifre zorunlu.' +
+'<div class="error">'+
+'E-posta ve şifre zorunlu.'+
 '</div>';
 
 return;
@@ -949,7 +1226,8 @@ document.getElementById('amsg').textContent=
 'Giriş kontrol ediliyor...';
 
 
-const r=await sb.auth.signInWithPassword({
+const r=
+await sb.auth.signInWithPassword({
 
 email:email,
 
@@ -961,8 +1239,8 @@ password:password
 if(r.error){
 
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-esc(r.error.message) +
+'<div class="error">'+
+esc(r.error.message)+
 '</div>';
 
 return;
@@ -972,18 +1250,18 @@ return;
 
 /*
 Şifre doğru.
-Şimdi MFA seviyesini kontrol ediyoruz.
+MFA seviyesini kontrol et.
 */
 
-const aal=await sb.auth.mfa
-.getAuthenticatorAssuranceLevel();
+const aal=
+await sb.auth.mfa.getAuthenticatorAssuranceLevel();
 
 
 if(aal.error){
 
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-esc(aal.error.message) +
+'<div class="error">'+
+esc(aal.error.message)+
 '</div>';
 
 return;
@@ -992,7 +1270,7 @@ return;
 
 
 /*
-Zaten aal2 ise doğrudan panele geç.
+Zaten MFA doğrulandıysa panel.
 */
 
 if(aal.data.currentLevel==='aal2'){
@@ -1005,7 +1283,7 @@ return;
 
 
 /*
-MFA kayıtlıysa challenge başlat.
+MFA gerekiyorsa challenge başlat.
 */
 
 if(aal.data.nextLevel==='aal2'){
@@ -1022,8 +1300,8 @@ MFA yoksa panel açılmaz.
 */
 
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-'Bu yönetici hesabında doğrulanmış MFA faktörü bulunamadı.' +
+'<div class="error">'+
+'Bu yönetici hesabında doğrulanmış MFA faktörü bulunamadı.'+
 '</div>';
 
 }
@@ -1032,9 +1310,10 @@ document.getElementById('amsg').innerHTML=
 /* MFA CHALLENGE BAŞLAT */
 
 async function startMFA(){
-   
+
 console.log('MFA BAŞLADI');
-   
+
+
 document.getElementById('mfaMsg').textContent=
 'Güvenlik doğrulaması hazırlanıyor...';
 
@@ -1046,8 +1325,8 @@ await sb.auth.mfa.listFactors();
 if(factors.error){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-esc(factors.error.message) +
+'<div class="error">'+
+esc(factors.error.message)+
 '</div>';
 
 return;
@@ -1069,8 +1348,8 @@ if(!totpFactors.length){
 showLoginBox();
 
 document.getElementById('amsg').innerHTML=
-'<div class="error">' +
-'Doğrulanmış Authenticator MFA faktörü bulunamadı.' +
+'<div class="error">'+
+'Doğrulanmış Authenticator MFA faktörü bulunamadı.'+
 '</div>';
 
 return;
@@ -1079,10 +1358,11 @@ return;
 
 
 /*
-İlk doğrulanmış TOTP faktörünü kullanıyoruz.
+İlk doğrulanmış TOTP faktörünü kullan.
 */
 
-mfaFactorId=totpFactors[0].id;
+mfaFactorId=
+totpFactors[0].id;
 
 
 const challenge=
@@ -1096,8 +1376,8 @@ factorId:mfaFactorId
 if(challenge.error){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-esc(challenge.error.message) +
+'<div class="error">'+
+esc(challenge.error.message)+
 '</div>';
 
 return;
@@ -1110,6 +1390,7 @@ challenge.data.id;
 
 
 document.getElementById('mfaCode').value='';
+
 
 document.getElementById('mfaMsg').textContent=
 'Authenticator uygulamanızdaki 6 haneli kodu girin.';
@@ -1139,8 +1420,8 @@ document.getElementById('mfaCode').value
 if(code.length!==6){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-'Lütfen 6 haneli doğrulama kodunu girin.' +
+'<div class="error">'+
+'Lütfen 6 haneli doğrulama kodunu girin.'+
 '</div>';
 
 return;
@@ -1151,8 +1432,8 @@ return;
 if(!mfaFactorId||!mfaChallengeId){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.' +
+'<div class="error">'+
+'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.'+
 '</div>';
 
 return;
@@ -1179,8 +1460,8 @@ code:code
 if(result.error){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-esc(result.error.message) +
+'<div class="error">'+
+esc(result.error.message)+
 '</div>';
 
 return;
@@ -1194,8 +1475,7 @@ Session artık aal2 olmalı.
 */
 
 const aal=
-await sb.auth.mfa
-.getAuthenticatorAssuranceLevel();
+await sb.auth.mfa.getAuthenticatorAssuranceLevel();
 
 
 if(
@@ -1204,8 +1484,8 @@ aal.data.currentLevel!=='aal2'
 ){
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="error">' +
-'MFA doğrulandı ancak güvenlik seviyesi aal2 olarak alınamadı.' +
+'<div class="error">'+
+'MFA doğrulandı ancak güvenlik seviyesi aal2 olarak alınamadı.'+
 '</div>';
 
 return;
@@ -1215,12 +1495,11 @@ return;
 
 /*
 Her şey başarılı.
-Yönetici panelini aç.
 */
 
 document.getElementById('mfaMsg').innerHTML=
-'<div class="success">' +
-'✓ MFA doğrulandı.' +
+'<div class="success">'+
+'✓ MFA doğrulandı.'+
 '</div>';
 
 
@@ -1241,9 +1520,12 @@ mfaFactorId='';
 
 mfaChallengeId='';
 
+
 await sb.auth.signOut();
 
+
 showLoginBox();
+
 
 document.getElementById('amsg').textContent=
 'Giriş iptal edildi.';
@@ -1291,7 +1573,8 @@ const box=
 document.getElementById('adminList');
 
 
-const r=await sb
+const r=
+await sb
 .from('businesses')
 .select('*')
 .order('created_at',{ascending:false});
@@ -1309,7 +1592,8 @@ return;
 }
 
 
-box.innerHTML=(r.data||[]).map(x=>
+box.innerHTML=
+(r.data||[]).map(x=>
 
 `<div class="card">
 
@@ -1335,7 +1619,9 @@ x.status!=='approved'
 `<button
 class="submit"
 onclick="setStatus('${x.id}','approved')">
+
 Onayla
+
 </button>`
 
 :''
@@ -1350,7 +1636,9 @@ x.status!=='rejected'
 
 `<button
 onclick="setStatus('${x.id}','rejected')">
+
 Reddet
+
 </button>`
 
 :''
@@ -1360,7 +1648,9 @@ Reddet
 
 <button
 onclick="removeListing('${x.id}')">
+
 Sil
+
 </button>
 
 </div>
@@ -1378,7 +1668,8 @@ Sil
 
 async function setStatus(id,status){
 
-const r=await sb
+const r=
+await sb
 .from('businesses')
 .update({status})
 .eq('id',id);
@@ -1404,7 +1695,8 @@ async function removeListing(id){
 if(!confirm('İlan silinsin mi?')) return;
 
 
-const r=await sb
+const r=
+await sb
 .from('businesses')
 .delete()
 .eq('id',id);
@@ -1441,6 +1733,7 @@ document.getElementById('mfaBox').style.display='none';
 
 document.getElementById('loginBox').style.display='block';
 
+
 document.getElementById('ae').value='';
 
 document.getElementById('ap').value='';
@@ -1471,5 +1764,13 @@ navigator.serviceWorker
 
 }
 
-</script></body>
-  </html>
+</script>
+
+</body>
+</html>
+Şimdi sadece 3 işlem yap
+GitHub'daki index.html → Edit.
+Eski kodun tamamını sil, yukarıdaki kodun tamamını yapıştır.
+Commit changes ile kaydet.
+Sonra uygulamayı açıp Yönetici butonuna bas.
+Önemli: İlk testte Yönetici → e-posta/şifre → Giriş yap aşamasına kadar bakalım. MFA ekranı açılırsa bir sonraki adımda onu kontrol ederiz.
