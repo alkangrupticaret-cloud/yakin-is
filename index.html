@@ -1029,24 +1029,20 @@ async function setupMFA() {
   const qrCodeUrl = enroll.data.totp.qr_code;
   const secretKey = enroll.data.totp.secret;
 
-  document.body.innerHTML = `
-    <div style="max-width:360px;margin:30px auto;padding:20px;background:#fff;border-radius:16px;text-align:center;font-family:sans-serif;box-shadow:0 10px 25px #0002">
-      <h2 style="margin-top:0">🔐 MFA Kurulumu</h2>
-      <p style="font-size:13px;color:#475569">Aşağıdaki QR kodunu Authenticator ile taratın VEYA anahtar kodunu kopyalayın:</p>
-      
-      <div style="margin:15px 0">${qrCodeUrl}</div>
-      
-      <div style="background:#f1f5f9;padding:10px;border-radius:8px;font-size:12px;word-break:break-all;margin-bottom:15px">
-        <b>Gizli Anahtar (Elle Ekleme İçin):</b><br>
-        <span style="color:#2563eb;font-weight:bold;font-size:14px">${secretKey}</span>
-      </div>
-
-      <p style="font-size:13px;color:#475569">Authenticator'daki 6 haneli kodu girin:</p>
-      <input id="totpInput" type="text" inputmode="numeric" maxlength="6" placeholder="000000" style="font-size:24px;padding:10px;width:150px;text-align:center;border:1px solid #cbd5e1;border-radius:10px;letter-spacing:4px" />
-      <br/><br/>
-      <button id="verifyBtn" style="width:100%;padding:12px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:16px;font-weight:bold">Doğrula ve Kaydet</button>
-    </div>
-  `;
+  document.body.innerHTML = 
+    '<div style="max-width:360px;margin:30px auto;padding:20px;background:#fff;border-radius:16px;text-align:center;font-family:sans-serif;box-shadow:0 10px 25px #0002">' +
+      '<h2 style="margin-top:0">🔐 MFA Kurulumu</h2>' +
+      '<p style="font-size:13px;color:#475569">Aşağıdaki QR kodunu Authenticator ile taratın VEYA anahtar kodunu kopyalayın:</p>' +
+      '<div style="margin:15px 0">' + qrCodeUrl + '</div>' +
+      '<div style="background:#f1f5f9;padding:10px;border-radius:8px;font-size:12px;word-break:break-all;margin-bottom:15px">' +
+        '<b>Gizli Anahtar (Elle Ekleme İçin):</b><br>' +
+        '<span style="color:#2563eb;font-weight:bold;font-size:14px">' + secretKey + '</span>' +
+      '</div>' +
+      '<p style="font-size:13px;color:#475569">Authenticator\'daki 6 haneli kodu girin:</p>' +
+      '<input id="totpInput" type="text" inputmode="numeric" maxlength="6" placeholder="000000" style="font-size:24px;padding:10px;width:150px;text-align:center;border:1px solid #cbd5e1;border-radius:10px;letter-spacing:4px" />' +
+      '<br/><br/>' +
+      '<button id="verifyBtn" style="width:100%;padding:12px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:16px;font-weight:bold">Doğrula ve Kaydet</button>' +
+    '</div>';
 
   document.getElementById('verifyBtn').onclick = async () => {
     const code = document.getElementById('totpInput').value.trim();
@@ -1069,9 +1065,4 @@ async function setupMFA() {
     }
   };
 }
-
 </script>
-
-
-</body>
-</html>
