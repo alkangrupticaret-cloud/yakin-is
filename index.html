@@ -814,7 +814,8 @@ Mevcut oturumun MFA seviyesini kontrol ediyoruz.
 
 const aal=await sb.auth.mfa
 .getAuthenticatorAssuranceLevel();
-
+console.log('MFA DURUMU:', aal.data);
+alert(JSON.stringify(aal.data));
 
 if(aal.error){
 
