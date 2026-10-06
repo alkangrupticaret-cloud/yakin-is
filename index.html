@@ -1,23 +1,24 @@
 <!doctype html>
-
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#1d4ed8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 
 <title>Yakınİş — İhtiyacın, yakında.</title>
 
 <style>
-
 *{
-box-sizing:border-box
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent
 }
 
 body{
 margin:0;
-font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 background:#f6f8fc;
 color:#0f172a
 }
@@ -62,7 +63,8 @@ border:0;
 outline:0;
 font-size:16px;
 padding:10px;
-min-width:0
+min-width:0;
+background:transparent
 }
 
 .search button,
@@ -72,14 +74,26 @@ border-radius:11px;
 background:#2563eb;
 color:#fff;
 padding:11px 16px;
-font-weight:750
+font-weight:750;
+cursor:pointer;
+transition:background .2s
+}
+
+.search button:active,
+.submit:active{
+background:#1d4ed8
 }
 
 .quick{
 display:flex;
 gap:8px;
-overflow:auto;
-padding:0 16px 5px
+overflow-x:auto;
+padding:0 16px 5px;
+scrollbar-width:none
+}
+
+.quick::-webkit-scrollbar{
+display:none
 }
 
 .quick button{
@@ -87,9 +101,10 @@ border:1px solid #dbeafe;
 background:#eff6ff;
 color:#1d4ed8;
 border-radius:999px;
-padding:8px 12px;
+padding:8px 14px;
 white-space:nowrap;
-font-weight:650
+font-weight:650;
+cursor:pointer
 }
 
 .cats{
@@ -107,7 +122,12 @@ padding:15px 8px;
 text-align:center;
 font-weight:650;
 cursor:pointer;
-box-shadow:0 4px 14px #0f172a0a
+box-shadow:0 4px 14px #0f172a0a;
+transition:transform .1s
+}
+
+.cat:active{
+transform:scale(.97)
 }
 
 .cat span{
@@ -169,27 +189,32 @@ font-weight:750;
 height:max-content
 }
 
+.tag-pending{
+background:#fef3c7;
+color:#92400e
+}
+
+.tag-rejected{
+background:#fee2e2;
+color:#991b1b
+}
+
 .actions{
 display:flex;
 gap:8px;
 margin-top:13px
 }
 
-.actions a{
+.actions a,
+.actions button{
 flex:1;
 text-align:center;
 text-decoration:none;
 border-radius:10px;
 padding:10px;
-font-weight:650
-}
-
-.actions button{
-flex:1;
-border:0;
-border-radius:10px;
-padding:10px;
 font-weight:650;
+border:0;
+font-size:14px;
 cursor:pointer
 }
 
@@ -201,6 +226,16 @@ color:#166534
 .call{
 background:#e0e7ff;
 color:#3730a3
+}
+
+.btn-reject{
+background:#fee2e2;
+color:#991b1b
+}
+
+.btn-delete{
+background:#f1f5f9;
+color:#475569
 }
 
 .empty{
@@ -225,7 +260,11 @@ margin-top:10px;
 width:100%;
 padding:11px;
 border:0;
-border-radius:10px
+border-radius:10px;
+background:#2563eb;
+color:#fff;
+font-weight:700;
+cursor:pointer
 }
 
 .modal{
@@ -234,7 +273,8 @@ inset:0;
 background:#0008;
 display:none;
 align-items:flex-end;
-z-index:10
+z-index:10;
+backdrop-filter:blur(2px)
 }
 
 .box{
@@ -245,7 +285,7 @@ margin:auto;
 border-radius:20px 20px 0 0;
 padding:20px;
 max-height:92vh;
-overflow:auto
+overflow-y:auto
 }
 
 .box input,
@@ -267,8 +307,11 @@ margin-top:8px
 
 .close{
 background:#e5e7eb;
+color:#374151;
 border:0;
-border-radius:10px
+border-radius:10px;
+font-weight:650;
+cursor:pointer
 }
 
 .note{
@@ -319,1451 +362,470 @@ border-radius:10px;
 font-size:13px;
 margin-top:10px
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="wrap">
-
-<h1>📍 Yakınİş</h1>
-
-<p>İhtiyacın olan hizmeti yakınında bul.</p>
-
-</div>
+  <div class="wrap">
+    <h1>📍 Yakınİş</h1>
+    <p>İhtiyacın olan hizmeti yakınında bul.</p>
+  </div>
 </header>
 
 <main class="wrap">
+  <div class="search">
+    <input id="q" placeholder="Hizmet veya ilçe ara..." onkeyup="if(event.key==='Enter') render()">
+    <button onclick="render()">Ara</button>
+  </div>
 
-<div class="search">
+  <div class="quick">
+    <button onclick="showAll()">Tümü</button>
+    <button onclick="quickSearch('Tesisatçı')">🔧 Tesisatçı</button>
+    <button onclick="quickSearch('Elektrikçi')">⚡ Elektrikçi</button>
+    <button onclick="quickSearch('Temizlik')">🧹 Temizlik</button>
+    <button onclick="quickSearch('Nakliye')">🚚 Nakliye</button>
+  </div>
 
-<input
-id="q"
-placeholder="Hizmet veya ilçe ara..."
->
+  <div class="cats" id="cats"></div>
 
-<button onclick="render()">
-Ara
-</button>
+  <div class="section">
+    <h2>Hizmet verenler</h2>
+    <span id="count"></span>
+  </div>
 
-</div>
+  <div class="cards" id="cards"></div>
 
+  <div class="admin">
+    <b>İşletmeni eklemek ister misin?</b>
+    <div style="opacity:.8;margin-top:5px">Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.</div>
+    <button onclick="openModal()">+ İşletme Ekle</button>
+  </div>
 
-<div class="quick">
-
-<button onclick="showAll()">
-Tümü
-</button>
-
-<button onclick="quickSearch('Tesisatçı')">
-🔧 Tesisatçı
-</button>
-
-<button onclick="quickSearch('Elektrikçi')">
-⚡ Elektrikçi
-</button>
-
-<button onclick="quickSearch('Temizlik')">
-🧹 Temizlik
-</button>
-
-<button onclick="quickSearch('Nakliye')">
-🚚 Nakliye
-</button>
-
-</div>
-
-
-<div
-class="cats"
-id="cats">
-</div>
-
-
-<div class="section">
-
-<h2>
-Hizmet verenler
-</h2>
-
-<span id="count"></span>
-
-</div>
-
-
-<div
-class="cards"
-id="cards">
-</div>
-
-
-<div class="admin">
-
-<b>
-İşletmeni eklemek ister misin?
-</b>
-
-<div style="opacity:.8;margin-top:5px">
-
-Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.
-
-</div>
-
-<button onclick="openModal()">
-+ İşletme Ekle
-</button>
-
-</div>
-
-
-<div style="margin:18px 16px 30px;text-align:center">
-
-<button
-onclick="openAdmin()"
-style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px">
-
-Yönetici
-
-</button>
-
-</div>
-
+  <div style="margin:18px 16px 30px;text-align:center">
+    <button onclick="openAdmin()" style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px;cursor:pointer">Yönetici Paneli</button>
+  </div>
 </main>
 
-
 <!-- YÖNETİCİ MODALI -->
+<div class="modal" id="adminModal" onclick="if(event.target===this) closeAdmin()">
+  <div class="box">
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <h2>Yakınİş Yönetim</h2>
+      <input id="ae" type="email" placeholder="Yönetici e-posta" autocomplete="username">
+      <input id="ap" type="password" placeholder="Şifre" autocomplete="current-password" onkeyup="if(event.key==='Enter') adminLogin()">
+      <button class="submit" onclick="adminLogin()">Giriş yap</button>
+      <button class="close" onclick="closeAdmin()">Kapat</button>
+      <div id="amsg" class="note"></div>
+    </div>
 
-<div
-class="modal"
-id="adminModal">
+    <!-- MFA -->
+    <div id="mfaBox" style="display:none">
+      <div class="mfa-icon">🔐</div>
+      <h2 class="mfa-title">İki aşamalı doğrulama</h2>
+      <p class="mfa-text">Yönetici paneline devam etmek için Authenticator uygulamanızdaki 6 haneli kodu girin.</p>
+      <input id="mfaCode" class="mfa-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+      <button class="submit" onclick="verifyMFA()">Kodu doğrula</button>
+      <button class="close" onclick="cancelMFA()">İptal</button>
+      <div id="mfaMsg" class="note"></div>
+    </div>
 
-<div class="box">
-
-
-<!-- LOGIN -->
-
-<div id="loginBox">
-
-<h2>
-Yakınİş Yönetim
-</h2>
-
-
-<input
-id="ae"
-type="email"
-placeholder="Yönetici e-posta"
-autocomplete="username"
->
-
-
-<input
-id="ap"
-type="password"
-placeholder="Şifre"
-autocomplete="current-password"
->
-
-
-<button
-class="submit"
-onclick="adminLogin()">
-
-Giriş yap
-
-</button>
-
-
-<button
-class="close"
-onclick="closeAdmin()">
-
-Kapat
-
-</button>
-
-
-<div
-id="amsg"
-class="note">
+    <!-- PANEL -->
+    <div id="panel" style="display:none">
+      <h2>Yönetim Paneli</h2>
+      <div class="success">🔐 MFA doğrulandı. Yönetici işlemleri aktif.</div>
+      <button class="close" style="margin-top:10px" onclick="adminLogout()">Çıkış Yap</button>
+      <div id="adminList" style="margin-top:16px;display:grid;gap:12px"></div>
+    </div>
+  </div>
 </div>
 
+<!-- İŞLETME EKLEME MODALI -->
+<div class="modal" id="modal" onclick="if(event.target===this) closeModal()">
+  <div class="box">
+    <h2>İşletmeni ekle</h2>
+    <input id="n" placeholder="İşletme adı *">
+    <select id="c">
+      <option>Tesisatçı</option>
+      <option>Elektrikçi</option>
+      <option>Temizlik</option>
+      <option>Oto Yıkama</option>
+      <option>Nakliye</option>
+      <option>Özel Ders</option>
+      <option>Diğer</option>
+    </select>
+    <input id="d" placeholder="İlçe / mahalle *">
+    <input id="p" placeholder="Telefon (05xx...) *" inputmode="tel">
+    <textarea id="desc" placeholder="Kısaca hizmetlerini anlat"></textarea>
+    <button class="submit" onclick="addBusiness()">İlan Gönder</button>
+    <button class="close" onclick="closeModal()">Vazgeç</button>
+    <div class="note">İlan önce beklemeye alınır; yönetici onayından sonra yayınlanır.</div>
+  </div>
 </div>
-
-
-<!-- MFA -->
-
-<div
-id="mfaBox"
-style="display:none">
-
-<div class="mfa-icon">
-🔐
-</div>
-
-<h2 class="mfa-title">
-İki aşamalı doğrulama
-</h2>
-
-<p class="mfa-text">
-
-Yönetici paneline devam etmek için
-Authenticator uygulamanızdaki 6 haneli kodu girin.
-
-</p>
-
-
-<input
-id="mfaCode"
-class="mfa-code"
-type="text"
-inputmode="numeric"
-autocomplete="one-time-code"
-maxlength="6"
-placeholder="000000"
->
-
-
-<button
-class="submit"
-onclick="verifyMFA()">
-
-Kodu doğrula
-
-</button>
-
-
-<button
-class="close"
-onclick="cancelMFA()">
-
-İptal
-
-</button>
-
-
-<div
-id="mfaMsg"
-class="note">
-</div>
-
-</div>
-
-
-<!-- PANEL -->
-
-<div
-id="panel"
-style="display:none">
-
-<h2>
-Yönetim Paneli
-</h2>
-
-
-<div class="success">
-
-🔐 MFA doğrulandı. Yönetici işlemleri aktif.
-
-</div>
-
-
-<button
-class="close"
-onclick="adminLogout()">
-
-Çıkış
-
-</button>
-
-
-<div
-id="adminList"
-style="margin-top:12px">
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<!-- İŞLETME EKLEME -->
-
-<div
-class="modal"
-id="modal">
-
-<div class="box">
-
-<h2>
-İşletmeni ekle
-</h2>
-
-
-<input
-id="n"
-placeholder="İşletme adı"
->
-
-
-<select id="c">
-
-<option>
-Tesisatçı
-</option>
-
-<option>
-Elektrikçi
-</option>
-
-<option>
-Temizlik
-</option>
-
-<option>
-Oto Yıkama
-</option>
-
-<option>
-Nakliye
-</option>
-
-<option>
-Özel Ders
-</option>
-
-<option>
-Diğer
-</option>
-
-</select>
-
-
-<input
-id="d"
-placeholder="İlçe / mahalle"
->
-
-
-<input
-id="p"
-placeholder="Telefon (05xx...)"
-inputmode="tel"
->
-
-
-<textarea
-id="desc"
-placeholder="Kısaca hizmetlerini anlat">
-</textarea>
-
-
-<button
-class="submit"
-onclick="addBusiness()">
-
-İlan Gönder
-
-</button>
-
-
-<button
-class="close"
-onclick="closeModal()">
-
-Vazgeç
-
-</button>
-
-
-<div class="note">
-
-İlan önce beklemeye alınır; yönetici onayından sonra yayınlanır.
-
-</div>
-
-</div>
-
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
-
-
-window.YAKINIS_CONFIG={
-
-SUPABASE_URL:
-'https://nbwvmhwpvsmyaijwdgag.supabase.co',
-
-SUPABASE_ANON_KEY:
-'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
-
+window.YAKINIS_CONFIG = {
+  SUPABASE_URL: 'https://nbwvmhwpvsmyaijwdgag.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
 };
 
+const cfg = window.YAKINIS_CONFIG || {};
+const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
 
-const cfg=window.YAKINIS_CONFIG||{};
-
-
-const sb=supabase.createClient(
-cfg.SUPABASE_URL,
-cfg.SUPABASE_ANON_KEY
-);
-
-
-const cats=[
-
-['🔧','Tesisatçı'],
-['⚡','Elektrikçi'],
-['🧹','Temizlik'],
-['🚗','Oto Yıkama'],
-['🚚','Nakliye'],
-['📚','Özel Ders']
-
+const cats = [
+  ['🔧','Tesisatçı'],
+  ['⚡','Elektrikçi'],
+  ['🧹','Temizlik'],
+  ['🚗','Oto Yıkama'],
+  ['🚚','Nakliye'],
+  ['📚','Özel Ders']
 ];
 
+let data = [];
+let mfaFactorId = '';
+let mfaChallengeId = '';
 
-let data=[];
-
-
-/* MFA DEĞİŞKENLERİ */
-
-let mfaFactorId='';
-let mfaChallengeId='';
-
-
-const catsEl=document.getElementById('cats');
-const cards=document.getElementById('cards');
-const count=document.getElementById('count');
-const q=document.getElementById('q');
-
+const catsEl = document.getElementById('cats');
+const cards = document.getElementById('cards');
+const count = document.getElementById('count');
+const q = document.getElementById('q');
 
 function esc(s){
-
-return String(s||'').replace(/[&<>"']/g,m=>({
-
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-
-}[m]));
-
+  return String(s||'').replace(/[&<>"']/g, m => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[m]));
 }
-
-
-/* KATEGORİLER */
 
 function renderCats(){
-
-catsEl.innerHTML=cats.map(x=>
-
-`<div
-class="cat"
-onclick="filterCat('${x[1]}')">
-
-<span>${x[0]}</span>${x[1]}
-
-</div>`
-
-).join('');
-
+  catsEl.innerHTML = cats.map(x =>
+    `<div class="cat" onclick="filterCat('${x[1]}')">
+      <span>${x[0]}</span>${x[1]}
+    </div>`
+  ).join('');
 }
-
-
-/* İLANLARI YÜKLE */
 
 async function load(){
+  const r = await sb
+    .from('businesses')
+    .select('*')
+    .eq('status','approved')
+    .order('created_at',{ascending:false});
 
-const r=await sb
-.from('businesses')
-.select('*')
-.eq('status','approved')
-.order('created_at',{ascending:false});
+  if(r.error){
+    cards.innerHTML = '<div class="empty">Veriler yüklenemedi.</div>';
+    return;
+  }
 
-
-if(r.error){
-
-cards.innerHTML=
-'<div class="empty">Veriler yüklenemedi.</div>';
-
-return;
-
+  data = r.data || [];
+  render();
 }
-
-
-data=r.data||[];
-
-render();
-
-}
-
-
-/* ARAMA */
 
 function render(cat=''){
+  function normalize(s){
+    return String(s||'')
+      .toLocaleLowerCase('tr-TR')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,'')
+      .replace(/ı/g,'i');
+  }
 
-function normalize(s){
+  const query = normalize(q.value);
 
-return String(s||'')
-.toLocaleLowerCase('tr-TR')
-.normalize('NFD')
-.replace(/[\u0300-\u036f]/g,'')
-.replace(/ı/g,'i');
+  let a = data.filter(x =>
+    (!cat || x.category === cat) &&
+    (!query ||
+      normalize(x.name).includes(query) ||
+      normalize(x.category).includes(query) ||
+      normalize(x.district).includes(query) ||
+      normalize(x.description).includes(query)
+    )
+  );
 
+  count.textContent = a.length + ' ilan';
+
+  cards.innerHTML = a.map(x => {
+    const phone = String(x.phone||'').replace(/\D/g,'');
+    const waPhone = phone.startsWith('90') ? phone : (phone.startsWith('0') ? '9' + phone : '90' + phone);
+
+    return `
+    <div class="card">
+      <div class="top">
+        <div>
+          <div class="name">${esc(x.name)}</div>
+          <div class="meta">${esc(x.category)} · ${esc(x.district)}</div>
+        </div>
+        <div class="tag">Onaylı</div>
+      </div>
+      ${x.description ? `<div style="font-size:13px;color:#475569;margin-top:8px">${esc(x.description)}</div>` : ''}
+      <div class="actions">
+        <a class="wa" href="https://wa.me/${waPhone}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="call" href="tel:${esc(x.phone)}">Ara</a>
+      </div>
+    </div>`;
+  }).join('') || '<div class="empty">Bu aramada ilan bulunamadı.</div>';
 }
 
-
-const query=normalize(q.value);
-
-
-let a=data.filter(x=>
-
-(!cat||x.category===cat)&&
-
-(!query||
-
-normalize(x.name).includes(query)||
-
-normalize(x.category).includes(query)||
-
-normalize(x.district).includes(query)||
-
-normalize(x.description).includes(query)
-
-)
-
-);
-
-
-count.textContent=a.length+' ilan';
-
-
-cards.innerHTML=a.map(x=>{
-
-const phone=
-String(x.phone||'').replace(/\D/g,'');
-
-
-const waPhone=
-phone.startsWith('90')
-?phone
-:(phone.startsWith('0')?'9'+phone:'90'+phone);
-
-
-return `
-
-<div class="card">
-
-<div class="top">
-
-<div>
-
-<div class="name">
-${esc(x.name)}
-</div>
-
-<div class="meta">
-${esc(x.category)} · ${esc(x.district)}
-</div>
-
-</div>
-
-<div class="tag">
-Onaylı
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<a
-class="wa"
-href="https://wa.me/${waPhone}"
-target="_blank"
-rel="noopener">
-
-WhatsApp
-
-</a>
-
-
-<a
-class="call"
-href="tel:${esc(x.phone)}">
-
-Ara
-
-</a>
-
-</div>
-
-</div>
-
-`;
-
-}).join('') ||
-
-'<div class="empty">
-Bu aramada ilan bulunamadı.
-</div>';
-
-}
-
-
-function filterCat(c){
-
-q.value=c;
-
-render(c);
-
-}
-
-
-function quickSearch(c){
-
-q.value=c;
-
-render();
-
-}
-
-
-function showAll(){
-
-q.value='';
-
-render();
-
-}
-
-
-/* İŞLETME MODALI */
-
-function openModal(){
-
-document.getElementById('modal').style.display='flex';
-
-}
-
-
-function closeModal(){
-
-document.getElementById('modal').style.display='none';
-
-}
-
-
-/* İŞLETME EKLE */
+function filterCat(c){ q.value = c; render(c); }
+function quickSearch(c){ q.value = c; render(); }
+function showAll(){ q.value = ''; render(); }
+
+function openModal(){ document.getElementById('modal').style.display = 'flex'; }
+function closeModal(){ document.getElementById('modal').style.display = 'none'; }
 
 async function addBusiness(){
+  const row = {
+    name: document.getElementById('n').value.trim(),
+    category: document.getElementById('c').value,
+    district: document.getElementById('d').value.trim(),
+    phone: document.getElementById('p').value.trim(),
+    description: document.getElementById('desc').value.trim(),
+    status: 'pending'
+  };
 
-const row={
+  if(!row.name || !row.district || !row.phone){
+    alert('İşletme adı, ilçe ve telefon zorunludur.');
+    return;
+  }
 
-name:n.value.trim(),
+  const r = await sb.from('businesses').insert(row);
 
-category:c.value,
+  if(r.error){
+    alert(r.error.message);
+    return;
+  }
 
-district:d.value.trim(),
+  try{
+    await fetch('https://ntfy.sh/yakinis-basvuru-2026-muhsin', {
+      method: 'POST',
+      body: `Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
+    });
+  }catch(e){
+    console.log('Bildirim gönderilemedi.');
+  }
 
-phone:p.value.trim(),
+  closeModal();
+  document.getElementById('n').value = '';
+  document.getElementById('d').value = '';
+  document.getElementById('p').value = '';
+  document.getElementById('desc').value = '';
 
-description:desc.value.trim(),
-
-status:'pending'
-
-};
-
-
-if(!row.name||!row.district||!row.phone){
-
-alert(
-'İşletme adı, ilçe ve telefon zorunlu.'
-);
-
-return;
-
+  alert('İlanın alındı. Yönetici onayından sonra yayınlanacak.');
 }
 
-
-const r=await sb
-.from('businesses')
-.insert(row);
-
-
-if(r.error){
-
-alert(r.error.message);
-
-return;
-
-}
-
-
-/* YENİ BAŞVURU BİLDİRİMİ */
-
-try{
-
-await fetch(
-'https://ntfy.sh/yakinis-basvuru-2026-muhsin',
-{
-method:'POST',
-body:
-`Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
-}
-);
-
-}catch(e){
-
-console.log('Bildirim gönderilemedi.');
-
-}
-
-
-closeModal();
-
-
-n.value='';
-d.value='';
-p.value='';
-desc.value='';
-
-
-alert(
-'İlanın alındı. Yönetici onayından sonra yayınlanacak.'
-);
-
-}
-
-
-/* =================================================
-   YÖNETİCİ / MFA
-================================================= */
-
-
-/* YÖNETİCİYİ AÇ */
-
+/* YÖNETİCİ & MFA SÜREÇLERİ */
 async function openAdmin(){
+  document.getElementById('adminModal').style.display = 'flex';
+  resetAdminMessages();
+  showLoginBox();
 
-document.getElementById('adminModal').style.display='flex';
+  const s = await sb.auth.getSession();
+  if(s.error || !s.data.session) return;
 
-resetAdminMessages();
+  const aal = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(aal.error) return;
 
-showLoginBox();
+  if(aal.data.currentLevel === 'aal2'){
+    showAdminPanel();
+    return;
+  }
 
-
-const s=await sb.auth.getSession();
-
-
-if(s.error){
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-esc(s.error.message)+
-'</div>';
-
-return;
-
+  if(aal.data.currentLevel === 'aal1' && aal.data.nextLevel === 'aal2'){
+    await startMFA();
+    return;
+  }
 }
-
-
-/*
-Oturum yoksa giriş ekranında kal.
-*/
-
-if(!s.data.session){
-
-return;
-
-}
-
-
-/*
-Mevcut oturumun MFA seviyesini kontrol et.
-*/
-
-const aal=
-await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-
-
-if(aal.error){
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-esc(aal.error.message)+
-'</div>';
-
-return;
-
-}
-
-
-/*
-Zaten MFA doğrulandıysa doğrudan panel.
-*/
-
-if(aal.data.currentLevel==='aal2'){
-
-showAdminPanel();
-
-return;
-
-}
-
-
-/*
-Oturum var ancak MFA doğrulaması gerekiyorsa.
-*/
-
-if(
-aal.data.currentLevel==='aal1' &&
-aal.data.nextLevel==='aal2'
-){
-
-await startMFA();
-
-return;
-
-}
-
-
-/*
-MFA durumu uygun değilse giriş ekranında kal.
-*/
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-'Yönetici hesabı için MFA doğrulaması gerekiyor.'+
-'</div>';
-
-}
-
-
-/* LOGIN EKRANINI GÖSTER */
 
 function showLoginBox(){
-
-document.getElementById('loginBox').style.display='block';
-
-document.getElementById('mfaBox').style.display='none';
-
-document.getElementById('panel').style.display='none';
-
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('mfaBox').style.display = 'none';
+  document.getElementById('panel').style.display = 'none';
 }
-
-
-/* MFA EKRANINI GÖSTER */
 
 function showMFABox(){
-
-document.getElementById('loginBox').style.display='none';
-
-document.getElementById('mfaBox').style.display='block';
-
-document.getElementById('panel').style.display='none';
-
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('mfaBox').style.display = 'block';
+  document.getElementById('panel').style.display = 'none';
 }
-
-
-/* PANELİ GÖSTER */
 
 function showAdminPanel(){
-
-document.getElementById('loginBox').style.display='none';
-
-document.getElementById('mfaBox').style.display='none';
-
-document.getElementById('panel').style.display='block';
-
-loadAdmin();
-
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('mfaBox').style.display = 'none';
+  document.getElementById('panel').style.display = 'block';
+  loadAdmin();
 }
 
-
-/* YÖNETİCİ MODALINI KAPAT */
-
-function closeAdmin(){
-
-document.getElementById('adminModal').style.display='none';
-
-}
-
-
-/* ADMIN LOGIN */
+function closeAdmin(){ document.getElementById('adminModal').style.display = 'none'; }
 
 async function adminLogin(){
+  const email = document.getElementById('ae').value.trim();
+  const password = document.getElementById('ap').value;
 
-const email=
-document.getElementById('ae').value.trim();
+  if(!email || !password){
+    document.getElementById('amsg').innerHTML = '<div class="error">E-posta ve şifre zorunlu.</div>';
+    return;
+  }
 
+  document.getElementById('amsg').textContent = 'Giriş kontrol ediliyor...';
 
-const password=
-document.getElementById('ap').value;
+  const r = await sb.auth.signInWithPassword({ email, password });
+  if(r.error){
+    document.getElementById('amsg').innerHTML = `<div class="error">${esc(r.error.message)}</div>`;
+    return;
+  }
 
+  const aal = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(aal.error){
+    document.getElementById('amsg').innerHTML = `<div class="error">${esc(aal.error.message)}</div>`;
+    return;
+  }
 
-if(!email||!password){
+  if(aal.data.currentLevel === 'aal2'){
+    showAdminPanel();
+    return;
+  }
 
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-'E-posta ve şifre zorunlu.'+
-'</div>';
+  if(aal.data.nextLevel === 'aal2'){
+    await startMFA();
+    return;
+  }
 
-return;
-
+  document.getElementById('amsg').innerHTML = '<div class="error">Hesapta tanımlı MFA bulunamadı.</div>';
 }
-
-
-document.getElementById('amsg').textContent=
-'Giriş kontrol ediliyor...';
-
-
-const r=
-await sb.auth.signInWithPassword({
-
-email:email,
-
-password:password
-
-});
-
-
-if(r.error){
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-esc(r.error.message)+
-'</div>';
-
-return;
-
-}
-
-
-/*
-Şifre doğru.
-MFA seviyesini kontrol et.
-*/
-
-const aal=
-await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-
-
-if(aal.error){
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-esc(aal.error.message)+
-'</div>';
-
-return;
-
-}
-
-
-/*
-Zaten MFA doğrulandıysa panel.
-*/
-
-if(aal.data.currentLevel==='aal2'){
-
-showAdminPanel();
-
-return;
-
-}
-
-
-/*
-MFA gerekiyorsa challenge başlat.
-*/
-
-if(aal.data.nextLevel==='aal2'){
-
-await startMFA();
-
-return;
-
-}
-
-
-/*
-MFA yoksa panel açılmaz.
-*/
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-'Bu yönetici hesabında doğrulanmış MFA faktörü bulunamadı.'+
-'</div>';
-
-}
-
-
-/* MFA CHALLENGE BAŞLAT */
 
 async function startMFA(){
+  document.getElementById('mfaMsg').textContent = 'Hazırlanıyor...';
+  const factors = await sb.auth.mfa.listFactors();
 
-console.log('MFA BAŞLADI');
+  if(factors.error){
+    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(factors.error.message)}</div>`;
+    return;
+  }
 
+  const totpFactors = (factors.data.totp || []).filter(x => x.status === 'verified');
+  if(!totpFactors.length){
+    showLoginBox();
+    document.getElementById('amsg').innerHTML = '<div class="error">Doğrulanmış MFA bulunamadı.</div>';
+    return;
+  }
 
-document.getElementById('mfaMsg').textContent=
-'Güvenlik doğrulaması hazırlanıyor...';
+  mfaFactorId = totpFactors[0].id;
+  const challenge = await sb.auth.mfa.challenge({ factorId: mfaFactorId });
 
+  if(challenge.error){
+    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(challenge.error.message)}</div>`;
+    return;
+  }
 
-const factors=
-await sb.auth.mfa.listFactors();
+  mfaChallengeId = challenge.data.id;
+  document.getElementById('mfaCode').value = '';
+  document.getElementById('mfaMsg').textContent = 'Authenticator 6 haneli kodu girin.';
+  showMFABox();
 
-
-if(factors.error){
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-esc(factors.error.message)+
-'</div>';
-
-return;
-
+  setTimeout(() => document.getElementById('mfaCode').focus(), 100);
 }
-
-
-/*
-TOTP faktörlerini al.
-*/
-
-const totpFactors=
-(factors.data.totp||[])
-.filter(x=>x.status==='verified');
-
-
-if(!totpFactors.length){
-
-showLoginBox();
-
-document.getElementById('amsg').innerHTML=
-'<div class="error">'+
-'Doğrulanmış Authenticator MFA faktörü bulunamadı.'+
-'</div>';
-
-return;
-
-}
-
-
-/*
-İlk doğrulanmış TOTP faktörünü kullan.
-*/
-
-mfaFactorId=
-totpFactors[0].id;
-
-
-const challenge=
-await sb.auth.mfa.challenge({
-
-factorId:mfaFactorId
-
-});
-
-
-if(challenge.error){
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-esc(challenge.error.message)+
-'</div>';
-
-return;
-
-}
-
-
-mfaChallengeId=
-challenge.data.id;
-
-
-document.getElementById('mfaCode').value='';
-
-
-document.getElementById('mfaMsg').textContent=
-'Authenticator uygulamanızdaki 6 haneli kodu girin.';
-
-
-showMFABox();
-
-
-setTimeout(()=>{
-
-document.getElementById('mfaCode').focus();
-
-},100);
-
-}
-
-
-/* MFA KODUNU DOĞRULA */
 
 async function verifyMFA(){
+  const code = document.getElementById('mfaCode').value.replace(/\D/g,'');
 
-const code=
-document.getElementById('mfaCode').value
-.replace(/\D/g,'');
+  if(code.length !== 6){
+    document.getElementById('mfaMsg').innerHTML = '<div class="error">Lütfen 6 haneli kodu girin.</div>';
+    return;
+  }
 
+  const result = await sb.auth.mfa.verify({
+    factorId: mfaFactorId,
+    challengeId: mfaChallengeId,
+    code: code
+  });
 
-if(code.length!==6){
+  if(result.error){
+    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(result.error.message)}</div>`;
+    return;
+  }
 
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-'Lütfen 6 haneli doğrulama kodunu girin.'+
-'</div>';
-
-return;
-
+  showAdminPanel();
 }
-
-
-if(!mfaFactorId||!mfaChallengeId){
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.'+
-'</div>';
-
-return;
-
-}
-
-
-document.getElementById('mfaMsg').textContent=
-'Kod doğrulanıyor...';
-
-
-const result=
-await sb.auth.mfa.verify({
-
-factorId:mfaFactorId,
-
-challengeId:mfaChallengeId,
-
-code:code
-
-});
-
-
-if(result.error){
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-esc(result.error.message)+
-'</div>';
-
-return;
-
-}
-
-
-/*
-MFA başarılı.
-Session artık aal2 olmalı.
-*/
-
-const aal=
-await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-
-
-if(
-aal.error ||
-aal.data.currentLevel!=='aal2'
-){
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="error">'+
-'MFA doğrulandı ancak güvenlik seviyesi aal2 olarak alınamadı.'+
-'</div>';
-
-return;
-
-}
-
-
-/*
-Her şey başarılı.
-*/
-
-document.getElementById('mfaMsg').innerHTML=
-'<div class="success">'+
-'✓ MFA doğrulandı.'+
-'</div>';
-
-
-setTimeout(()=>{
-
-showAdminPanel();
-
-},300);
-
-}
-
-
-/* MFA İPTAL */
 
 async function cancelMFA(){
-
-mfaFactorId='';
-
-mfaChallengeId='';
-
-
-await sb.auth.signOut();
-
-
-showLoginBox();
-
-
-document.getElementById('amsg').textContent=
-'Giriş iptal edildi.';
-
+  mfaFactorId = '';
+  mfaChallengeId = '';
+  await sb.auth.signOut();
+  showLoginBox();
+  document.getElementById('amsg').textContent = 'Giriş iptal edildi.';
 }
-
-
-/* MESAJLARI TEMİZLE */
 
 function resetAdminMessages(){
-
-document.getElementById('amsg').textContent='';
-
-document.getElementById('mfaMsg').textContent='';
-
-document.getElementById('mfaCode').value='';
-
-mfaFactorId='';
-
-mfaChallengeId='';
-
+  document.getElementById('amsg').textContent = '';
+  document.getElementById('mfaMsg').textContent = '';
+  document.getElementById('mfaCode').value = '';
+  mfaFactorId = '';
+  mfaChallengeId = '';
 }
 
-
-/* ENTER İLE MFA DOĞRULAMA */
-
-document
-.getElementById('mfaCode')
-.addEventListener('keydown',function(e){
-
-if(e.key==='Enter'){
-
-verifyMFA();
-
-}
-
+document.getElementById('mfaCode').addEventListener('keydown', e => {
+  if(e.key === 'Enter') verifyMFA();
 });
 
-
-/* ADMIN İLANLARI */
-
 async function loadAdmin(){
+  const box = document.getElementById('adminList');
+  const r = await sb.from('businesses').select('*').order('created_at',{ascending:false});
 
-const box=
-document.getElementById('adminList');
+  if(r.error){
+    box.innerHTML = `<div class="note">${esc(r.error.message)}</div>`;
+    return;
+  }
 
+  box.innerHTML = (r.data || []).map(x => {
+    let statusTag = '<span class="tag">Onaylı</span>';
+    if(x.status === 'pending') statusTag = '<span class="tag tag-pending">Bekliyor</span>';
+    if(x.status === 'rejected') statusTag = '<span class="tag tag-rejected">Reddedildi</span>';
 
-const r=
-await sb
-.from('businesses')
-.select('*')
-.order('created_at',{ascending:false});
-
-
-if(r.error){
-
-box.innerHTML=
-'<div class="note">'+
-esc(r.error.message)+
-'</div>';
-
-return;
-
+    return `
+    <div class="card">
+      <div class="top">
+        <b>${esc(x.name)}</b>
+        ${statusTag}
+      </div>
+      <div class="meta">${esc(x.category)} · ${esc(x.district)} · ${esc(x.phone)}</div>
+      ${x.description ? `<div style="font-size:12px;color:#64748b;margin-top:4px">${esc(x.description)}</div>` : ''}
+      <div class="actions">
+        ${x.status !== 'approved' ? `<button class="submit" onclick="setStatus('${esc(x.id)}','approved')">Onayla</button>` : ''}
+        ${x.status !== 'rejected' ? `<button class="btn-reject" onclick="setStatus('${esc(x.id)}','rejected')">Reddet</button>` : ''}
+        <button class="btn-delete" onclick="removeListing('${esc(x.id)}')">Sil</button>
+      </div>
+    </div>`;
+  }).join('') || '<div class="empty">İlan yok.</div>';
 }
 
-
-box.innerHTML=
-(r.data||[]).map(x=>
-
-`<div class="card">
-
-<b>${esc(x.name)}</b>
-
-<div class="meta">
-
-${esc(x.category)}
-· ${esc(x.district)}
-· ${esc(x.phone)}
-· ${esc(x.status)}
-
-</div>
-
-
-<div class="actions">
-
-${
-x.status!=='approved'
-
-?
-
-`<button
-class="submit"
-onclick="setStatus('${x.id}','approved')">
-
-Onayla
-
-</button>`
-
-:''
-
+async function setStatus(id, status){
+  const r = await sb.from('businesses').update({ status }).eq('id', id);
+  if(r.error) alert(r.error.message);
+  else loadAdmin();
 }
-
-
-${
-x.status!=='rejected'
-
-?
-
-`<button
-onclick="setStatus('${x.id}','rejected')">
-
-Reddet
-
-</button>`
-
-:''
-
-}
-
-
-<button
-onclick="removeListing('${x.id}')">
-
-Sil
-
-</button>
-
-</div>
-
-</div>`
-
-).join('') ||
-
-'<div class="empty">İlan yok.</div>';
-
-}
-
-
-/* DURUM DEĞİŞTİR */
-
-async function setStatus(id,status){
-
-const r=
-await sb
-.from('businesses')
-.update({status})
-.eq('id',id);
-
-
-if(r.error){
-
-alert(r.error.message);
-
-}else{
-
-loadAdmin();
-
-}
-
-}
-
-
-/* İLAN SİL */
 
 async function removeListing(id){
-
-if(!confirm('İlan silinsin mi?')) return;
-
-
-const r=
-await sb
-.from('businesses')
-.delete()
-.eq('id',id);
-
-
-if(r.error){
-
-alert(r.error.message);
-
-}else{
-
-loadAdmin();
-
+  if(!confirm('İlan silinsin mi?')) return;
+  const r = await sb.from('businesses').delete().eq('id', id);
+  if(r.error) alert(r.error.message);
+  else loadAdmin();
 }
-
-}
-
-
-/* ÇIKIŞ */
 
 async function adminLogout(){
-
-await sb.auth.signOut();
-
-
-mfaFactorId='';
-
-mfaChallengeId='';
-
-
-document.getElementById('panel').style.display='none';
-
-document.getElementById('mfaBox').style.display='none';
-
-document.getElementById('loginBox').style.display='block';
-
-
-document.getElementById('ae').value='';
-
-document.getElementById('ap').value='';
-
-document.getElementById('mfaCode').value='';
-
-document.getElementById('amsg').textContent='';
-
-document.getElementById('mfaMsg').textContent='';
-
+  await sb.auth.signOut();
+  resetAdminMessages();
+  showLoginBox();
 }
 
-
-/* BAŞLANGIÇ */
-
+/* BAŞLANGIÇ ÇALIŞTIRMA */
 renderCats();
-
 load();
 
-
-/* SERVICE WORKER */
-
 if('serviceWorker' in navigator){
-
-navigator.serviceWorker
-.register('sw.js')
-.catch(()=>{});
-
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
-
 </script>
 
 </body>
