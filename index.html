@@ -12,357 +12,55 @@
 <title>Yakınİş — İhtiyacın, yakında.</title>
 
 <style>
-*{
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f6f8fc;color:#0f172a}
+header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:20px 18px 40px}
+.wrap{max-width:720px;margin:auto}
+.top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.top-nav .logo{font-size:24px;font-weight:800;margin:0}
+.auth-btns{display:flex;gap:8px}
+.btn-auth{background:rgba(255,255,255,0.15);color:#fff;border:0;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
+.btn-auth:hover{background:rgba(255,255,255,0.25)}
+header p{margin:0;color:#dbeafe;font-size:14px}
 
-body{
-margin:0;
-font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-background:#f6f8fc;
-color:#0f172a
-}
+.search{margin:-22px 16px 18px;background:#fff;border-radius:16px;padding:8px;border:1px solid #e2e8f0;box-shadow:0 10px 28px #0f172a18;display:flex;gap:8px}
+.search input{flex:1;border:0;outline:0;font-size:15px;padding:8px;min-width:0;background:transparent}
+.search button,.submit{border:0;border-radius:10px;background:#2563eb;color:#fff;padding:10px 16px;font-weight:700;cursor:pointer}
 
-header{
-background:linear-gradient(135deg,#0f172a,#1d4ed8);
-color:#fff;
-padding:28px 18px 42px
-}
+.quick{display:flex;gap:8px;overflow-x:auto;padding:0 16px 5px;scrollbar-width:none}
+.quick::-webkit-scrollbar{display:none}
+.quick button{border:1px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:8px 14px;white-space:nowrap;font-weight:650;cursor:pointer}
 
-.wrap{
-max-width:720px;
-margin:auto
-}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 16px 0}
+.cat{background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:14px 8px;text-align:center;font-weight:650;cursor:pointer;box-shadow:0 4px 14px #0f172a0a}
+.cat span{display:block;font-size:24px;margin-bottom:4px}
 
-header h1{
-margin:0 0 7px;
-font-size:30px;
-letter-spacing:-.5px
-}
+.section{padding:20px 16px 10px;display:flex;justify-content:space-between;align-items:center}
+.section h2{font-size:18px;margin:0}
 
-header p{
-margin:0;
-color:#dbeafe;
-font-size:15px
-}
+.cards{padding:0 16px;display:grid;gap:12px}
+.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;box-shadow:0 5px 18px #0f172a0a;position:relative}
+.top{display:flex;justify-content:space-between;gap:10px}
+.name{font-weight:750;font-size:16px}
+.meta{color:#64748b;font-size:13px;margin-top:2px}
+.fav-btn{position:absolute;top:14px;right:14px;background:none;border:0;font-size:18px;cursor:pointer;color:#94a3b8}
+.fav-btn.active{color:#ef4444}
 
-.search{
-margin:-22px 16px 18px;
-background:#fff;
-border-radius:16px;
-padding:9px;
-border:1px solid #e2e8f0;
-box-shadow:0 10px 28px #0f172a18;
-display:flex;
-gap:8px
-}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions a,.actions button{flex:1;text-align:center;text-decoration:none;border-radius:10px;padding:10px;font-weight:650;border:0;font-size:13px;cursor:pointer}
+.wa{background:#dcfce7;color:#166534}
+.call{background:#e0e7ff;color:#3730a3}
 
-.search input{
-flex:1;
-border:0;
-outline:0;
-font-size:16px;
-padding:10px;
-min-width:0;
-background:transparent
-}
-
-.search button,
-.submit{
-border:0;
-border-radius:11px;
-background:#2563eb;
-color:#fff;
-padding:11px 16px;
-font-weight:750;
-cursor:pointer;
-transition:background .2s
-}
-
-.search button:active,
-.submit:active{
-background:#1d4ed8
-}
-
-.quick{
-display:flex;
-gap:8px;
-overflow-x:auto;
-padding:0 16px 5px;
-scrollbar-width:none
-}
-
-.quick::-webkit-scrollbar{
-display:none
-}
-
-.quick button{
-border:1px solid #dbeafe;
-background:#eff6ff;
-color:#1d4ed8;
-border-radius:999px;
-padding:8px 14px;
-white-space:nowrap;
-font-weight:650;
-cursor:pointer
-}
-
-.cats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-padding:14px 16px 0
-}
-
-.cat{
-background:#fff;
-border:1px solid #e2e8f0;
-border-radius:15px;
-padding:15px 8px;
-text-align:center;
-font-weight:650;
-cursor:pointer;
-box-shadow:0 4px 14px #0f172a0a;
-transition:transform .1s
-}
-
-.cat:active{
-transform:scale(.97)
-}
-
-.cat span{
-display:block;
-font-size:25px;
-margin-bottom:5px
-}
-
-.section{
-padding:22px 16px 9px;
-display:flex;
-justify-content:space-between;
-align-items:center
-}
-
-.section h2{
-font-size:19px;
-margin:0
-}
-
-.cards{
-padding:0 16px;
-display:grid;
-gap:12px
-}
-
-.card{
-background:#fff;
-border-radius:16px;
-padding:16px;
-border:1px solid #e2e8f0;
-box-shadow:0 5px 18px #0f172a0a
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-gap:10px
-}
-
-.name{
-font-weight:750;
-font-size:17px
-}
-
-.meta{
-color:#64748b;
-font-size:14px;
-margin-top:4px
-}
-
-.tag{
-background:#dcfce7;
-color:#166534;
-padding:5px 9px;
-border-radius:999px;
-font-size:12px;
-font-weight:750;
-height:max-content
-}
-
-.tag-pending{
-background:#fef3c7;
-color:#92400e
-}
-
-.tag-rejected{
-background:#fee2e2;
-color:#991b1b
-}
-
-.actions{
-display:flex;
-gap:8px;
-margin-top:13px
-}
-
-.actions a,
-.actions button{
-flex:1;
-text-align:center;
-text-decoration:none;
-border-radius:10px;
-padding:10px;
-font-weight:650;
-border:0;
-font-size:14px;
-cursor:pointer
-}
-
-.wa{
-background:#dcfce7;
-color:#166534
-}
-
-.call{
-background:#e0e7ff;
-color:#3730a3
-}
-
-.btn-reject{
-background:#fee2e2;
-color:#991b1b
-}
-
-.btn-delete{
-background:#f1f5f9;
-color:#475569
-}
-
-.empty{
-padding:32px 16px;
-text-align:center;
-color:#64748b;
-background:#fff;
-border:1px dashed #cbd5e1;
-border-radius:16px
-}
-
-.admin{
-margin:26px 16px;
-background:linear-gradient(135deg,#0f172a,#1e293b);
-color:#fff;
-border-radius:18px;
-padding:18px
-}
-
-.admin button{
-margin-top:10px;
-width:100%;
-padding:11px;
-border:0;
-border-radius:10px;
-background:#2563eb;
-color:#fff;
-font-weight:700;
-cursor:pointer
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:#0008;
-display:none;
-align-items:flex-end;
-z-index:10;
-backdrop-filter:blur(2px)
-}
-
-.box{
-background:#fff;
-width:100%;
-max-width:720px;
-margin:auto;
-border-radius:20px 20px 0 0;
-padding:20px;
-max-height:92vh;
-overflow-y:auto
-}
-
-.box input,
-.box select,
-.box textarea{
-width:100%;
-padding:12px;
-margin:7px 0;
-border:1px solid #d1d5db;
-border-radius:10px;
-font:inherit
-}
-
-.box button{
-width:100%;
-padding:12px;
-margin-top:8px
-}
-
-.close{
-background:#e5e7eb;
-color:#374151;
-border:0;
-border-radius:10px;
-font-weight:650;
-cursor:pointer
-}
-
-.note{
-font-size:12px;
-color:#64748b;
-margin-top:10px
-}
-
-.mfa-icon{
-font-size:42px;
-text-align:center;
-margin-bottom:8px
-}
-
-.mfa-title{
-text-align:center;
-margin:0 0 6px
-}
-
-.mfa-text{
-text-align:center;
-color:#64748b;
-font-size:14px;
-margin:0 0 15px
-}
-
-.mfa-code{
-text-align:center;
-font-size:26px !important;
-letter-spacing:7px;
-font-weight:750
-}
-
-.success{
-background:#dcfce7;
-color:#166534;
-padding:10px;
-border-radius:10px;
-font-size:13px;
-margin-top:10px
-}
-
-.error{
-background:#fee2e2;
-color:#991b1b;
-padding:10px;
-border-radius:10px;
-font-size:13px;
-margin-top:10px
-}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(3px);padding:16px}
+.box{background:#fff;width:100%;max-width:440px;border-radius:20px;padding:22px;max-height:90vh;overflow-y:auto}
+.box h2{margin-top:0;font-size:20px;color:#0f172a}
+.box input,.box select,.box textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#f8fafc}
+.box button{width:100%;padding:11px;margin-top:6px}
+.close{background:#f1f5f9;color:#475569;border:0;border-radius:10px;font-weight:650;cursor:pointer}
+.tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:10px;font-weight:700;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.active{color:#2563eb;border-color:#2563eb}
+.empty{padding:30px;text-align:center;color:#64748b;background:#fff;border:1px dashed #cbd5e1;border-radius:16px}
 </style>
 </head>
 
@@ -370,8 +68,14 @@ margin-top:10px
 
 <header>
   <div class="wrap">
-    <h1>📍 Yakınİş</h1>
-    <p>İhtiyacın olan hizmeti yakınında bul.</p>
+    <div class="top-nav">
+      <h1 class="logo">📍 Yakınİş</h1>
+      <div class="auth-btns">
+        <button class="btn-auth" onclick="openAuthModal('user')">👤 Kullanıcı Girişi</button>
+        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İşletme Girişi</button>
+      </div>
+    </div>
+    <p>İhtiyacın olan hizmeti yakınında bul veya işletmeni tanıt.</p>
   </div>
 </header>
 
@@ -392,77 +96,44 @@ margin-top:10px
   <div class="cats" id="cats"></div>
 
   <div class="section">
-    <h2>Hizmet verenler</h2>
-    <span id="count"></span>
+    <h2>Hizmet Verenler</h2>
+    <span id="count" style="font-size:13px;color:#64748b"></span>
   </div>
 
   <div class="cards" id="cards"></div>
-
-  <div class="admin">
-    <b>İşletmeni eklemek ister misin?</b>
-    <div style="opacity:.8;margin-top:5px">Ücretsiz ilan gönder; yayınlanmadan önce kontrol edilir.</div>
-    <button onclick="openModal()">+ İşletme Ekle</button>
-  </div>
-
-  <div style="margin:18px 16px 30px;text-align:center">
-    <button onclick="openAdmin()" style="background:none;border:0;color:#64748b;text-decoration:underline;padding:10px;cursor:pointer">Yönetici Paneli</button>
-  </div>
 </main>
 
-<!-- YÖNETİCİ MODALI -->
-<div class="modal" id="adminModal" onclick="if(event.target===this) closeAdmin()">
+<!-- GİRİŞ & KAYIT MODALI -->
+<div class="modal" id="authModal" onclick="if(event.target===this) closeAuthModal()">
   <div class="box">
-    <!-- LOGIN -->
-    <div id="loginBox">
-      <h2>Yakınİş Yönetim</h2>
-      <input id="ae" type="email" placeholder="Yönetici e-posta" autocomplete="username">
-      <input id="ap" type="password" placeholder="Şifre" autocomplete="current-password" onkeyup="if(event.key==='Enter') adminLogin()">
-      <button class="submit" onclick="adminLogin()">Giriş yap</button>
-      <button class="close" onclick="closeAdmin()">Kapat</button>
-      <div id="amsg" class="note"></div>
+    <div class="tabs">
+      <div class="tab active" id="tabLogin" onclick="switchAuthTab('login')">Giriş Yap</div>
+      <div class="tab" id="tabRegister" onclick="switchAuthTab('register')">Kayıt Ol</div>
     </div>
 
-    <!-- MFA -->
-    <div id="mfaBox" style="display:none">
-      <div class="mfa-icon">🔐</div>
-      <h2 class="mfa-title">İki aşamalı doğrulama</h2>
-      <p class="mfa-text">Yönetici paneline devam etmek için Authenticator uygulamanızdaki 6 haneli kodu girin.</p>
-      <input id="mfaCode" class="mfa-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
-      <button class="submit" onclick="verifyMFA()">Kodu doğrula</button>
-      <button class="close" onclick="cancelMFA()">İptal</button>
-      <div id="mfaMsg" class="note"></div>
+    <input id="authEmail" type="email" placeholder="E-posta Adresi">
+    <input id="authPassword" type="password" placeholder="Şifre">
+    
+    <div id="bizFields" style="display:none">
+      <hr style="border:0;border-top:1px solid #e2e8f0;margin:12px 0">
+      <p style="font-size:13px;font-weight:700;margin:0 0 8px;color:#334155">İşletme Bilgileri</p>
+      <input id="bizName" placeholder="İşletme Adı *">
+      <select id="bizCat">
+        <option>Tesisatçı</option>
+        <option>Elektrikçi</option>
+        <option>Temizlik</option>
+        <option>Oto Yıkama</option>
+        <option>Nakliye</option>
+        <option>Özel Ders</option>
+        <option>Diğer</option>
+      </select>
+      <input id="bizDistrict" placeholder="İlçe / Mahalle *">
+      <input id="bizPhone" placeholder="Telefon (05xx...)" inputmode="tel">
+      <textarea id="bizDesc" placeholder="Hizmetlerinizi kısaca tanımlayın"></textarea>
     </div>
 
-    <!-- PANEL -->
-    <div id="panel" style="display:none">
-      <h2>Yönetim Paneli</h2>
-      <div class="success">🔐 MFA doğrulandı. Yönetici işlemleri aktif.</div>
-      <button class="close" style="margin-top:10px" onclick="adminLogout()">Çıkış Yap</button>
-      <div id="adminList" style="margin-top:16px;display:grid;gap:12px"></div>
-    </div>
-  </div>
-</div>
-
-<!-- İŞLETME EKLEME MODALI -->
-<div class="modal" id="modal" onclick="if(event.target===this) closeModal()">
-  <div class="box">
-    <h2>İşletmeni ekle</h2>
-    <input id="n" placeholder="İşletme adı *">
-    <select id="c">
-      <option>Tesisatçı</option>
-      <option>Elektrikçi</option>
-      <option>Temizlik</option>
-      <option>Oto Yıkama</option>
-      <option>Nakliye</option>
-      <option>Özel Ders</option>
-      <option>Diğer</option>
-    </select>
-    <input id="d" placeholder="İlçe / mahalle *">
-    <input id="p" placeholder="Telefon (05xx...) *" inputmode="tel">
-    <textarea id="desc" placeholder="Kısaca hizmetlerini anlat"></textarea>
-    <button class="submit" onclick="addBusiness()">İlan Gönder</button>
-    <button class="close" onclick="closeModal()">Vazgeç</button>
-    <div class="note">İlan önce beklemeye alınır; yönetici onayından sonra yayınlanır.</div>
+    <button class="submit" id="authSubmitBtn" onclick="handleAuth()">Giriş Yap</button>
+    <button class="close" onclick="closeAuthModal()">Vazgeç</button>
   </div>
 </div>
 
@@ -486,8 +157,8 @@ const cats = [
 ];
 
 let data = [];
-let mfaFactorId = '';
-let mfaChallengeId = '';
+let currentAuthRole = 'user'; // 'user' veya 'biz'
+let currentAuthTab = 'login'; // 'login' veya 'register'
 
 const catsEl = document.getElementById('cats');
 const cards = document.getElementById('cards');
@@ -495,9 +166,7 @@ const count = document.getElementById('count');
 const q = document.getElementById('q');
 
 function esc(s){
-  return String(s||'').replace(/[&<>"']/g, m => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[m]));
+  return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 function renderCats(){
@@ -512,7 +181,6 @@ async function load(){
   const r = await sb
     .from('businesses')
     .select('*')
-    .eq('status','approved')
     .order('created_at',{ascending:false});
 
   if(r.error){
@@ -526,11 +194,7 @@ async function load(){
 
 function render(cat=''){
   function normalize(s){
-    return String(s||'')
-      .toLocaleLowerCase('tr-TR')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g,'')
-      .replace(/ı/g,'i');
+    return String(s||'').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i');
   }
 
   const query = normalize(q.value);
@@ -540,8 +204,7 @@ function render(cat=''){
     (!query ||
       normalize(x.name).includes(query) ||
       normalize(x.category).includes(query) ||
-      normalize(x.district).includes(query) ||
-      normalize(x.description).includes(query)
+      normalize(x.district).includes(query)
     )
   );
 
@@ -553,12 +216,12 @@ function render(cat=''){
 
     return `
     <div class="card">
+      <button class="fav-btn" onclick="toggleFav('${x.id}', this)">♥</button>
       <div class="top">
         <div>
           <div class="name">${esc(x.name)}</div>
           <div class="meta">${esc(x.category)} · ${esc(x.district)}</div>
         </div>
-        <div class="tag">Onaylı</div>
       </div>
       ${x.description ? `<div style="font-size:13px;color:#475569;margin-top:8px">${esc(x.description)}</div>` : ''}
       <div class="actions">
@@ -573,260 +236,87 @@ function filterCat(c){ q.value = c; render(c); }
 function quickSearch(c){ q.value = c; render(); }
 function showAll(){ q.value = ''; render(); }
 
-function openModal(){ document.getElementById('modal').style.display = 'flex'; }
-function closeModal(){ document.getElementById('modal').style.display = 'none'; }
-
-async function addBusiness(){
-  const row = {
-    name: document.getElementById('n').value.trim(),
-    category: document.getElementById('c').value,
-    district: document.getElementById('d').value.trim(),
-    phone: document.getElementById('p').value.trim(),
-    description: document.getElementById('desc').value.trim(),
-    status: 'pending'
-  };
-
-  if(!row.name || !row.district || !row.phone){
-    alert('İşletme adı, ilçe ve telefon zorunludur.');
-    return;
-  }
-
-  const r = await sb.from('businesses').insert(row);
-
-  if(r.error){
-    alert(r.error.message);
-    return;
-  }
-
-  try{
-    await fetch('https://ntfy.sh/yakinis-basvuru-2026-muhsin', {
-      method: 'POST',
-      body: `Yeni işletme başvurusu: ${row.name} · ${row.category} · ${row.district}`
-    });
-  }catch(e){
-    console.log('Bildirim gönderilemedi.');
-  }
-
-  closeModal();
-  document.getElementById('n').value = '';
-  document.getElementById('d').value = '';
-  document.getElementById('p').value = '';
-  document.getElementById('desc').value = '';
-
-  alert('İlanın alındı. Yönetici onayından sonra yayınlanacak.');
+/* AUTH MODAL MANTIĞI */
+function openAuthModal(role){
+  currentAuthRole = role;
+  document.getElementById('authModal').style.display = 'flex';
+  switchAuthTab('login');
 }
 
-/* YÖNETİCİ & MFA SÜREÇLERİ */
-async function openAdmin(){
-  document.getElementById('adminModal').style.display = 'flex';
-  resetAdminMessages();
-  showLoginBox();
-
-  const s = await sb.auth.getSession();
-  if(s.error || !s.data.session) return;
-
-  const aal = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-  if(aal.error) return;
-
-  if(aal.data.currentLevel === 'aal2'){
-    showAdminPanel();
-    return;
-  }
-
-  if(aal.data.currentLevel === 'aal1' && aal.data.nextLevel === 'aal2'){
-    await startMFA();
-    return;
-  }
+function closeAuthModal(){
+  document.getElementById('authModal').style.display = 'none';
 }
 
-function showLoginBox(){
-  document.getElementById('loginBox').style.display = 'block';
-  document.getElementById('mfaBox').style.display = 'none';
-  document.getElementById('panel').style.display = 'none';
+function switchAuthTab(tab){
+  currentAuthTab = tab;
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  
+  const isBizRegister = (currentAuthRole === 'biz' && tab === 'register');
+  document.getElementById('bizFields').style.display = isBizRegister ? 'block' : 'none';
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'İşletme Kaydı Oluştur' : 'Kayıt Ol');
 }
 
-function showMFABox(){
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('mfaBox').style.display = 'block';
-  document.getElementById('panel').style.display = 'none';
-}
-
-function showAdminPanel(){
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('mfaBox').style.display = 'none';
-  document.getElementById('panel').style.display = 'block';
-  loadAdmin();
-}
-
-function closeAdmin(){ document.getElementById('adminModal').style.display = 'none'; }
-
-async function adminLogin(){
-  const email = document.getElementById('ae').value.trim();
-  const password = document.getElementById('ap').value;
+async function handleAuth(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
 
   if(!email || !password){
-    document.getElementById('amsg').innerHTML = '<div class="error">E-posta ve şifre zorunlu.</div>';
+    alert('Lütfen e-posta ve şifrenizi girin.');
     return;
   }
 
-  document.getElementById('amsg').textContent = 'Giriş kontrol ediliyor...';
+  if(currentAuthTab === 'login'){
+    const r = await sb.auth.signInWithPassword({ email, password });
+    if(r.error) alert('Giriş Başarısız: ' + r.error.message);
+    else {
+      alert('Başarıyla giriş yapıldı!');
+      closeAuthModal();
+    }
+  } else {
+    // KAYIT OL
+    const r = await sb.auth.signUp({ 
+      email, 
+      password,
+      options: { data: { role: currentAuthRole } }
+    });
 
-  const r = await sb.auth.signInWithPassword({ email, password });
-  if(r.error){
-    document.getElementById('amsg').innerHTML = `<div class="error">${esc(r.error.message)}</div>`;
-    return;
+    if(r.error){
+      alert('Kayıt Başarısız: ' + r.error.message);
+      return;
+    }
+
+    // İŞLETME KAYDI İSE VERİTABANINA DA EKLE
+    if(currentAuthRole === 'biz'){
+      const name = document.getElementById('bizName').value.trim();
+      const district = document.getElementById('bizDistrict').value.trim();
+      const phone = document.getElementById('bizPhone').value.trim();
+      const category = document.getElementById('bizCat').value;
+      const description = document.getElementById('bizDesc').value.trim();
+
+      if(!name || !district || !phone){
+        alert('Kayıt oluşturuldu fakat işletme bilgileri eksik kaldığı için ilan onayına gönderilemedi.');
+        closeAuthModal();
+        return;
+      }
+
+      await sb.from('businesses').insert({
+        name, category, district, phone, description, status: 'approved'
+      });
+    }
+
+    alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+    switchAuthTab('login');
   }
-
-  const aal = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-  if(aal.error){
-    document.getElementById('amsg').innerHTML = `<div class="error">${esc(aal.error.message)}</div>`;
-    return;
-  }
-
-  if(aal.data.currentLevel === 'aal2'){
-    showAdminPanel();
-    return;
-  }
-
-  if(aal.data.nextLevel === 'aal2'){
-    await startMFA();
-    return;
-  }
-
-  document.getElementById('amsg').innerHTML = '<div class="error">Hesapta tanımlı MFA bulunamadı.</div>';
 }
 
-async function startMFA(){
-  document.getElementById('mfaMsg').textContent = 'Hazırlanıyor...';
-  const factors = await sb.auth.mfa.listFactors();
-
-  if(factors.error){
-    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(factors.error.message)}</div>`;
-    return;
-  }
-
-  const totpFactors = (factors.data.totp || []).filter(x => x.status === 'verified');
-  if(!totpFactors.length){
-    showLoginBox();
-    document.getElementById('amsg').innerHTML = '<div class="error">Doğrulanmış MFA bulunamadı.</div>';
-    return;
-  }
-
-  mfaFactorId = totpFactors[0].id;
-  const challenge = await sb.auth.mfa.challenge({ factorId: mfaFactorId });
-
-  if(challenge.error){
-    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(challenge.error.message)}</div>`;
-    return;
-  }
-
-  mfaChallengeId = challenge.data.id;
-  document.getElementById('mfaCode').value = '';
-  document.getElementById('mfaMsg').textContent = 'Authenticator 6 haneli kodu girin.';
-  showMFABox();
-
-  setTimeout(() => document.getElementById('mfaCode').focus(), 100);
+function toggleFav(id, btn){
+  btn.classList.toggle('active');
 }
 
-async function verifyMFA(){
-  const code = document.getElementById('mfaCode').value.replace(/\D/g,'');
-
-  if(code.length !== 6){
-    document.getElementById('mfaMsg').innerHTML = '<div class="error">Lütfen 6 haneli kodu girin.</div>';
-    return;
-  }
-
-  const result = await sb.auth.mfa.verify({
-    factorId: mfaFactorId,
-    challengeId: mfaChallengeId,
-    code: code
-  });
-
-  if(result.error){
-    document.getElementById('mfaMsg').innerHTML = `<div class="error">${esc(result.error.message)}</div>`;
-    return;
-  }
-
-  showAdminPanel();
-}
-
-async function cancelMFA(){
-  mfaFactorId = '';
-  mfaChallengeId = '';
-  await sb.auth.signOut();
-  showLoginBox();
-  document.getElementById('amsg').textContent = 'Giriş iptal edildi.';
-}
-
-function resetAdminMessages(){
-  document.getElementById('amsg').textContent = '';
-  document.getElementById('mfaMsg').textContent = '';
-  document.getElementById('mfaCode').value = '';
-  mfaFactorId = '';
-  mfaChallengeId = '';
-}
-
-document.getElementById('mfaCode').addEventListener('keydown', e => {
-  if(e.key === 'Enter') verifyMFA();
-});
-
-async function loadAdmin(){
-  const box = document.getElementById('adminList');
-  const r = await sb.from('businesses').select('*').order('created_at',{ascending:false});
-
-  if(r.error){
-    box.innerHTML = `<div class="note">${esc(r.error.message)}</div>`;
-    return;
-  }
-
-  box.innerHTML = (r.data || []).map(x => {
-    let statusTag = '<span class="tag">Onaylı</span>';
-    if(x.status === 'pending') statusTag = '<span class="tag tag-pending">Bekliyor</span>';
-    if(x.status === 'rejected') statusTag = '<span class="tag tag-rejected">Reddedildi</span>';
-
-    return `
-    <div class="card">
-      <div class="top">
-        <b>${esc(x.name)}</b>
-        ${statusTag}
-      </div>
-      <div class="meta">${esc(x.category)} · ${esc(x.district)} · ${esc(x.phone)}</div>
-      ${x.description ? `<div style="font-size:12px;color:#64748b;margin-top:4px">${esc(x.description)}</div>` : ''}
-      <div class="actions">
-        ${x.status !== 'approved' ? `<button class="submit" onclick="setStatus('${esc(x.id)}','approved')">Onayla</button>` : ''}
-        ${x.status !== 'rejected' ? `<button class="btn-reject" onclick="setStatus('${esc(x.id)}','rejected')">Reddet</button>` : ''}
-        <button class="btn-delete" onclick="removeListing('${esc(x.id)}')">Sil</button>
-      </div>
-    </div>`;
-  }).join('') || '<div class="empty">İlan yok.</div>';
-}
-
-async function setStatus(id, status){
-  const r = await sb.from('businesses').update({ status }).eq('id', id);
-  if(r.error) alert(r.error.message);
-  else loadAdmin();
-}
-
-async function removeListing(id){
-  if(!confirm('İlan silinsin mi?')) return;
-  const r = await sb.from('businesses').delete().eq('id', id);
-  if(r.error) alert(r.error.message);
-  else loadAdmin();
-}
-
-async function adminLogout(){
-  await sb.auth.signOut();
-  resetAdminMessages();
-  showLoginBox();
-}
-
-/* BAŞLANGIÇ ÇALIŞTIRMA */
+/* BAŞLANGIÇ */
 renderCats();
 load();
-
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
 </script>
 </body>
 </html>
