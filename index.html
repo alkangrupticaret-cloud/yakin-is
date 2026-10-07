@@ -84,13 +84,12 @@
         return;
       }
 
-      // VIP İlanları Üste Sıralama
+      // VIP olanları en üste sıralama
       data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
 
       const now = new Date();
 
       container.innerHTML = data.map(item => {
-        // VIP Süre Kontrolü
         let isVipActive = item.is_vip;
         if (item.vip_until && new Date(item.vip_until) < now) {
           isVipActive = false;
