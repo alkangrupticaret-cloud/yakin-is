@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yakın-İş | VIP Hizmet Portalı</title>
   <link rel="manifest" href="manifest.json">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f6f9; color: #333; padding: 15px; }
@@ -29,7 +28,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; gap: 8px;
     }
 
-    /* VIP Kart Tasarımı */
     .vip-card {
       border: 2px solid #ffd700 !important;
       background: linear-gradient(135deg, #fffdf0 0%, #ffffff 100%);
@@ -64,46 +62,56 @@
   <script>
     const SUPABASE_URL = 'https://nbwvmhapvsmywjwdgag.supabase.co';
     const SUPABASE_KEY = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function loadServices() {
       const container = document.getElementById('services');
       
-      const { data, error } = await _supabase
-        .from('services')
-        .select('*');
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/services?select=*`, {
+          method: 'GET',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      if (error) {
-        console.error("Supabase Hatası:", error);
-        container.innerHTML = `<p style="color:red; text-align:center; grid-column: 1/-1;">Hata Detayı: ${error.message}</p>`;
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
-        return;
-      }
-
-      // VIP olanları en üste sıralama
-      data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
-
-      const now = new Date();
-
-      container.innerHTML = data.map(item => {
-        let isVipActive = item.is_vip;
-        if (item.vip_until && new Date(item.vip_until) < now) {
-          isVipActive = false;
+        if (!response.ok) {
+          throw new Error(`HTTP Hatası: ${response.status}`);
         }
 
-        return `
-          <div class="card ${isVipActive ? 'vip-card' : ''}">
-            ${isVipActive ? '<span class="vip-badge">⭐ VIP İLAN</span>' : ''}
-            <h3>${item.title || 'Başlıksız Hizmet'}</h3>
-            <span class="category">${item.category || 'Genel'}</span>
-            <a href="tel:${item.phone}" class="phone">📞 ${item.phone || 'Telefon Yok'}</a>
-          </div>
-        `;
-      }).join('');
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
+          return;
+        }
+
+        // VIP olanları en üste sıralama
+        data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
+
+        const now = new Date();
+
+        container.innerHTML = data.map(item => {
+          let isVipActive = item.is_vip;
+          if (item.vip_until && new Date(item.vip_until) < now) {
+            isVipActive = false;
+          }
+
+          return `
+            <div class="card ${isVipActive ? 'vip-card' : ''}">
+              ${isVipActive ? '<span class="vip-badge">⭐ VIP İLAN</span>' : ''}
+              <h3>${item.title || 'Başlıksız Hizmet'}</h3>
+              <span class="category">${item.category || 'Genel'}</span>
+              <a href="tel:${item.phone}" class="phone">📞 ${item.phone || 'Telefon Yok'}</a>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error("Bağlantı Hatası:", error);
+        container.innerHTML = `<p style="color:red; text-align:center; grid-column: 1/-1;">Erişim Hatası: ${error.message}</p>`;
+      }
     }
 
     loadServices();
