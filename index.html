@@ -40,7 +40,7 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 .cards{padding:0 16px;display:grid;gap:12px}
 .card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;box-shadow:0 5px 18px #0f172a0a;position:relative}
 
-/* MONETİZASYON / VIP İLAN STİLİ */
+/* MONETİZASYON / VIP STİLLERİ */
 .card.vip{border:2px solid #f59e0b;background:linear-gradient(180deg, #fffcf5 0%, #ffffff 100%);box-shadow:0 8px 22px rgba(245, 158, 11, 0.15)}
 .vip-badge{background:linear-gradient(135deg, #f59e0b, #d97706);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;display:inline-block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
 
@@ -53,7 +53,7 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 .wa{background:#dcfce7;color:#166534}
 .call{background:#e0e7ff;color:#3730a3}
 
-/* REKLAM BANNER ALANI */
+/* REKLAM BANNER */
 .ad-banner{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:15px;text-align:center;color:#64748b;font-size:13px;margin:10px 16px}
 
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(3px);padding:16px}
@@ -65,8 +65,12 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 .tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
 .tab{flex:1;text-align:center;padding:10px;font-weight:700;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
 .tab.active{color:#2563eb;border-color:#2563eb}
-.plan-box{border:1px solid #e2e8f0;padding:10px;border-radius:10px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.plan-box{border:1px solid #e2e8f0;padding:12px;border-radius:12px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:10px}
 .plan-box.selected{border-color:#2563eb;background:#eff6ff}
+
+/* IBAN ÖDEME BİLGİ KUTUSU */
+.payment-info{background:#fffbe0;border:1px solid #fef08a;padding:14px;border-radius:12px;margin-top:12px;font-size:13px;color:#713f12;display:none}
+.payment-info code{display:block;background:#fef9c3;padding:8px;border-radius:6px;font-size:14px;font-weight:bold;margin:6px 0;user-select:all}
 </style>
 </head>
 
@@ -78,7 +82,7 @@ header p{margin:0;color:#dbeafe;font-size:14px}
       <h1 class="logo">📍 Yakınİş</h1>
       <div class="auth-btns">
         <button class="btn-auth" onclick="openAuthModal('user')">👤 Kullanıcı</button>
-        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İşletme / İlan Ver</button>
+        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İlan Ver / Giriş</button>
       </div>
     </div>
     <p>İhtiyacın olan hizmeti yakınında bul veya işletmeni öne çıkar.</p>
@@ -101,10 +105,9 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 
   <div class="cats" id="cats"></div>
 
-  <!-- REKLAM BANNER ALANI (MONETİZASYON) -->
   <div class="ad-banner">
     <b>📢 Reklam Alanı</b><br>
-    Burada yer almak ve binlerce müşteriye ulaşmak için bizimle iletişime geçin!
+    Sitenin en çok görünen yerinde reklam vermek için bizimle iletişime geçin!
   </div>
 
   <div class="section">
@@ -115,12 +118,12 @@ header p{margin:0;color:#dbeafe;font-size:14px}
   <div class="cards" id="cards"></div>
 </main>
 
-<!-- GİRİŞ & İŞLETME PAKET SEÇİM MODALI -->
+<!-- MODAL (GİRİŞ / İLAN EKLEME & ÖDEME) -->
 <div class="modal" id="authModal" onclick="if(event.target===this) closeAuthModal()">
   <div class="box">
     <div class="tabs">
       <div class="tab active" id="tabLogin" onclick="switchAuthTab('login')">Giriş Yap</div>
-      <div class="tab" id="tabRegister" onclick="switchAuthTab('register')">Kayıt Ol</div>
+      <div class="tab" id="tabRegister" onclick="switchAuthTab('register')">Kayıt Ol & İlan Ekle</div>
     </div>
 
     <input id="authEmail" type="email" placeholder="E-posta Adresi">
@@ -143,21 +146,28 @@ header p{margin:0;color:#dbeafe;font-size:14px}
       <input id="bizPhone" placeholder="Telefon (05xx...)" inputmode="tel">
       <textarea id="bizDesc" placeholder="Hizmetlerinizi kısaca tanımlayın"></textarea>
 
-      <!-- PAKET SEÇİMİ (PARA KAZANMA ALANI) -->
       <p style="font-size:13px;font-weight:700;margin:10px 0 6px;color:#334155">Yayınlama Paketi Seçin</p>
       <div class="plan-box selected" id="planFree" onclick="selectPlan('free')">
-        <input type="radio" name="plan" checked>
+        <input type="radio" name="plan" id="rFree" checked>
         <div>
           <b>Ücretsiz İlan</b>
           <div style="font-size:12px;color:#64748b">Standart listeleme</div>
         </div>
       </div>
       <div class="plan-box" id="planVip" onclick="selectPlan('vip')">
-        <input type="radio" name="plan">
+        <input type="radio" name="plan" id="rVip">
         <div>
           <b>⭐ Öne Çıkan VIP İlan (Aylık 199 TL)</b>
-          <div style="font-size:12px;color:#d97706">En üst sırada listelenin, 3 kat daha fazla arama alın!</div>
+          <div style="font-size:12px;color:#d97706">En üst sırada görünüm ve altın sarısı vurgulu kart!</div>
         </div>
+      </div>
+
+      <!-- IBAN & DETAY ÖDEME KUTUSU -->
+      <div class="payment-info" id="paymentInfo">
+        <b>💳 Ödeme Bilgileri (Aylık 199 TL):</b><br>
+        Aşağıdaki IBAN hesabına 199 TL gönderip WhatsApp üzerinden dekont iletiniz:
+        <code>TR40 0001 0026 1470 8234 4450 03</code>
+        <b>Alıcı:</b> Adınız Soyadınız / Firma Unvanınız
       </div>
     </div>
 
@@ -172,6 +182,9 @@ window.YAKINIS_CONFIG = {
   SUPABASE_URL: 'https://nbwvmhwpvsmyaijwdgag.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
 };
+
+/* YÖNETİCİ WHATSAPP NUMARASI (KENDİ NUMARANIZI GİRİN) */
+const ADMIN_WHATSAPP = "905522852592"; 
 
 const cfg = window.YAKINIS_CONFIG || {};
 const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
@@ -211,7 +224,7 @@ async function load(){
   const r = await sb
     .from('businesses')
     .select('*')
-    .order('is_vip',{ascending:false}) // ÖNCE VIP/SPONSORLU İLANLAR LİSTELENİR
+    .order('is_vip',{ascending:false})
     .order('created_at',{ascending:false});
 
   if(r.error){
@@ -282,6 +295,9 @@ function selectPlan(plan){
   selectedPlan = plan;
   document.getElementById('planFree').classList.toggle('selected', plan==='free');
   document.getElementById('planVip').classList.toggle('selected', plan==='vip');
+  document.getElementById('rFree').checked = (plan === 'free');
+  document.getElementById('rVip').checked = (plan === 'vip');
+  document.getElementById('paymentInfo').style.display = (plan === 'vip') ? 'block' : 'none';
 }
 
 function switchAuthTab(tab){
@@ -291,7 +307,7 @@ function switchAuthTab(tab){
   
   const isBizRegister = (currentAuthRole === 'biz' && tab === 'register');
   document.getElementById('bizFields').style.display = isBizRegister ? 'block' : 'none';
-  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'İşletmeyi Kaydet' : 'Kayıt Ol');
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'Kayıt Ol ve İlan Oluştur' : 'Kayıt Ol');
 }
 
 async function handleAuth(){
@@ -338,16 +354,19 @@ async function handleAuth(){
       await sb.from('businesses').insert({
         name, category, district, phone, description, 
         status: 'approved',
-        is_vip: selectedPlan === 'vip'
+        is_vip: false // İlk başta pasif, ödeme yapılınca siz manuel veya butonla aktifleştirirsiniz
       });
 
       if(selectedPlan === 'vip'){
-        alert('VIP İlan Talebiniz alındı! Ödeme yapmak için yönetici sizinle iletişime geçecektir.');
+        const msg = encodeURIComponent(`Merhaba, Yakınİş sitemize '${name}' adıyla VIP İlan kaydı oluşturdum. IBAN hesabınıza 199 TL ödemeyi yapıp dekont göndermek istiyorum.`);
+        window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+      } else {
+        alert('İlanınız başarıyla eklendi ve yayınlandı!');
       }
     }
 
-    alert('Kayıt başarılı!');
-    switchAuthTab('login');
+    closeAuthModal();
+    load();
   }
 }
 
