@@ -60,8 +60,8 @@
   </div>
 
   <script>
-    // Gerçek Supabase Project URL adresi
-    const SUPABASE_URL = 'https://nbwvmhapvsmywjwdgag.supabase.co';
+    // URL ve Key birebir aynı proje ID'sine (nbwvmhwpvsmyaijwdgag) esitlendi
+    const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
 
     async function loadServices() {
@@ -72,8 +72,7 @@
           method: 'GET',
           headers: {
             'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${SUPABASE_KEY}`
           }
         });
 
@@ -116,4 +115,4 @@
     loadServices();
   </script>
 </body>
-</html>
+  </html>
