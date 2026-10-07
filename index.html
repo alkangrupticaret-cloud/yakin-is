@@ -20,7 +20,6 @@ header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:20p
 .top-nav .logo{font-size:24px;font-weight:800;margin:0}
 .auth-btns{display:flex;gap:8px}
 .btn-auth{background:rgba(255,255,255,0.15);color:#fff;border:0;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
-.btn-auth:hover{background:rgba(255,255,255,0.25)}
 header p{margin:0;color:#dbeafe;font-size:14px}
 
 .search{margin:-22px 16px 18px;background:#fff;border-radius:16px;padding:8px;border:1px solid #e2e8f0;box-shadow:0 10px 28px #0f172a18;display:flex;gap:8px}
@@ -40,16 +39,22 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 
 .cards{padding:0 16px;display:grid;gap:12px}
 .card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;box-shadow:0 5px 18px #0f172a0a;position:relative}
+
+/* MONETİZASYON / VIP İLAN STİLİ */
+.card.vip{border:2px solid #f59e0b;background:linear-gradient(180deg, #fffcf5 0%, #ffffff 100%);box-shadow:0 8px 22px rgba(245, 158, 11, 0.15)}
+.vip-badge{background:linear-gradient(135deg, #f59e0b, #d97706);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;display:inline-block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+
 .top{display:flex;justify-content:space-between;gap:10px}
 .name{font-weight:750;font-size:16px}
 .meta{color:#64748b;font-size:13px;margin-top:2px}
-.fav-btn{position:absolute;top:14px;right:14px;background:none;border:0;font-size:18px;cursor:pointer;color:#94a3b8}
-.fav-btn.active{color:#ef4444}
 
 .actions{display:flex;gap:8px;margin-top:12px}
 .actions a,.actions button{flex:1;text-align:center;text-decoration:none;border-radius:10px;padding:10px;font-weight:650;border:0;font-size:13px;cursor:pointer}
 .wa{background:#dcfce7;color:#166534}
 .call{background:#e0e7ff;color:#3730a3}
+
+/* REKLAM BANNER ALANI */
+.ad-banner{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:15px;text-align:center;color:#64748b;font-size:13px;margin:10px 16px}
 
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(3px);padding:16px}
 .box{background:#fff;width:100%;max-width:440px;border-radius:20px;padding:22px;max-height:90vh;overflow-y:auto}
@@ -60,7 +65,8 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 .tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
 .tab{flex:1;text-align:center;padding:10px;font-weight:700;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
 .tab.active{color:#2563eb;border-color:#2563eb}
-.empty{padding:30px;text-align:center;color:#64748b;background:#fff;border:1px dashed #cbd5e1;border-radius:16px}
+.plan-box{border:1px solid #e2e8f0;padding:10px;border-radius:10px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.plan-box.selected{border-color:#2563eb;background:#eff6ff}
 </style>
 </head>
 
@@ -71,11 +77,11 @@ header p{margin:0;color:#dbeafe;font-size:14px}
     <div class="top-nav">
       <h1 class="logo">📍 Yakınİş</h1>
       <div class="auth-btns">
-        <button class="btn-auth" onclick="openAuthModal('user')">👤 Kullanıcı Girişi</button>
-        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İşletme Girişi</button>
+        <button class="btn-auth" onclick="openAuthModal('user')">👤 Kullanıcı</button>
+        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İşletme / İlan Ver</button>
       </div>
     </div>
-    <p>İhtiyacın olan hizmeti yakınında bul veya işletmeni tanıt.</p>
+    <p>İhtiyacın olan hizmeti yakınında bul veya işletmeni öne çıkar.</p>
   </div>
 </header>
 
@@ -95,6 +101,12 @@ header p{margin:0;color:#dbeafe;font-size:14px}
 
   <div class="cats" id="cats"></div>
 
+  <!-- REKLAM BANNER ALANI (MONETİZASYON) -->
+  <div class="ad-banner">
+    <b>📢 Reklam Alanı</b><br>
+    Burada yer almak ve binlerce müşteriye ulaşmak için bizimle iletişime geçin!
+  </div>
+
   <div class="section">
     <h2>Hizmet Verenler</h2>
     <span id="count" style="font-size:13px;color:#64748b"></span>
@@ -103,7 +115,7 @@ header p{margin:0;color:#dbeafe;font-size:14px}
   <div class="cards" id="cards"></div>
 </main>
 
-<!-- GİRİŞ & KAYIT MODALI -->
+<!-- GİRİŞ & İŞLETME PAKET SEÇİM MODALI -->
 <div class="modal" id="authModal" onclick="if(event.target===this) closeAuthModal()">
   <div class="box">
     <div class="tabs">
@@ -130,6 +142,23 @@ header p{margin:0;color:#dbeafe;font-size:14px}
       <input id="bizDistrict" placeholder="İlçe / Mahalle *">
       <input id="bizPhone" placeholder="Telefon (05xx...)" inputmode="tel">
       <textarea id="bizDesc" placeholder="Hizmetlerinizi kısaca tanımlayın"></textarea>
+
+      <!-- PAKET SEÇİMİ (PARA KAZANMA ALANI) -->
+      <p style="font-size:13px;font-weight:700;margin:10px 0 6px;color:#334155">Yayınlama Paketi Seçin</p>
+      <div class="plan-box selected" id="planFree" onclick="selectPlan('free')">
+        <input type="radio" name="plan" checked>
+        <div>
+          <b>Ücretsiz İlan</b>
+          <div style="font-size:12px;color:#64748b">Standart listeleme</div>
+        </div>
+      </div>
+      <div class="plan-box" id="planVip" onclick="selectPlan('vip')">
+        <input type="radio" name="plan">
+        <div>
+          <b>⭐ Öne Çıkan VIP İlan (Aylık 199 TL)</b>
+          <div style="font-size:12px;color:#d97706">En üst sırada listelenin, 3 kat daha fazla arama alın!</div>
+        </div>
+      </div>
     </div>
 
     <button class="submit" id="authSubmitBtn" onclick="handleAuth()">Giriş Yap</button>
@@ -157,8 +186,9 @@ const cats = [
 ];
 
 let data = [];
-let currentAuthRole = 'user'; // 'user' veya 'biz'
-let currentAuthTab = 'login'; // 'login' veya 'register'
+let currentAuthRole = 'user';
+let currentAuthTab = 'login';
+let selectedPlan = 'free';
 
 const catsEl = document.getElementById('cats');
 const cards = document.getElementById('cards');
@@ -181,6 +211,7 @@ async function load(){
   const r = await sb
     .from('businesses')
     .select('*')
+    .order('is_vip',{ascending:false}) // ÖNCE VIP/SPONSORLU İLANLAR LİSTELENİR
     .order('created_at',{ascending:false});
 
   if(r.error){
@@ -213,10 +244,11 @@ function render(cat=''){
   cards.innerHTML = a.map(x => {
     const phone = String(x.phone||'').replace(/\D/g,'');
     const waPhone = phone.startsWith('90') ? phone : (phone.startsWith('0') ? '9' + phone : '90' + phone);
+    const isVip = x.is_vip || false;
 
     return `
-    <div class="card">
-      <button class="fav-btn" onclick="toggleFav('${x.id}', this)">♥</button>
+    <div class="card ${isVip ? 'vip' : ''}">
+      ${isVip ? '<span class="vip-badge">⭐ Öne Çıkan Sponsorlu İlan</span>' : ''}
       <div class="top">
         <div>
           <div class="name">${esc(x.name)}</div>
@@ -236,7 +268,6 @@ function filterCat(c){ q.value = c; render(c); }
 function quickSearch(c){ q.value = c; render(); }
 function showAll(){ q.value = ''; render(); }
 
-/* AUTH MODAL MANTIĞI */
 function openAuthModal(role){
   currentAuthRole = role;
   document.getElementById('authModal').style.display = 'flex';
@@ -247,6 +278,12 @@ function closeAuthModal(){
   document.getElementById('authModal').style.display = 'none';
 }
 
+function selectPlan(plan){
+  selectedPlan = plan;
+  document.getElementById('planFree').classList.toggle('selected', plan==='free');
+  document.getElementById('planVip').classList.toggle('selected', plan==='vip');
+}
+
 function switchAuthTab(tab){
   currentAuthTab = tab;
   document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
@@ -254,7 +291,7 @@ function switchAuthTab(tab){
   
   const isBizRegister = (currentAuthRole === 'biz' && tab === 'register');
   document.getElementById('bizFields').style.display = isBizRegister ? 'block' : 'none';
-  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'İşletme Kaydı Oluştur' : 'Kayıt Ol');
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'İşletmeyi Kaydet' : 'Kayıt Ol');
 }
 
 async function handleAuth(){
@@ -274,7 +311,6 @@ async function handleAuth(){
       closeAuthModal();
     }
   } else {
-    // KAYIT OL
     const r = await sb.auth.signUp({ 
       email, 
       password,
@@ -286,7 +322,6 @@ async function handleAuth(){
       return;
     }
 
-    // İŞLETME KAYDI İSE VERİTABANINA DA EKLE
     if(currentAuthRole === 'biz'){
       const name = document.getElementById('bizName').value.trim();
       const district = document.getElementById('bizDistrict').value.trim();
@@ -295,23 +330,25 @@ async function handleAuth(){
       const description = document.getElementById('bizDesc').value.trim();
 
       if(!name || !district || !phone){
-        alert('Kayıt oluşturuldu fakat işletme bilgileri eksik kaldığı için ilan onayına gönderilemedi.');
+        alert('Kayıt oluşturuldu fakat işletme bilgileri eksik.');
         closeAuthModal();
         return;
       }
 
       await sb.from('businesses').insert({
-        name, category, district, phone, description, status: 'approved'
+        name, category, district, phone, description, 
+        status: 'approved',
+        is_vip: selectedPlan === 'vip'
       });
+
+      if(selectedPlan === 'vip'){
+        alert('VIP İlan Talebiniz alındı! Ödeme yapmak için yönetici sizinle iletişime geçecektir.');
+      }
     }
 
-    alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+    alert('Kayıt başarılı!');
     switchAuthTab('login');
   }
-}
-
-function toggleFav(id, btn){
-  btn.classList.toggle('active');
 }
 
 /* BAŞLANGIÇ */
