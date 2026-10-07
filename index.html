@@ -60,8 +60,8 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://nbwvmhapvsmywjwdgag.supabase.co';
-    // Buraya Supabase panelinizden kopyaladığınız eyJ... ile başlayan anon key'inizi yapıştırın
+    // URL, anon key içindeki doğru referans koduyla güncellendi
+    const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
 
     async function loadServices() {
@@ -88,7 +88,7 @@
           return;
         }
 
-        // VIP ilanları üste çıkar
+        // VIP olanları üste sırala
         data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
         const now = new Date();
 
