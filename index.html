@@ -71,12 +71,11 @@
       
       const { data, error } = await _supabase
         .from('services')
-        .select('*')
-        .order('is_vip', { ascending: false })
-        .order('created_at', { ascending: false });
+        .select('*');
 
       if (error) {
-        container.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">Veriler yüklenirken hata oluştu.</p>';
+        console.error("Supabase Hatası:", error);
+        container.innerHTML = `<p style="color:red; text-align:center; grid-column: 1/-1;">Hata Detayı: ${error.message}</p>`;
         return;
       }
 
@@ -84,6 +83,9 @@
         container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
         return;
       }
+
+      // VIP İlanları Üste Sıralama
+      data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
 
       const now = new Date();
 
