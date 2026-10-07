@@ -1,378 +1,111 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#1d4ed8">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="google-site-verification" content="8D_6sim-o9ka7NWOC_PD56M0gioxAcXq9a-U7CvPxm4" />
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yakın-İş | VIP Hizmet Portalı</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; padding: 15px; }
+    header { text-align: center; margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    h1 { color: #1a202c; font-size: 24px; }
+    
+    .cta-banner {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: #fff; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px;
+      font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .cta-btn {
+      background: #fff; color: #128c7e; border: none; padding: 8px 16px; border-radius: 20px;
+      font-weight: bold; text-decoration: none; cursor: pointer; display: inline-block;
+    }
 
-<title>Yakınİş — İhtiyacın, yakında.</title>
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+    
+    .card {
+      background: #fff; border-radius: 12px; padding: 15px; border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; gap: 8px;
+    }
 
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f6f8fc;color:#0f172a}
-header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:20px 18px 40px}
-.wrap{max-width:720px;margin:auto}
-.top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.top-nav .logo{font-size:24px;font-weight:800;margin:0}
-.auth-btns{display:flex;gap:8px}
-.btn-auth{background:rgba(255,255,255,0.15);color:#fff;border:0;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
-header p{margin:0;color:#dbeafe;font-size:14px}
+    /* VIP Kart Tasarımı */
+    .vip-card {
+      border: 2px solid #ffd700 !important;
+      background: linear-gradient(135deg, #fffdf0 0%, #ffffff 100%);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+    }
+    .vip-badge {
+      position: absolute; top: -10px; right: 15px; background: #ffd700; color: #000;
+      font-weight: bold; font-size: 11px; padding: 3px 10px; border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
 
-.search{margin:-22px 16px 18px;background:#fff;border-radius:16px;padding:8px;border:1px solid #e2e8f0;box-shadow:0 10px 28px #0f172a18;display:flex;gap:8px}
-.search input{flex:1;border:0;outline:0;font-size:15px;padding:8px;min-width:0;background:transparent}
-.search button,.submit{border:0;border-radius:10px;background:#2563eb;color:#fff;padding:10px 16px;font-weight:700;cursor:pointer}
-
-.quick{display:flex;gap:8px;overflow-x:auto;padding:0 16px 5px;scrollbar-width:none}
-.quick::-webkit-scrollbar{display:none}
-.quick button{border:1px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:8px 14px;white-space:nowrap;font-weight:650;cursor:pointer}
-
-.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 16px 0}
-.cat{background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:14px 8px;text-align:center;font-weight:650;cursor:pointer;box-shadow:0 4px 14px #0f172a0a}
-.cat span{display:block;font-size:24px;margin-bottom:4px}
-
-.section{padding:20px 16px 10px;display:flex;justify-content:space-between;align-items:center}
-.section h2{font-size:18px;margin:0}
-
-.cards{padding:0 16px;display:grid;gap:12px}
-.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0;box-shadow:0 5px 18px #0f172a0a;position:relative}
-
-/* MONETİZASYON / VIP STİLLERİ */
-.card.vip{border:2px solid #f59e0b;background:linear-gradient(180deg, #fffcf5 0%, #ffffff 100%);box-shadow:0 8px 22px rgba(245, 158, 11, 0.15)}
-.vip-badge{background:linear-gradient(135deg, #f59e0b, #d97706);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;display:inline-block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
-
-.top{display:flex;justify-content:space-between;gap:10px}
-.name{font-weight:750;font-size:16px}
-.meta{color:#64748b;font-size:13px;margin-top:2px}
-
-.actions{display:flex;gap:8px;margin-top:12px}
-.actions a,.actions button{flex:1;text-align:center;text-decoration:none;border-radius:10px;padding:10px;font-weight:650;border:0;font-size:13px;cursor:pointer}
-.wa{background:#dcfce7;color:#166534}
-.call{background:#e0e7ff;color:#3730a3}
-
-/* REKLAM BANNER */
-.ad-banner{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:15px;text-align:center;color:#64748b;font-size:13px;margin:10px 16px}
-
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(3px);padding:16px}
-.box{background:#fff;width:100%;max-width:440px;border-radius:20px;padding:22px;max-height:90vh;overflow-y:auto}
-.box h2{margin-top:0;font-size:20px;color:#0f172a}
-.box input,.box select,.box textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#f8fafc}
-.box button{width:100%;padding:11px;margin-top:6px}
-.close{background:#f1f5f9;color:#475569;border:0;border-radius:10px;font-weight:650;cursor:pointer}
-.tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
-.tab{flex:1;text-align:center;padding:10px;font-weight:700;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
-.tab.active{color:#2563eb;border-color:#2563eb}
-.plan-box{border:1px solid #e2e8f0;padding:12px;border-radius:12px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:10px}
-.plan-box.selected{border-color:#2563eb;background:#eff6ff}
-
-/* IBAN ÖDEME BİLGİ KUTUSU */
-.payment-info{background:#fffbe0;border:1px solid #fef08a;padding:14px;border-radius:12px;margin-top:12px;font-size:13px;color:#713f12;display:none}
-.payment-info code{display:block;background:#fef9c3;padding:8px;border-radius:6px;font-size:14px;font-weight:bold;margin:6px 0;user-select:all}
-</style>
+    .card h3 { font-size: 18px; color: #2d3748; padding-right: 60px; }
+    .card .category { font-size: 13px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card .phone { font-size: 15px; color: #2b6cb0; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px; }
+  </style>
 </head>
-
 <body>
 
-<header>
-  <div class="wrap">
-    <div class="top-nav">
-      <h1 class="logo">📍 Yakınİş</h1>
-      <div class="auth-btns">
-        <button class="btn-auth" onclick="openAuthModal('user')">👤 Kullanıcı</button>
-        <button class="btn-auth" onclick="openAuthModal('biz')">🏢 İlan Ver / Giriş</button>
-      </div>
-    </div>
-    <p>İhtiyacın olan hizmeti yakınında bul veya işletmeni öne çıkar.</p>
-  </div>
-</header>
+  <header>
+    <h1>Yakın-İş Hizmet Rehberi</h1>
+  </header>
 
-<main class="wrap">
-  <div class="search">
-    <input id="q" placeholder="Hizmet veya ilçe ara..." onkeyup="if(event.key==='Enter') render()">
-    <button onclick="render()">Ara</button>
+  <div class="cta-banner">
+    <span>🌟 Hizmetinizi öne çıkarmak mı istiyorsunuz?</span>
+    <a href="https://wa.me/905522852592?text=Merhaba,%20yakinis.com%20sitenize%20VIP%20ilan%20vermek%20istiyorum." target="_blank" class="cta-btn">WhatsApp İlan Ver / VIP Al</a>
   </div>
 
-  <div class="quick">
-    <button onclick="showAll()">Tümü</button>
-    <button onclick="quickSearch('Tesisatçı')">🔧 Tesisatçı</button>
-    <button onclick="quickSearch('Elektrikçi')">⚡ Elektrikçi</button>
-    <button onclick="quickSearch('Temizlik')">🧹 Temizlik</button>
-    <button onclick="quickSearch('Nakliye')">🚚 Nakliye</button>
+  <div id="services" class="services-grid">
+    <p style="text-align:center; grid-column: 1/-1;">Hizmetler yükleniyor...</p>
   </div>
 
-  <div class="cats" id="cats"></div>
+  <script>
+    const SUPABASE_URL = '[https://nbwvmhapvsmywjwdgag.supabase.co](https://nbwvmhapvsmywjwdgag.supabase.co)'
+    const SUPABASE_KEY = 'sizin-anon-public-key-anahtarınız';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <div class="ad-banner">
-    <b>📢 Reklam Alanı</b><br>
-    Sitenin en çok görünen yerinde reklam vermek için bizimle iletişime geçin!
-  </div>
+    async function loadServices() {
+      const container = document.getElementById('services');
+      
+      const { data, error } = await _supabase
+        .from('services')
+        .select('*')
+        .order('is_vip', { ascending: false })
+        .order('created_at', { ascending: false });
 
-  <div class="section">
-    <h2>Hizmet Verenler</h2>
-    <span id="count" style="font-size:13px;color:#64748b"></span>
-  </div>
-
-  <div class="cards" id="cards"></div>
-</main>
-
-<!-- MODAL (GİRİŞ / İLAN EKLEME & ÖDEME) -->
-<div class="modal" id="authModal" onclick="if(event.target===this) closeAuthModal()">
-  <div class="box">
-    <div class="tabs">
-      <div class="tab active" id="tabLogin" onclick="switchAuthTab('login')">Giriş Yap</div>
-      <div class="tab" id="tabRegister" onclick="switchAuthTab('register')">Kayıt Ol & İlan Ekle</div>
-    </div>
-
-    <input id="authEmail" type="email" placeholder="E-posta Adresi">
-    <input id="authPassword" type="password" placeholder="Şifre">
-    
-    <div id="bizFields" style="display:none">
-      <hr style="border:0;border-top:1px solid #e2e8f0;margin:12px 0">
-      <p style="font-size:13px;font-weight:700;margin:0 0 8px;color:#334155">İşletme Bilgileri</p>
-      <input id="bizName" placeholder="İşletme Adı *">
-      <select id="bizCat">
-        <option>Tesisatçı</option>
-        <option>Elektrikçi</option>
-        <option>Temizlik</option>
-        <option>Oto Yıkama</option>
-        <option>Nakliye</option>
-        <option>Özel Ders</option>
-        <option>Diğer</option>
-      </select>
-      <input id="bizDistrict" placeholder="İlçe / Mahalle *">
-      <input id="bizPhone" placeholder="Telefon (05xx...)" inputmode="tel">
-      <textarea id="bizDesc" placeholder="Hizmetlerinizi kısaca tanımlayın"></textarea>
-
-      <p style="font-size:13px;font-weight:700;margin:10px 0 6px;color:#334155">Yayınlama Paketi Seçin</p>
-      <div class="plan-box selected" id="planFree" onclick="selectPlan('free')">
-        <input type="radio" name="plan" id="rFree" checked>
-        <div>
-          <b>Ücretsiz İlan</b>
-          <div style="font-size:12px;color:#64748b">Standart listeleme</div>
-        </div>
-      </div>
-      <div class="plan-box" id="planVip" onclick="selectPlan('vip')">
-        <input type="radio" name="plan" id="rVip">
-        <div>
-          <b>⭐ Öne Çıkan VIP İlan (Aylık 199 TL)</b>
-          <div style="font-size:12px;color:#d97706">En üst sırada görünüm ve altın sarısı vurgulu kart!</div>
-        </div>
-      </div>
-
-      <!-- IBAN & DETAY ÖDEME KUTUSU -->
-      <div class="payment-info" id="paymentInfo">
-        <b>💳 Ödeme Bilgileri (Aylık 199 TL):</b><br>
-        Aşağıdaki IBAN hesabına 199 TL gönderip WhatsApp üzerinden dekont iletiniz:
-        <code>TR40 0001 0026 1470 8234 4450 03</code>
-        <b>Alıcı:</b> Muhsin alkan / yakıniş
-      </div>
-    </div>
-
-    <button class="submit" id="authSubmitBtn" onclick="handleAuth()">Giriş Yap</button>
-    <button class="close" onclick="closeAuthModal()">Vazgeç</button>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-window.YAKINIS_CONFIG = {
-  SUPABASE_URL: 'https://nbwvmhwpvsmyaijwdgag.supabase.co',
-  SUPABASE_ANON_KEY: 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt'
-};
-
-/* YÖNETİCİ WHATSAPP NUMARASI (KENDİ NUMARANIZI GİRİN) */
-const ADMIN_WHATSAPP = "905522852592"; 
-
-const cfg = window.YAKINIS_CONFIG || {};
-const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
-
-const cats = [
-  ['🔧','Tesisatçı'],
-  ['⚡','Elektrikçi'],
-  ['🧹','Temizlik'],
-  ['🚗','Oto Yıkama'],
-  ['🚚','Nakliye'],
-  ['📚','Özel Ders']
-];
-
-let data = [];
-let currentAuthRole = 'user';
-let currentAuthTab = 'login';
-let selectedPlan = 'free';
-
-const catsEl = document.getElementById('cats');
-const cards = document.getElementById('cards');
-const count = document.getElementById('count');
-const q = document.getElementById('q');
-
-function esc(s){
-  return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-function renderCats(){
-  catsEl.innerHTML = cats.map(x =>
-    `<div class="cat" onclick="filterCat('${x[1]}')">
-      <span>${x[0]}</span>${x[1]}
-    </div>`
-  ).join('');
-}
-
-async function load(){
-  const r = await sb
-    .from('businesses')
-    .select('*')
-    .order('is_vip',{ascending:false})
-    .order('created_at',{ascending:false});
-
-  if(r.error){
-    cards.innerHTML = '<div class="empty">Veriler yüklenemedi.</div>';
-    return;
-  }
-
-  data = r.data || [];
-  render();
-}
-
-function render(cat=''){
-  function normalize(s){
-    return String(s||'').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i');
-  }
-
-  const query = normalize(q.value);
-
-  let a = data.filter(x =>
-    (!cat || x.category === cat) &&
-    (!query ||
-      normalize(x.name).includes(query) ||
-      normalize(x.category).includes(query) ||
-      normalize(x.district).includes(query)
-    )
-  );
-
-  count.textContent = a.length + ' ilan';
-
-  cards.innerHTML = a.map(x => {
-    const phone = String(x.phone||'').replace(/\D/g,'');
-    const waPhone = phone.startsWith('90') ? phone : (phone.startsWith('0') ? '9' + phone : '90' + phone);
-    const isVip = x.is_vip || false;
-
-    return `
-    <div class="card ${isVip ? 'vip' : ''}">
-      ${isVip ? '<span class="vip-badge">⭐ Öne Çıkan Sponsorlu İlan</span>' : ''}
-      <div class="top">
-        <div>
-          <div class="name">${esc(x.name)}</div>
-          <div class="meta">${esc(x.category)} · ${esc(x.district)}</div>
-        </div>
-      </div>
-      ${x.description ? `<div style="font-size:13px;color:#475569;margin-top:8px">${esc(x.description)}</div>` : ''}
-      <div class="actions">
-        <a class="wa" href="https://wa.me/${waPhone}" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="call" href="tel:${esc(x.phone)}">Ara</a>
-      </div>
-    </div>`;
-  }).join('') || '<div class="empty">Bu aramada ilan bulunamadı.</div>';
-}
-
-function filterCat(c){ q.value = c; render(c); }
-function quickSearch(c){ q.value = c; render(); }
-function showAll(){ q.value = ''; render(); }
-
-function openAuthModal(role){
-  currentAuthRole = role;
-  document.getElementById('authModal').style.display = 'flex';
-  switchAuthTab('login');
-}
-
-function closeAuthModal(){
-  document.getElementById('authModal').style.display = 'none';
-}
-
-function selectPlan(plan){
-  selectedPlan = plan;
-  document.getElementById('planFree').classList.toggle('selected', plan==='free');
-  document.getElementById('planVip').classList.toggle('selected', plan==='vip');
-  document.getElementById('rFree').checked = (plan === 'free');
-  document.getElementById('rVip').checked = (plan === 'vip');
-  document.getElementById('paymentInfo').style.display = (plan === 'vip') ? 'block' : 'none';
-}
-
-function switchAuthTab(tab){
-  currentAuthTab = tab;
-  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-  
-  const isBizRegister = (currentAuthRole === 'biz' && tab === 'register');
-  document.getElementById('bizFields').style.display = isBizRegister ? 'block' : 'none';
-  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Giriş Yap' : (currentAuthRole === 'biz' ? 'Kayıt Ol ve İlan Oluştur' : 'Kayıt Ol');
-}
-
-async function handleAuth(){
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-
-  if(!email || !password){
-    alert('Lütfen e-posta ve şifrenizi girin.');
-    return;
-  }
-
-  if(currentAuthTab === 'login'){
-    const r = await sb.auth.signInWithPassword({ email, password });
-    if(r.error) alert('Giriş Başarısız: ' + r.error.message);
-    else {
-      alert('Başarıyla giriş yapıldı!');
-      closeAuthModal();
-    }
-  } else {
-    const r = await sb.auth.signUp({ 
-      email, 
-      password,
-      options: { data: { role: currentAuthRole } }
-    });
-
-    if(r.error){
-      alert('Kayıt Başarısız: ' + r.error.message);
-      return;
-    }
-
-    if(currentAuthRole === 'biz'){
-      const name = document.getElementById('bizName').value.trim();
-      const district = document.getElementById('bizDistrict').value.trim();
-      const phone = document.getElementById('bizPhone').value.trim();
-      const category = document.getElementById('bizCat').value;
-      const description = document.getElementById('bizDesc').value.trim();
-
-      if(!name || !district || !phone){
-        alert('Kayıt oluşturuldu fakat işletme bilgileri eksik.');
-        closeAuthModal();
+      if (error) {
+        container.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">Veriler yüklenirken hata oluştu.</p>';
         return;
       }
 
-      await sb.from('businesses').insert({
-        name, category, district, phone, description, 
-        status: 'approved',
-        is_vip: false // İlk başta pasif, ödeme yapılınca siz manuel veya butonla aktifleştirirsiniz
-      });
-
-      if(selectedPlan === 'vip'){
-        const msg = encodeURIComponent(`Merhaba, Yakınİş sitemize '${name}' adıyla VIP İlan kaydı oluşturdum. IBAN hesabınıza 199 TL ödemeyi yapıp dekont göndermek istiyorum.`);
-        window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
-      } else {
-        alert('İlanınız başarıyla eklendi ve yayınlandı!');
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
+        return;
       }
+
+      const now = new Date();
+
+      container.innerHTML = data.map(item => {
+        // VIP Süre Kontrolü
+        let isVipActive = item.is_vip;
+        if (item.vip_until && new Date(item.vip_until) < now) {
+          isVipActive = false;
+        }
+
+        return `
+          <div class="card ${isVipActive ? 'vip-card' : ''}">
+            ${isVipActive ? '<span class="vip-badge">⭐ VIP İLAN</span>' : ''}
+            <h3>${item.title || 'Başlıksız Hizmet'}</h3>
+            <span class="category">${item.category || 'Genel'}</span>
+            <a href="tel:${item.phone}" class="phone">📞 ${item.phone || 'Telefon Yok'}</a>
+          </div>
+        `;
+      }).join('');
     }
 
-    closeAuthModal();
-    load();
-  }
-}
-
-/* BAŞLANGIÇ */
-renderCats();
-load();
-</script>
+    loadServices();
+  </script>
 </body>
 </html>
