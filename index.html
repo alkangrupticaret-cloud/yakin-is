@@ -62,6 +62,7 @@
 
   <script>
     const SUPABASE_URL = 'https://nbwvmhapvsmywjwdgag.supabase.co';
+    
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
 
     const { createClient } = supabase;
@@ -75,18 +76,14 @@
           .from('services')
           .select('*');
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         if (!data || data.length === 0) {
           container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
           return;
         }
 
-        // VIP olanları en üste sıralama
         data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
-
         const now = new Date();
 
         container.innerHTML = data.map(item => {
