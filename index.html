@@ -3,116 +3,391 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yakın-İş | VIP Hizmet Portalı</title>
+  <title>Yakın-İş | Hizmet & VIP Talep Portalı</title>
+  
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#128c7e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yakın-İş">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
     body { background-color: #f4f6f9; color: #333; padding: 15px; }
     header { text-align: center; margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    h1 { color: #1a202c; font-size: 24px; }
     
-    .cta-banner {
-      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-      color: #fff; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px;
-      font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    #pwa-install-banner {
+      display: none;
+      background: #128c7e;
+      color: white;
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    .cta-btn {
-      background: #fff; color: #128c7e; border: none; padding: 8px 16px; border-radius: 20px;
-      font-weight: bold; text-decoration: none; cursor: pointer; display: inline-block;
+    #pwa-install-banner button {
+      background: #ffd700;
+      color: #000;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+    .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { background: #128c7e; color: white; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .card { background: #fff; border-radius: 12px; padding: 15px; border: 1px solid #e2e8f0; margin-bottom: 12px; position: relative; }
     
-    .card {
-      background: #fff; border-radius: 12px; padding: 15px; border: 1px solid #e2e8f0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; gap: 8px;
-    }
+    .filter-box { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .filter-box input, .filter-box select { flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; }
 
     .vip-card {
       border: 2px solid #ffd700 !important;
       background: linear-gradient(135deg, #fffdf0 0%, #ffffff 100%);
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
     }
     .vip-badge {
-      position: absolute; top: -10px; right: 15px; background: #ffd700; color: #000;
-      font-weight: bold; font-size: 11px; padding: 3px 10px; border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      position: absolute; top: 12px; right: 12px; background: #ffd700; color: #000;
+      font-weight: bold; font-size: 11px; padding: 4px 10px; border-radius: 12px;
     }
 
-    .card h3 { font-size: 18px; color: #2d3748; padding-right: 60px; }
-    .card .category { font-size: 13px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
-    .card .phone { font-size: 15px; color: #2b6cb0; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    .btn { background: #128c7e; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+    .btn-danger { background: #e53e3e; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; margin-top: 8px; }
+    
+    .action-btns { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .phone-btn { background: #2b6cb0; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
+    .wa-btn { background: #25d366; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
+
+    .admin-badge { background: #805ad5; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-left: 8px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Yakın-İş Hizmet Rehberi</h1>
-  </header>
-
-  <div class="cta-banner">
-    <span>🌟 Hizmetinizi öne çıkarmak mı istiyorsunuz?</span>
-    <a href="https://wa.me/905522852592?text=Merhaba,%20yakinis.com%20sitenize%20VIP%20ilan%20vermek%20istiyorum." target="_blank" class="cta-btn">WhatsApp İlan Ver / VIP Al</a>
+  <div id="pwa-install-banner">
+    <div>
+      <strong>📲 Uygulamayı Yükleyin</strong>
+      <p style="font-size: 12px; opacity: 0.9;">Daha hızlı erişim için ana ekrana ekleyin.</p>
+    </div>
+    <button onclick="installPWA()">YÜKLE</button>
   </div>
 
-  <div id="services" class="services-grid">
-    <p style="text-align:center; grid-column: 1/-1;">Hizmetler yükleniyor...</p>
+  <header>
+    <h1>Yakın-İş Hizmet & VIP Portalı</h1>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('ustalar')">Ustalar</button>
+    <button class="tab-btn" onclick="switchTab('talep-olustur')">Talep Bırak</button>
+    <button class="tab-btn" onclick="switchTab('usta-paneli')">Giriş Yap</button>
+  </div>
+
+  <!-- 1. USTALAR LİSTESİ VE FİLTRELEME -->
+  <div id="sec-ustalar" class="section active">
+    <h3>Kayıtlı Ustalar</h3>
+    <br>
+    <div class="filter-box">
+      <input type="text" id="searchCity" placeholder="Şehir / İlçe Arayın..." oninput="filterCraftsmen()">
+      <select id="searchCategory" onchange="filterCraftsmen()">
+        <option value="">Tüm Kategoriler</option>
+        <option value="Tesisat">Tesisat</option>
+        <option value="Otomotiv">Otomotiv</option>
+        <option value="Elektrik">Elektrik</option>
+        <option value="Boya / Tadilat">Boya / Tadilat</option>
+        <option value="Temizlik">Temizlik</option>
+      </select>
+    </div>
+    <div id="craftsmen-list"><p>Ustalar yükleniyor...</p></div>
+  </div>
+
+  <!-- 2. TALEP OLUŞTUR -->
+  <div id="sec-talep-olustur" class="section">
+    <div class="card">
+      <h3>Hizmet Talebi Oluştur</h3>
+      <p style="font-size: 13px; color: #666; margin-bottom: 15px;">İhtiyacınızı yazın, ustalar sizinle iletişime geçsin.</p>
+      <form id="requestForm">
+        <div class="form-group">
+          <label>Talep Başlığı</label>
+          <input type="text" id="reqTitle" placeholder="Örn: Acil Su Kaçağı Tamiri" required>
+        </div>
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="reqCategory" required>
+            <option value="Tesisat">Tesisat</option>
+            <option value="Otomotiv">Otomotiv</option>
+            <option value="Elektrik">Elektrik</option>
+            <option value="Boya / Tadilat">Boya / Tadilat</option>
+            <option value="Temizlik">Temizlik</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Şehir / İlçe</label>
+          <input type="text" id="reqCity" placeholder="Örn: Bursa / Nilüfer" required>
+        </div>
+        <div class="form-group">
+          <label>Telefon Numaranız</label>
+          <input type="tel" id="reqPhone" placeholder="05XXXXXXXXX" required>
+        </div>
+        <div class="form-group">
+          <label>Açıklama</label>
+          <textarea id="reqDesc" rows="3" placeholder="Detayları yazın..."></textarea>
+        </div>
+        
+        <div class="form-group" style="display:flex; align-items:center; gap:8px; background:#fffdf0; padding:10px; border:1px solid #ffd700; border-radius:6px; margin-bottom:15px;">
+          <input type="checkbox" id="reqIsVip" style="width: auto; cursor:pointer;">
+          <label for="reqIsVip" style="margin-bottom:0; cursor:pointer; color:#b7791f; font-weight:bold;">⭐ VIP / Acil Talep Olarak Öne Çıkar</label>
+        </div>
+
+        <button type="submit" class="btn">Talebi Gönder</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. USTA & YÖNETİCİ PANELİ -->
+  <div id="sec-usta-paneli" class="section">
+    <div id="auth-box" class="card">
+      <h3>Kullanıcı / Usta / Admin Girişi</h3>
+      <br>
+      <div class="form-group">
+        <label>E-Posta</label>
+        <input type="email" id="email" placeholder="email@adresiniz.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="password" placeholder="******">
+      </div>
+      <button onclick="loginUsta()" class="btn" style="margin-bottom: 8px;">Giriş Yap</button>
+      <button onclick="registerUstaModal()" class="btn" style="background:#4a5568;">Yeni Kayıt Oluştur</button>
+    </div>
+
+    <div id="requests-box" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 id="panel-title">Gelen Müşteri Talepleri</h3>
+        <button onclick="logoutUsta()" style="padding: 5px 10px; background: #e53e3e; color: white; border: none; border-radius: 5px; cursor: pointer;">Çıkış</button>
+      </div>
+      <div id="requests-list"><p>Talepler yükleniyor...</p></div>
+    </div>
   </div>
 
   <script>
-    // URL ve Key birebir aynı proje ID'sine (nbwvmhwpvsmyaijwdgag) esitlendi
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+    
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let IS_ADMIN = false;
+    let ALL_CRAFTSMEN = [];
 
-    async function loadServices() {
-      const container = document.getElementById('services');
-      
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/services?select=*`, {
-          method: 'GET',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
-          }
-        });
+    // PWA Kurulumu
+    let deferredPrompt;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
 
-        if (!response.ok) {
-          throw new Error(`HTTP Hatası: ${response.status}`);
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('pwa-install-banner').style.display = 'flex';
+    });
+
+    async function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          document.getElementById('pwa-install-banner').style.display = 'none';
         }
-
-        const data = await response.json();
-
-        if (!data || data.length === 0) {
-          container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Henüz kayıtlı hizmet bulunmamaktadır.</p>';
-          return;
-        }
-
-        data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
-        const now = new Date();
-
-        container.innerHTML = data.map(item => {
-          let isVipActive = item.is_vip;
-          if (item.vip_until && new Date(item.vip_until) < now) {
-            isVipActive = false;
-          }
-
-          return `
-            <div class="card ${isVipActive ? 'vip-card' : ''}">
-              ${isVipActive ? '<span class="vip-badge">⭐ VIP İLAN</span>' : ''}
-              <h3>${item.title || 'Başlıksız Hizmet'}</h3>
-              <span class="category">${item.category || 'Genel'}</span>
-              <a href="tel:${item.phone}" class="phone">📞 ${item.phone || 'Telefon Yok'}</a>
-            </div>
-          `;
-        }).join('');
-
-      } catch (error) {
-        console.error("Bağlantı Hatası:", error);
-        container.innerHTML = `<p style="color:red; text-align:center; grid-column: 1/-1;">Bağlantı Hatası: ${error.message || error}</p>`;
+        deferredPrompt = null;
       }
     }
 
-    loadServices();
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabName));
+      if(activeBtn) activeBtn.classList.add('active');
+      
+      document.getElementById(`sec-${tabName}`).classList.add('active');
+
+      if (tabName === 'ustalar') loadCraftsmen();
+      if (tabName === 'usta-paneli') checkUstaSession();
+    }
+
+    // Ustaları Listele ve Filtrele
+    async function loadCraftsmen() {
+      const { data, error } = await db.from('services').select('*');
+      if (error || !data) return;
+      
+      ALL_CRAFTSMEN = data;
+      filterCraftsmen();
+    }
+
+    function filterCraftsmen() {
+      const container = document.getElementById('craftsmen-list');
+      const cityQuery = document.getElementById('searchCity').value.toLowerCase();
+      const catQuery = document.getElementById('searchCategory').value;
+
+      let filtered = ALL_CRAFTSMEN.filter(u => {
+        const matchesCity = !cityQuery || (u.city && u.city.toLowerCase().includes(cityQuery));
+        const matchesCat = !catQuery || u.category === catQuery;
+        return matchesCity && matchesCat;
+      });
+
+      filtered.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
+
+      if (!filtered.length) {
+        container.innerHTML = '<p>Aranan kriterlere uygun usta bulunamadı.</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(u => {
+        const cleanPhone = u.phone ? u.phone.replace(/\D/g,'') : '';
+        const waLink = `https://wa.me/90${cleanPhone}?text=${encodeURIComponent('Merhaba, Yakın-İş üzerinden ulaştım.')}`;
+        
+        return `
+          <div class="card ${u.is_vip ? 'vip-card' : ''}">
+            ${u.is_vip ? '<span class="vip-badge">⭐ VIP USTA</span>' : ''}
+            <h4 style="padding-right: 60px;">${u.title}</h4>
+            <p style="font-size:13px; color:#666;">${u.category} ${u.city ? '• ' + u.city : ''}</p>
+            <div class="action-btns">
+              <a href="tel:${u.phone}" class="phone-btn">📞 Arayın</a>
+              <a href="${waLink}" target="_blank" class="wa-btn">💬 WhatsApp</a>
+            </div>
+            ${IS_ADMIN ? `<br><button onclick="deleteService(${u.id})" class="btn-danger">🗑️ İlanı Sil (Admin)</button>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Müşteri Talep Gönderimi
+    document.getElementById('requestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('reqTitle').value,
+        category: document.getElementById('reqCategory').value,
+        city: document.getElementById('reqCity').value,
+        customer_phone: document.getElementById('reqPhone').value,
+        description: document.getElementById('reqDesc').value,
+        is_vip: document.getElementById('reqIsVip').checked
+      };
+
+      const { error } = await db.from('requests').insert([payload]);
+      if (!error) {
+        alert('Talebiniz başarıyla alındı! Ustalar sizinle iletişime geçecektir.');
+        document.getElementById('requestForm').reset();
+        switchTab('ustalar');
+      } else {
+        alert('Hata oluştu: ' + error.message);
+      }
+    });
+
+    // Oturum ve Yönetici Kontrolü
+    async function checkUstaSession() {
+      const { data: { session } } = await db.auth.getSession();
+      if (session) {
+        const { data: adminData } = await db.from('admins').select('*').eq('email', session.user.email);
+        IS_ADMIN = adminData && adminData.length > 0;
+
+        document.getElementById('auth-box').style.display = 'none';
+        document.getElementById('requests-box').style.display = 'block';
+
+        if (IS_ADMIN) {
+          document.getElementById('panel-title').innerHTML = 'Yönetici Paneli <span class="admin-badge">ADMIN</span>';
+        } else {
+          document.getElementById('panel-title').innerText = 'Gelen Müşteri Talepleri';
+        }
+
+        loadCustomerRequests();
+      } else {
+        IS_ADMIN = false;
+        document.getElementById('auth-box').style.display = 'block';
+        document.getElementById('requests-box').style.display = 'none';
+      }
+    }
+
+    async function loadCustomerRequests() {
+      const container = document.getElementById('requests-list');
+      const { data, error } = await db.from('requests').select('*').order('id', { ascending: false });
+
+      if (error || !data || !data.length) {
+        container.innerHTML = '<p>Şu an açık müşteri talebi yok.</p>';
+        return;
+      }
+
+      data.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
+
+      container.innerHTML = data.map(r => {
+        const cleanPhone = r.customer_phone ? r.customer_phone.replace(/\D/g,'') : '';
+        const waMessage = encodeURIComponent(`Merhaba, Yakın-İş portalındaki "${r.title}" talebiniz için yazıyorum.`);
+        const waLink = `https://wa.me/90${cleanPhone}?text=${waMessage}`;
+
+        return `
+          <div class="card ${r.is_vip ? 'vip-card' : ''}" style="${r.is_vip ? '' : 'border-left: 4px solid #128c7e;'}">
+            ${r.is_vip ? '<span class="vip-badge">⭐ VIP TALEP</span>' : ''}
+            <small style="color:#e53e3e; font-weight:bold;">${r.city} - ${r.category}</small>
+            <h4 style="margin: 5px 0; padding-right: 60px;">${r.title}</h4>
+            <p style="font-size:14px; margin-bottom:12px; color:#4a5568;">${r.description || 'Açıklama belirtilmemiş.'}</p>
+            <div class="action-btns">
+              <a href="tel:${r.customer_phone}" class="phone-btn" style="background:${r.is_vip ? '#ffd700' : '#2b6cb0'}; color:${r.is_vip ? '#000' : '#fff'};">📞 Müşteriyi Ara</a>
+              <a href="${waLink}" target="_blank" class="wa-btn">💬 WhatsApp'tan Yaz</a>
+            </div>
+            ${IS_ADMIN ? `<br><button onclick="deleteRequest(${r.id})" class="btn-danger">🗑️ Talebi Sil (Admin)</button>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function deleteRequest(id) {
+      if(confirm('Bu müşteri talebini silmek istediğinize emin misiniz?')) {
+        await db.from('requests').delete().eq('id', id);
+        loadCustomerRequests();
+      }
+    }
+
+    async function deleteService(id) {
+      if(confirm('Bu usta ilanını silmek istediğinize emin misiniz?')) {
+        await db.from('services').delete().eq('id', id);
+        loadCraftsmen();
+      }
+    }
+
+    async function loginUsta() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) alert('Giriş başarısız: ' + error.message);
+      else checkUstaSession();
+    }
+
+    async function registerUstaModal() {
+      const email = prompt('E-posta adresiniz:');
+      const password = prompt('Şifreniz (En az 6 karakter):');
+      if (email && password) {
+        const { error } = await db.auth.signUp({ email, password });
+        if (error) alert('Kayıt Hatası: ' + error.message);
+        else alert('Kayıt başarılı! Şimdi giriş yapabilirsiniz.');
+      }
+    }
+
+    async function logoutUsta() {
+      await db.auth.signOut();
+      checkUstaSession();
+    }
+
+    loadCraftsmen();
   </script>
 </body>
   </html>
