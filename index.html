@@ -3,200 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Yerel Hizmet ve Usta Platformu</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Yakın-İş | Hizmet & VIP Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans">
+<body class="bg-slate-50 text-slate-800 font-sans pb-12">
 
-    <!-- Üst Menü / Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black text-blue-600 tracking-tight">Yakın-İş</h1>
-            <div id="auth-status" class="text-sm font-medium text-slate-600">Giriş Yapılmadı</div>
+    <!-- Üst Menü -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-black text-emerald-600 tracking-tight">Yakın-İş</h1>
+            <div id="user-menu-area">
+                <button onclick="openAuthModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl transition">Giriş Yap</button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+        
+        <!-- Üst Başlık ve Sekmeler -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center">
+            <h2 class="text-xl font-bold text-slate-900 mb-1">Yakın-İş Hizmet & VIP Portal</h2>
+            <p class="text-xs text-slate-500 mb-4">Ustaları keşfet ya da anında talep oluştur.</p>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="switchTab('masters')" id="btn-tab-masters" class="bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-sm">Ustalar</button>
+                <button onclick="switchTab('request')" id="btn-tab-request" class="bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-sm transition">Talep Bırak</button>
+            </div>
+        </div>
 
-        <!-- MÜŞTERİ BÖLÜMÜ: TALEP OLUŞTURMA -->
-        <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-center space-x-3 mb-6">
-                <div class="bg-blue-100 p-3 rounded-xl text-blue-600 font-bold">🛠️</div>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">Hizmet Talebi Oluştur</h2>
-                    <p class="text-sm text-slate-500">İhtiyacını yaz, ustalardan teklif al (9.99 TL)</p>
-                </div>
+        <!-- SEKME 1: USTA LİSTESİ (Supabase'den Canlı Çekilir) -->
+        <div id="tab-masters" class="space-y-3">
+            <div class="flex gap-2">
+                <input type="text" id="search-location" placeholder="Şehir / İlçe Arayın..." class="w-1/2 px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select id="filter-category" onchange="loadMasters()" class="w-1/2 px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="">Tüm Kategoriler</option>
+                    <option value="Tesisat">Tesisat</option>
+                    <option value="Elektrik">Elektrik</option>
+                    <option value="Otomotiv">Otomotiv</option>
+                </select>
             </div>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
-                    <select id="req_category" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        <option value="Tesisatçı">Su Tesisatçısı</option>
-                        <option value="Elektrikçi">Elektrikçi</option>
-                        <option value="Oto Tamir">Oto Tamir / Servis</option>
-                        <option value="Nakliye">Nakliyat</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Talep Başlığı</label>
-                    <input type="text" id="req_title" placeholder="Örn: Mutfak gideri tıkanıklığı" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Açıklama</label>
-                    <textarea id="req_desc" rows="3" placeholder="Sorununuzu detaylıca açıklayın..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">İl / İlçe</label>
-                    <input type="text" id="req_location" placeholder="Örn: Ankara / Çankaya" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                </div>
-                <button onclick="createRequestWithPayment()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-500/25">
-                    Ödeme Yap ve Talebi Yayınla (9.99 TL)
-                </button>
+            <div id="masters-container" class="space-y-3">
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Ustalar yükleniyor...</div>
             </div>
-        </section>
+        </div>
 
-        <!-- USTA BÖLÜMÜ: AÇIK TALEPLER -->
-        <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-center space-x-3 mb-6">
-                <div class="bg-amber-100 p-3 rounded-xl text-amber-600 font-bold">📋</div>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">Açık Talepler</h2>
-                    <p class="text-sm text-slate-500">Bölgendeki işleri incele, teklif ver (24.99 TL)</p>
-                </div>
+        <!-- SEKME 2: TALEP BIRAK (9.99 TL Ödemeli) -->
+        <div id="tab-request" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hidden space-y-3">
+            <h3 class="font-bold text-slate-900 text-base">Hizmet Talebi Oluştur (9.99 TL)</h3>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                <select id="req_category" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="Tesisat">Su Tesisatçısı</option>
+                    <option value="Elektrik">Elektrikçi</option>
+                    <option value="Otomotiv">Oto Tamir / Servis</option>
+                    <option value="Nakliye">Nakliyat</option>
+                </select>
             </div>
-
-            <div id="requests-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-1">
-                <div class="text-center py-8 text-slate-400">Talepler yükleniyor...</div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Talep Başlığı</label>
+                <input type="text" id="req_title" placeholder="Örn: Mutfak gideri tıkanıklığı" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-        </section>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Açıklama</label>
+                <textarea id="req_desc" rows="3" placeholder="Sorununuzu detaylıca yazın..." class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">İl / İlçe</label>
+                <input type="text" id="req_location" placeholder="Örn: Ankara / Çankaya" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <button onclick="createRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
+                Talebi Yayınla ve Öde (9.99 TL)
+            </button>
+        </div>
 
     </main>
 
+    <!-- GİRİŞ / KAYIT MODAL (AÇILIR PENCERE) -->
+    <div id="auth-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm p-6 rounded-3xl shadow-xl space-y-4 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 text-center">Giriş Yap</h3>
+            
+            <div id="modal-name-box" class="hidden">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad</label>
+                <input type="text" id="auth_name" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta</label>
+                <input type="email" id="auth_email" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
+                <input type="password" id="auth_password" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div id="modal-type-box" class="hidden">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Üyelik Tipi</label>
+                <select id="auth_type" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="client">Müşteri (Hizmet Almak İstiyorum)</option>
+                    <option value="master">Usta (Hizmet Vermek İstiyorum)</option>
+                </select>
+            </div>
+
+            <button onclick="handleAuthSubmit()" id="modal-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition">Giriş Yap</button>
+            <div onclick="toggleAuthMode()" class="text-center text-xs text-emerald-600 font-semibold cursor-pointer">Hesabın yok mu? Kayıt ol</div>
+        </div>
+    </div>
+
     <script>
-        const SUPABASE_URL = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+        // Supabase Bilgileriniz (Kendi bilgilerinizi buraya ekleyin)
+        const SUPABASE_URL = 'SUPABASE_PROJE_URL_BURAYA';
+        const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Kullanıcı oturum kontrolü
-        async function checkUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-            const statusEl = document.getElementById('auth-status');
-            if (user) {
-                statusEl.innerHTML = `<span class="text-green-600 font-semibold">● Aktif Oturum</span>`;
+        let isRegisterMode = false;
+        let currentUser = null;
+
+        // Oturum kontrolü
+        async function checkUserSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            const area = document.getElementById('user-menu-area');
+            if (session) {
+                currentUser = session.user;
+                area.innerHTML = `<span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl">Oturum Açık</span>`;
             } else {
-                statusEl.innerHTML = `<span class="text-amber-600 font-semibold">Giriş Yapılmadı</span>`;
+                currentUser = null;
+                area.innerHTML = `<button onclick="openAuthModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl transition">Giriş Yap</button>`;
             }
         }
 
-        // 1. Talep Oluşturma
-        async function createRequestWithPayment() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                alert("Lütfen önce giriş yapın!");
-                return;
-            }
+        // Sekme Değiştirme
+        function switchTab(tab) {
+            const btnMasters = document.getElementById('btn-tab-masters');
+            const btnRequest = document.getElementById('btn-tab-request');
+            const divMasters = document.getElementById('tab-masters');
+            const divRequest = document.getElementById('tab-request');
 
-            const category = document.getElementById('req_category').value;
-            const title = document.getElementById('req_title').value;
-            const description = document.getElementById('req_desc').value;
-            const locationParts = document.getElementById('req_location').value.split('/');
-            const city = locationParts[0] ? locationParts[0].trim() : "Bilinmiyor";
-            const district = locationParts[1] ? locationParts[1].trim() : "Bilinmiyor";
-
-            if (!title || !description) {
-                alert("Lütfen tüm alanları doldurun.");
-                return;
-            }
-
-            const onay = confirm("Talep yayınlamak için 9.99 TL ödeme alınacaktır. Onaylıyor musunuz?");
-            if (!onay) return;
-
-            const { error } = await supabase.from('requests').insert([
-                { client_id: user.id, category, title, description, city, district, status: 'active', is_paid: true }
-            ]);
-
-            if (error) {
-                alert("Talep oluşturulamadı: " + error.message);
+            if (tab === 'masters') {
+                btnMasters.className = "bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-sm";
+                btnRequest.className = "bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-sm transition";
+                divMasters.classList.remove('hidden');
+                divRequest.classList.add('hidden');
+                loadMasters();
             } else {
-                alert("Ödeme başarılı! Talebiniz yayınlandı.");
-                loadActiveRequests();
+                btnRequest.className = "bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-sm";
+                btnMasters.className = "bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-sm transition";
+                divRequest.classList.remove('hidden');
+                divMasters.classList.add('hidden');
             }
         }
 
-        // 2. Açık Talepleri Listeleme
-        async function loadActiveRequests() {
-            const container = document.getElementById('requests-list');
+        // Modal Yönetimi
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('modal-title').innerText = isRegisterMode ? "Kayıt Ol" : "Giriş Yap";
+            document.getElementById('modal-submit-btn').innerText = isRegisterMode ? "Kayıt Ol" : "Giriş Yap";
+            document.getElementById('modal-name-box').classList.toggle('hidden', !isRegisterMode);
+            document.getElementById('modal-type-box').classList.toggle('hidden', !isRegisterMode);
+        }
 
-            const { data: requests, error } = await supabase
-                .from('requests')
-                .select('*')
-                .eq('status', 'active')
-                .order('created_at', { ascending: false });
+        // Giriş / Kayıt İşlemi
+        async function handleAuthSubmit() {
+            const email = document.getElementById('auth_email').value;
+            const password = document.getElementById('auth_password').value;
 
-            if (error || !requests || requests.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-slate-400">Şu anda aktif talep bulunmuyor.</div>`;
+            if (isRegisterMode) {
+                const fullName = document.getElementById('auth_name').value;
+                const userType = document.getElementById('auth_type').value;
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) { alert("Kayıt hatası: " + error.message); return; }
+                if (data.user) {
+                    await supabase.from('profiles').insert([{ id: data.user.id, full_name: fullName, phone: '05000000000', user_type: userType }]);
+                }
+                alert("Kayıt başarılı! Giriş yapabilirsiniz.");
+                toggleAuthMode();
+            } else {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) { alert("Giriş hatası: " + error.message); return; }
+                alert("Giriş başarılı!");
+                closeAuthModal();
+                checkUserSession();
+            }
+        }
+
+        // Supabase'den Canlı Ustaları Çekme
+        async function loadMasters() {
+            const container = document.getElementById('masters-container');
+            const categoryFilter = document.getElementById('filter-category').value;
+
+            let query = supabase.from('master_details').select(`*, profiles(full_name, phone)`);
+            if (categoryFilter) query = query.eq('category', categoryFilter);
+
+            const { data: masters, error } = await query;
+
+            if (error || !masters || masters.length === 0) {
+                container.innerHTML = `<div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Henüz kayıtlı usta bulunmuyor.</div>`;
                 return;
             }
 
             container.innerHTML = "";
-            requests.forEach(req => {
+            masters.forEach(m => {
+                const name = m.profiles ? m.profiles.full_name : "Usta";
+                const phone = m.profiles ? m.profiles.phone : "";
+                const isVip = m.is_vip;
+
                 container.innerHTML += `
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-slate-900">${req.title}</h3>
-                            <span class="text-xs bg-blue-100 text-blue-700 font-semibold px-2.5 py-1 rounded-full">${req.category}</span>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border ${isVip ? 'border-amber-300 ring-2 ring-amber-100' : 'border-slate-100'} flex justify-between items-center">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-bold text-slate-900 text-sm">${name}</h4>
+                                ${isVip ? '<span class="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">★ VIP USTA</span>' : ''}
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">${m.category}</p>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium">📍 ${req.city} / ${req.district}</p>
-                        <p class="text-sm text-slate-600">${req.description}</p>
-                        
-                        <div class="border-t border-slate-200 pt-3 space-y-2">
-                            <input type="number" id="price_${req.id}" placeholder="Teklif Fiyatınız (TL)" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <input type="text" id="msg_${req.id}" placeholder="Usta mesajı (opsiyonel)" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <button onclick="sendOffer('${req.id}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-sm transition">
-                                Teklif Gönder (24.99 TL)
-                            </button>
+                        <div class="flex space-x-2">
+                            <a href="tel:${phone}" class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-xs font-bold transition">📞 Arayın</a>
+                            <a href="https://wa.me/${phone}?text=Merhaba,%20hizmet%20talebiniz%20için%20ulaşıyorum." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-xs font-bold transition">💬 WhatsApp</a>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // 3. Usta Teklif Verme
-        async function sendOffer(requestId) {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                alert("Lütfen usta hesabınızla giriş yapın!");
+        // 9.99 TL Ödemeli Talep Oluşturma
+        async function createRequest() {
+            if (!currentUser) {
+                alert("Talep oluşturmak için lütfen önce giriş yapın!");
+                openAuthModal();
                 return;
             }
 
-            const priceOffer = document.getElementById(`price_${requestId}`).value;
-            const message = document.getElementById(`msg_${requestId}`).value;
+            const category = document.getElementById('req_category').value;
+            const title = document.getElementById('req_title').value;
+            const description = document.getElementById('req_desc').value;
+            const locationVal = document.getElementById('req_location').value.split('/');
+            const city = locationVal[0] ? locationVal[0].trim() : "Bursa";
+            const district = locationVal[1] ? locationVal[1].trim() : "Merkez";
 
-            if (!priceOffer) {
-                alert("Lütfen teklif fiyatı girin.");
-                return;
-            }
+            if (!title || !description) { alert("Lütfen başlık ve açıklamayı doldurun."); return; }
 
-            const onay = confirm("Teklif göndermek için 24.99 TL düşülecektir. Onaylıyor musunuz?");
+            const onay = confirm("Talep yayınlamak için 9.99 TL tahsil edilecektir. Onaylıyor musunuz?");
             if (!onay) return;
 
-            const { error } = await supabase.from('offers').insert([
-                { request_id: requestId, master_id: user.id, price_offer: parseFloat(priceOffer), message, is_paid: true }
+            const { error } = await supabase.from('requests').insert([
+                { client_id: currentUser.id, category, title, description, city, district, status: 'active', is_paid: true }
             ]);
 
             if (error) {
-                alert("Teklif gönderilemedi (Zaten teklif vermiş olabilirsiniz): " + error.message);
+                alert("Talep oluşturulamadı: " + error.message);
             } else {
-                alert("Teklifiniz başarıyla iletildi!");
+                alert("Ödeme başarılı! Talebiniz yayına alındı.");
+                switchTab('masters');
             }
         }
 
         window.onload = () => {
-            checkUser();
-            loadActiveRequests();
+            checkUserSession();
+            loadMasters();
         };
     </script>
 </body>
