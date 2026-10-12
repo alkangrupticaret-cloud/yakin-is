@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- SEKME 1: USTA LİSTESİ (Supabase'den Canlı Çekilir) -->
+        <!-- SEKME 1: USTA LİSTESİ -->
         <div id="tab-masters" class="space-y-3">
             <div class="flex gap-2">
                 <input type="text" id="search-location" placeholder="Şehir / İlçe Arayın..." class="w-1/2 px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <!-- SEKME 2: TALEP BIRAK (9.99 TL Ödemeli) -->
+        <!-- SEKME 2: TALEP BIRAK -->
         <div id="tab-request" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hidden space-y-3">
             <h3 class="font-bold text-slate-900 text-base">Hizmet Talebi Oluştur (9.99 TL)</h3>
             <div>
@@ -80,7 +80,7 @@
 
     </main>
 
-    <!-- GİRİŞ / KAYIT MODAL (AÇILIR PENCERE) -->
+    <!-- GİRİŞ / KAYIT MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm p-6 rounded-3xl shadow-xl space-y-4 relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
@@ -112,15 +112,15 @@
     </div>
 
     <script>
-        // Supabase Bilgileriniz (Kendi bilgilerinizi buraya ekleyin)
-        const SUPABASE_URL = 'SUPABASE_PROJE_URL_BURAYA';
-        const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
+        // Kendi Supabase Proje Bilgilerinizi Buraya Yapıştırın:
+        const SUPABASE_URL = 'BURAYA_PROJE_URL_ADRESINI_YAZ';
+        const SUPABASE_ANON_KEY = 'BURAYA_ANON_KEY_YAZ';
+        
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isRegisterMode = false;
         let currentUser = null;
 
-        // Oturum kontrolü
         async function checkUserSession() {
             const { data: { session } } = await supabase.auth.getSession();
             const area = document.getElementById('user-menu-area');
@@ -133,7 +133,6 @@
             }
         }
 
-        // Sekme Değiştirme
         function switchTab(tab) {
             const btnMasters = document.getElementById('btn-tab-masters');
             const btnRequest = document.getElementById('btn-tab-request');
@@ -154,7 +153,6 @@
             }
         }
 
-        // Modal Yönetimi
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
         
@@ -166,7 +164,6 @@
             document.getElementById('modal-type-box').classList.toggle('hidden', !isRegisterMode);
         }
 
-        // Giriş / Kayıt İşlemi
         async function handleAuthSubmit() {
             const email = document.getElementById('auth_email').value;
             const password = document.getElementById('auth_password').value;
@@ -190,7 +187,6 @@
             }
         }
 
-        // Supabase'den Canlı Ustaları Çekme
         async function loadMasters() {
             const container = document.getElementById('masters-container');
             const categoryFilter = document.getElementById('filter-category').value;
@@ -229,7 +225,6 @@
             });
         }
 
-        // 9.99 TL Ödemeli Talep Oluşturma
         async function createRequest() {
             if (!currentUser) {
                 alert("Talep oluşturmak için lütfen önce giriş yapın!");
