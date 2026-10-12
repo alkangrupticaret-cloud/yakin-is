@@ -1,69 +1,119 @@
--- Önce foreign key bağımlılığı olan tabloları ve ana tabloları güvenle silelim
-DROP TABLE IF EXISTS payments CASCADE;
-DROP TABLE IF EXISTS offers CASCADE;
-DROP TABLE IF EXISTS requests CASCADE;
-DROP TABLE IF EXISTS master_details CASCADE;
-DROP TABLE IF EXISTS profiles CASCADE;
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yakın-İş | Giriş ve Kayıt</title>
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+        .switch-text { text-align: center; margin-top: 15px; font-size: 14px; color: #666; cursor: pointer; }
+    </style>
+</head>
+<body>
 
--- 1. KULLANICI / USTA PROFİLLERİ TABLOSU
-CREATE TABLE profiles (
-  id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
-  full_name TEXT NOT NULL,
-  phone TEXT UNIQUE NOT NULL,
-  user_type TEXT CHECK (user_type IN ('client', 'master', 'admin')) DEFAULT 'client',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+<div class="container">
+    <h2 id="form-title">Giriş Yap</h2>
+    
+    <div class="form-group" id="name-group" style="display:none;">
+        <label>Ad Soyad</label>
+        <input type="text" id="full_name" placeholder="Adınız Soyadınız">
+    </div>
 
--- 2. USTA DETAYLARI VE DOĞRULAMA TABLOSU
-CREATE TABLE master_details (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE UNIQUE NOT NULL,
-  category TEXT NOT NULL,
-  national_id TEXT, -- T.C. Kimlik No
-  document_url TEXT, -- Ustalık belgesi / Vergi levhası
-  selfie_url TEXT, -- Selfie görseli
-  is_verified BOOLEAN DEFAULT FALSE, -- Doğrulanmış Usta Rozeti
-  is_vip BOOLEAN DEFAULT FALSE, -- VIP Üye
-  vip_expires_at TIMESTAMP WITH TIME ZONE,
-  rating DECIMAL(2,1) DEFAULT 0.0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+    <div class="form-group" id="phone-group" style="display:none;">
+        <label>Telefon Numarası</label>
+        <input type="text" id="phone" placeholder="05XXXXXXXXX">
+    </div>
 
--- 3. KULLANICI TALEPLERİ TABLOSU (9.99 TL)
-CREATE TABLE requests (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  category TEXT NOT NULL,
-  city TEXT NOT NULL,
-  district TEXT NOT NULL,
-  status TEXT CHECK (status IN ('pending_payment', 'active', 'completed', 'cancelled')) DEFAULT 'pending_payment',
-  is_paid BOOLEAN DEFAULT FALSE,
-  payment_id TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+    <div class="form-group" id="type-group" style="display:none;">
+        <label>Üyelik Tipi</label>
+        <select id="user_type">
+            <option value="client">Hizmet Almak İstiyorum (Müşteri)</option>
+            <option value="master">Hizmet Vermek İstiyorum (Usta)</option>
+        </select>
+    </div>
 
--- 4. USTA TEKLİFLERİ TABLOSU (24.99 TL veya VIP Ücretsiz)
-CREATE TABLE offers (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  request_id UUID REFERENCES requests(id) ON DELETE CASCADE NOT NULL,
-  master_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  price_offer DECIMAL(10,2) NOT NULL,
-  message TEXT,
-  is_paid BOOLEAN DEFAULT FALSE,
-  status TEXT CHECK (status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE (request_id, master_id)
-);
+    <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="email" placeholder="ornek@mail.com">
+    </div>
 
--- 5. ÖDEME KAYITLARI TABLOSU
-CREATE TABLE payments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  amount DECIMAL(10,2) NOT NULL,
-  payment_type TEXT CHECK (payment_type IN ('client_request', 'master_offer', 'master_vip')),
-  reference_id UUID,
-  status TEXT CHECK (status IN ('success', 'failed', 'refunded')) DEFAULT 'success',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+    <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="password" placeholder="******">
+    </div>
+
+    <button id="action-btn" onclick="handleAuth()">Giriş Yap</button>
+    <div class="switch-text" id="switch-btn" onclick="toggleMode()">Hesabın yok mu? Kayıt ol</div>
+</div>
+
+<script>
+    // Supabase Bağlantı Bilgilerinizi Buraya Ekleyin
+    const SUPABASE_URL = 'SUPABASE_PROJE_URL_BURAYA';
+    const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let isLoginMode = true;
+
+    function toggleMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('form-title').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
+        document.getElementById('action-btn').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
+        document.getElementById('switch-btn').innerText = isLoginMode ? "Hesabın yok mu? Kayıt ol" : "Zaten hesabın var mı? Giriş yap";
+        
+        document.getElementById('name-group').style.display = isLoginMode ? "none" : "block";
+        document.getElementById('phone-group').style.display = isLoginMode ? "none" : "block";
+        document.getElementById('type-group').style.display = isLoginMode ? "none" : "block";
+    }
+
+    async function handleAuth() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (isLoginMode) {
+            // Giriş Yapma İşlemi
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("Giriş Hatası: " + error.message);
+            else {
+                alert("Giriş başarılı!");
+                window.location.reload();
+            }
+        } else {
+            // Kayıt Olma İşlemi
+            const fullName = document.getElementById('full_name').value;
+            const phone = document.getElementById('phone').value;
+            const userType = document.getElementById('user_type').value;
+
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { full_name: fullName, phone: phone, user_type: userType }
+                }
+            });
+
+            if (error) {
+                alert("Kayıt Hatası: " + error.message);
+            } else {
+                // Profiller tablosuna da kaydı işleyelim
+                if (data.user) {
+                    await supabase.from('profiles').insert([
+                        { id: data.user.id, full_name: fullName, phone: phone, user_type: userType }
+                    ]);
+                }
+                alert("Kayıt başarılı! Lütfen e-postanızı onaylayın.");
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
