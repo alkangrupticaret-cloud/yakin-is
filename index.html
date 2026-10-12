@@ -3,434 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Hizmet, Ödeme & VIP Portal</title>
+    <title>Yakın-İş | Giriş ve Kayıt Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .bg-repair-image {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans pb-12">
+<body class="bg-repair-image min-h-screen flex flex-col justify-between text-slate-800 font-sans">
 
-    <!-- Üst Menü -->
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-black text-emerald-600 tracking-tight">Yakın-İş</h1>
-            <div id="user-menu-area" class="flex gap-2 items-center">
-                <button onclick="openAuthModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl transition">Giriş Yap</button>
-            </div>
-        </div>
+    <!-- Üst Logo / Başlık -->
+    <header class="w-full pt-8 text-center">
+        <h1 class="text-3xl font-black text-white tracking-wider">YAKIN-İŞ</h1>
+        <p class="text-slate-300 text-sm mt-1 font-medium">Yerel Hizmet & Usta Bulma Platformu</p>
     </header>
 
-    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
-        
-        <!-- Üst Başlık ve Sekmeler -->
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center">
-            <h2 class="text-xl font-bold text-slate-900 mb-1">Yakın-İş Hizmet & VIP Portal</h2>
-            <p class="text-xs text-slate-500 mb-4">Ustaları keşfet, talep aç veya usta doğrula.</p>
-            
-            <div class="grid grid-cols-3 gap-1.5">
-                <button onclick="switchTab('masters')" id="btn-tab-masters" class="bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-xs transition shadow-sm">Ustalar</button>
-                <button onclick="switchTab('request')" id="btn-tab-request" class="bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-xs transition">Talep Bırak</button>
-                <button onclick="switchTab('admin')" id="btn-tab-admin" class="bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-xs transition">Admin / Panel</button>
-            </div>
-        </div>
+    <!-- Yan Yana Giriş Kartları -->
+    <main class="max-w-4xl mx-auto w-full px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 
-        <!-- SEKME 1: USTA LİSTESİ -->
-        <div id="tab-masters" class="space-y-3">
-            <div class="flex gap-2">
-                <input type="text" id="search-location" placeholder="Şehir / İlçe Arayın..." class="w-1/2 px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <select id="filter-category" onchange="loadMasters()" class="w-1/2 px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="">Tüm Kategoriler</option>
-                    <option value="Tesisat">Tesisat</option>
-                    <option value="Elektrik">Elektrik</option>
-                    <option value="Otomotiv">Otomotiv</option>
-                    <option value="Nakliye">Nakliyat</option>
-                </select>
+        <!-- SOL KART: KULLANICI / MÜŞTERİ GİRİŞİ -->
+        <div class="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl space-y-5 border border-white/20">
+            <div class="text-center space-y-1">
+                <div class="inline-block bg-blue-100 text-blue-600 p-3 rounded-2xl mb-2 text-2xl">👤</div>
+                <h2 class="text-2xl font-bold text-slate-900">Kullanıcı Girişi</h2>
+                <p class="text-xs text-slate-500">Hizmet almak ve talep oluşturmak için</p>
             </div>
 
-            <div id="masters-container" class="space-y-3">
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Ustalar yükleniyor...</div>
-            </div>
-        </div>
-
-        <!-- SEKME 2: TALEP BIRAK (9.99 TL) -->
-        <div id="tab-request" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hidden space-y-3">
-            <h3 class="font-bold text-slate-900 text-base">Hizmet Talebi Oluştur (9.99 TL)</h3>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-                <select id="req_category" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="Tesisat">Su Tesisatçısı</option>
-                    <option value="Elektrik">Elektrikçi</option>
-                    <option value="Otomotiv">Oto Tamir / Servis</option>
-                    <option value="Nakliye">Nakliyat</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Talep Başlığı</label>
-                <input type="text" id="req_title" placeholder="Örn: Mutfak gideri tıkanıklığı" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Açıklama</label>
-                <textarea id="req_desc" rows="3" placeholder="Sorununuzu detaylıca yazın..." class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">İl / İlçe</label>
-                <input type="text" id="req_location" placeholder="Örn: Bursa / Nilüfer" class="w-full px-3 py-2.5 text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
-            <button onclick="startRequestPaymentProcess()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 flex justify-center items-center gap-2">
-                💳 Ödeme Yap ve Talebi Yayınla (9.99 TL)
-            </button>
-        </div>
-
-        <!-- SEKME 3: ADMIN & USTA DOĞRULAMA PANELİ -->
-        <div id="tab-admin" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hidden space-y-4">
-            <h3 class="font-bold text-slate-900 text-base border-b border-slate-100 pb-2">Usta Belge Yükleme & Doğrulama Paneli</h3>
-            
-            <!-- Usta Belge Yükleme Formu -->
-            <div class="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <h4 class="text-xs font-bold text-slate-700 uppercase">Usta Belge Gönderimi</h4>
-                <div>
-                    <label class="block text-xs text-slate-600 mb-1">T.C. Kimlik Numarası</label>
-                    <input type="text" id="verify_tc" placeholder="11 Haneli T.C. Kimlik No" maxlength="11" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none">
+            <!-- Form Alanı -->
+            <div class="space-y-3">
+                <div id="client-name-box" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad</label>
+                    <input type="text" id="client_name" placeholder="Ahmet Yılmaz" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-600 mb-1">Ustalık Belgesi / Vergi Levhası URL</label>
-                    <input type="text" id="verify_doc_url" placeholder="Belge Görsel Linki" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta Adresi</label>
+                    <input type="email" id="client_email" placeholder="ornek@mail.com" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <button onclick="submitMasterDocuments()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs transition">
-                    Belgeleri Onaya Gönder
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
+                    <input type="password" id="client_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" class="rounded text-blue-600"> Beni Hatırla
+                    </label>
+                    <a href="#" class="text-blue-600 hover:underline font-medium">Şifremi Unuttum</a>
+                </div>
+
+                <button onclick="handleAuth('client')" id="btn-client-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-blue-500/30">
+                    Kullanıcı Girişi Yap
                 </button>
             </div>
 
-            <!-- Admin Doğrulama Onay Listesi -->
-            <div class="space-y-2">
-                <h4 class="text-xs font-bold text-slate-700 uppercase">Admin Onay Bekleyen Ustalar</h4>
-                <div id="admin-pending-masters" class="space-y-2">
-                    <div class="text-center py-4 text-xs text-slate-400">Yükleniyor...</div>
+            <div class="text-center pt-2">
+                <span id="client-toggle-text" onclick="toggleMode('client')" class="text-xs text-blue-600 font-bold cursor-pointer hover:underline">
+                    Hesabın yok mu? Müşteri olarak kayıt ol
+                </span>
+            </div>
+        </div>
+
+
+        <!-- SAĞ KART: USTA GİRİŞİ -->
+        <div class="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl space-y-5 border border-white/20">
+            <div class="text-center space-y-1">
+                <div class="inline-block bg-emerald-100 text-emerald-600 p-3 rounded-2xl mb-2 text-2xl">🛠️</div>
+                <h2 class="text-2xl font-bold text-slate-900">Usta Girişi</h2>
+                <p class="text-xs text-slate-500">Teklif vermek ve iş almak için</p>
+            </div>
+
+            <!-- Form Alanı -->
+            <div class="space-y-3">
+                <div id="master-name-box" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad / Firma Adı</label>
+                    <input type="text" id="master_name" placeholder="Usta Mehmet / Tesisat A.Ş." class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
+                <div id="master-category-box" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Uzmanlık Alanı</label>
+                    <select id="master_category" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="Tesisat">Su Tesisatı</option>
+                        <option value="Elektrik">Elektrik</option>
+                        <option value="Otomotiv">Oto Tamir / Servis</option>
+                        <option value="Boya / Tadilat">Boya / Dekoresyon</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta Adresi</label>
+                    <input type="email" id="master_email" placeholder="usta@mail.com" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
+                    <input type="password" id="master_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <label class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" class="rounded text-emerald-600"> Beni Hatırla
+                    </label>
+                    <a href="#" class="text-emerald-600 hover:underline font-medium">Şifremi Unuttum</a>
+                </div>
+
+                <button onclick="handleAuth('master')" id="btn-master-submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/30">
+                    Usta Girişi Yap
+                </button>
+            </div>
+
+            <div class="text-center pt-2">
+                <span id="master-toggle-text" onclick="toggleMode('master')" class="text-xs text-emerald-600 font-bold cursor-pointer hover:underline">
+                    Usta hesabın yok mu? Hemen Usta Ol
+                </span>
             </div>
         </div>
 
     </main>
 
-    <!-- GİRİŞ / KAYIT MODAL -->
-    <div id="auth-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm p-6 rounded-3xl shadow-xl space-y-4 relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
-            <h3 id="modal-title" class="text-lg font-bold text-slate-900 text-center">Giriş Yap</h3>
-            
-            <div id="modal-name-box" class="hidden">
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad</label>
-                <input type="text" id="auth_name" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta</label>
-                <input type="email" id="auth_email" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
-                <input type="password" id="auth_password" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            </div>
-            <div id="modal-type-box" class="hidden">
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Üyelik Tipi</label>
-                <select id="auth_type" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="client">Müşteri (Hizmet Almak İstiyorum)</option>
-                    <option value="master">Usta (Hizmet Vermek İstiyorum)</option>
-                </select>
-            </div>
-
-            <button onclick="handleAuthSubmit()" id="modal-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition">Giriş Yap</button>
-            <div onclick="toggleAuthMode()" class="text-center text-xs text-emerald-600 font-semibold cursor-pointer">Hesabın yok mu? Kayıt ol</div>
-        </div>
-    </div>
-
-    <!-- IYZICO / PAYTR KREDİ KARTI ÖDEME MODAL -->
-    <div id="payment-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
-            
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-xl">💳</span>
-                    <h3 class="text-base font-bold text-slate-900">Güvenli Ödeme (iyzico)</h3>
-                </div>
-                <span id="payment-amount-tag" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">9.99 TL</span>
-            </div>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kart Üzerindeki İsim</label>
-                    <input type="text" id="card_holder" placeholder="AHMET YILMAZ" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 uppercase focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kart Numarası</label>
-                    <input type="text" id="card_number" placeholder="4543 **** **** 1234" maxlength="19" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">Son Kullanma (AA/YY)</label>
-                        <input type="text" id="card_exp" placeholder="12/28" maxlength="5" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-500 mb-1">CVC / CVV</label>
-                        <input type="text" id="card_cvc" placeholder="321" maxlength="3" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="processCardPayment()" id="payment-pay-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
-                Ödemeyi Onayla ve Tamamla
-            </button>
-            <p class="text-[10px] text-slate-400 text-center">256-bit SSL Koruma & iyzico/PayTR Güvenli Ödeme Altyapısı</p>
-        </div>
-    </div>
+    <!-- Alt Bilgi -->
+    <footer class="w-full pb-6 text-center text-xs text-slate-400">
+        © 2026 Yakın-İş (yakinis.com) — Tüm Hakları Saklıdır.
+    </footer>
 
     <script>
         // Supabase Bilgileriniz
-        const SUPABASE_URL = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkeyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-        
+        const SUPABASE_URL = 'sbpublishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let isRegisterMode = false;
-        let currentUser = null;
-        let currentPaymentType = null; // 'request' veya 'offer'
-        let pendingOfferData = null;
+        let clientRegisterMode = false;
+        let masterRegisterMode = false;
 
-        // Oturum kontrolü
-        async function checkUserSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            const area = document.getElementById('user-menu-area');
-            if (session) {
-                currentUser = session.user;
-                area.innerHTML = `
-                    <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-xl">Oturum Açık</span>
-                    <button onclick="handleSignOut()" class="text-xs text-rose-600 font-semibold px-2 py-1">Çıkış</button>
-                `;
+        // Mod Değiştirme (Giriş Yap <-> Kayıt Ol)
+        function toggleMode(role) {
+            if (role === 'client') {
+                clientRegisterMode = !clientRegisterMode;
+                document.getElementById('client-name-box').classList.toggle('hidden', !clientRegisterMode);
+                document.getElementById('btn-client-submit').innerText = clientRegisterMode ? "Müşteri Olarak Kayıt Ol" : "Kullanıcı Girişi Yap";
+                document.getElementById('client-toggle-text').innerText = clientRegisterMode ? "Zaten hesabın var mı? Giriş yap" : "Hesabın yok mu? Müşteri olarak kayıt ol";
             } else {
-                currentUser = null;
-                area.innerHTML = `<button onclick="openAuthModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl transition">Giriş Yap</button>`;
+                masterRegisterMode = !masterRegisterMode;
+                document.getElementById('master-name-box').classList.toggle('hidden', !masterRegisterMode);
+                document.getElementById('master-category-box').classList.toggle('hidden', !masterRegisterMode);
+                document.getElementById('btn-master-submit').innerText = masterRegisterMode ? "Usta Olarak Kayıt Ol" : "Usta Girişi Yap";
+                document.getElementById('master-toggle-text').innerText = masterRegisterMode ? "Zaten hesabın var mı? Giriş yap" : "Usta hesabın yok mu? Hemen Usta Ol";
             }
         }
 
-        async function handleSignOut() {
-            await supabase.auth.signOut();
-            checkUserSession();
-        }
+        // Giriş ve Kayıt Mantığı
+        async function handleAuth(role) {
+            const isRegister = role === 'client' ? clientRegisterMode : masterRegisterMode;
+            const email = document.getElementById(`${role}_email`).value;
+            const password = document.getElementById(`${role}_password`).value;
 
-        // Sekme Yönetimi
-        function switchTab(tab) {
-            const btnMasters = document.getElementById('btn-tab-masters');
-            const btnRequest = document.getElementById('btn-tab-request');
-            const btnAdmin = document.getElementById('btn-tab-admin');
+            if (!email || !password) {
+                alert("Lütfen e-posta ve şifrenizi girin.");
+                return;
+            }
 
-            const divMasters = document.getElementById('tab-masters');
-            const divRequest = document.getElementById('tab-request');
-            const divAdmin = document.getElementById('tab-admin');
+            if (isRegister) {
+                const fullName = document.getElementById(`${role}_name`).value;
+                if (!fullName) { alert("Lütfen adınızı girin."); return; }
 
-            const activeClass = "bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-xs transition shadow-sm";
-            const inactiveClass = "bg-slate-100 text-slate-600 font-semibold py-2.5 rounded-xl text-xs transition";
-
-            btnMasters.className = tab === 'masters' ? activeClass : inactiveClass;
-            btnRequest.className = tab === 'request' ? activeClass : inactiveClass;
-            btnAdmin.className = tab === 'admin' ? activeClass : inactiveClass;
-
-            divMasters.classList.toggle('hidden', tab !== 'masters');
-            divRequest.classList.toggle('hidden', tab !== 'request');
-            divAdmin.classList.toggle('hidden', tab !== 'admin');
-
-            if (tab === 'masters') loadMasters();
-            if (tab === 'admin') loadAdminPendingMasters();
-        }
-
-        // Modal Yönetimi
-        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-        
-        function openPaymentModal(type, amount) {
-            currentPaymentType = type;
-            document.getElementById('payment-amount-tag').innerText = `${amount} TL`;
-            document.getElementById('payment-modal').classList.remove('hidden');
-        }
-        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
-
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            document.getElementById('modal-title').innerText = isRegisterMode ? "Kayıt Ol" : "Giriş Yap";
-            document.getElementById('modal-submit-btn').innerText = isRegisterMode ? "Kayıt Ol" : "Giriş Yap";
-            document.getElementById('modal-name-box').classList.toggle('hidden', !isRegisterMode);
-            document.getElementById('modal-type-box').classList.toggle('hidden', !isRegisterMode);
-        }
-
-        // Auth
-        async function handleAuthSubmit() {
-            const email = document.getElementById('auth_email').value;
-            const password = document.getElementById('auth_password').value;
-
-            if (isRegisterMode) {
-                const fullName = document.getElementById('auth_name').value;
-                const userType = document.getElementById('auth_type').value;
                 const { data, error } = await supabase.auth.signUp({ email, password });
-                if (error) { alert("Kayıt hatası: " + error.message); return; }
+                if (error) { alert("Kayıt Hatası: " + error.message); return; }
+
                 if (data.user) {
-                    await supabase.from('profiles').insert([{ id: data.user.id, full_name: fullName, phone: '05000000000', user_type: userType }]);
+                    // Kullanıcı profilini veritabanına ekle
+                    await supabase.from('profiles').insert([
+                        { id: data.user.id, full_name: fullName, user_type: role }
+                    ]);
+
+                    // Eğer Usta olarak kayıt olunuyorsa usta detayını oluştur
+                    if (role === 'master') {
+                        const category = document.getElementById('master_category').value;
+                        await supabase.from('master_details').insert([
+                            { user_id: data.user.id, category: category, is_verified: false }
+                        ]);
+                    }
+
+                    alert("Kayıt başarılı! Giriş yapabilirsiniz.");
+                    toggleMode(role);
                 }
-                alert("Kayıt başarılı! Giriş yapabilirsiniz.");
-                toggleAuthMode();
             } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) { alert("Giriş hatası: " + error.message); return; }
-                alert("Giriş başarılı!");
-                closeAuthModal();
-                checkUserSession();
+                // Giriş İşlemi
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    alert("Giriş Hatası: " + error.message);
+                } else {
+                    alert(`Tebrikler, ${role === 'client' ? 'Kullanıcı' : 'Usta'} olarak giriş yapıldı!`);
+                    // Giriş sonrası yönlendirilecek sayfa (Örn: ana sayfa)
+                    // window.location.href = "/dashboard.html";
+                }
             }
         }
-
-        // Canlı Ustaları Çekme
-        async function loadMasters() {
-            const container = document.getElementById('masters-container');
-            const categoryFilter = document.getElementById('filter-category').value;
-
-            let query = supabase.from('master_details').select(`*, profiles(full_name, phone)`);
-            if (categoryFilter) query = query.eq('category', categoryFilter);
-
-            const { data: masters, error } = await query;
-
-            if (error || !masters || masters.length === 0) {
-                container.innerHTML = `<div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Henüz kayıtlı usta bulunmuyor.</div>`;
-                return;
-            }
-
-            container.innerHTML = "";
-            masters.forEach(m => {
-                const name = m.profiles ? m.profiles.full_name : "Usta";
-                const phone = m.profiles ? m.profiles.phone : "05000000000";
-                const isVip = m.is_vip;
-                const isVerified = m.is_verified;
-
-                container.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border ${isVip ? 'border-amber-300 ring-2 ring-amber-100' : 'border-slate-100'} flex justify-between items-center">
-                        <div>
-                            <div class="flex items-center gap-1.5 flex-wrap">
-                                <h4 class="font-bold text-slate-900 text-sm">${name}</h4>
-                                ${isVerified ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">✓ Onaylı Usta</span>' : ''}
-                                ${isVip ? '<span class="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">★ VIP USTA</span>' : ''}
-                            </div>
-                            <p class="text-xs text-slate-500 mt-0.5">${m.category}</p>
-                        </div>
-                        <div class="flex space-x-1.5">
-                            <a href="tel:${phone}" class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1">📞 Arayın</a>
-                            <a href="https://wa.me/${phone}?text=Merhaba,%20Yak%C4%B1n-%C4%B0%C5%9F%20uzundan%20ula%C5%9F%C4%B1yorum." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1">💬 WhatsApp</a>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Ödeme Başlatma
-        function startRequestPaymentProcess() {
-            if (!currentUser) {
-                alert("Talep oluşturmak için lütfen önce giriş yapın!");
-                openAuthModal();
-                return;
-            }
-            openPaymentModal('request', 9.99);
-        }
-
-        // Ödeme Tamamlama
-        async function processCardPayment() {
-            const cardHolder = document.getElementById('card_holder').value;
-            const cardNumber = document.getElementById('card_number').value;
-
-            if (!cardHolder || !cardNumber) {
-                alert("Lütfen kart bilgilerini doldurun.");
-                return;
-            }
-
-            alert("Kredi kartı ödemesi başarıyla onaylandı!");
-            closePaymentModal();
-
-            if (currentPaymentType === 'request') {
-                await executeCreateRequest();
-            }
-        }
-
-        // Talebi Kaydetme
-        async function executeCreateRequest() {
-            const category = document.getElementById('req_category').value;
-            const title = document.getElementById('req_title').value;
-            const description = document.getElementById('req_desc').value;
-            const locationVal = document.getElementById('req_location').value.split('/');
-            const city = locationVal[0] ? locationVal[0].trim() : "Bursa";
-            const district = locationVal[1] ? locationVal[1].trim() : "Merkez";
-
-            const { error } = await supabase.from('requests').insert([
-                { client_id: currentUser.id, category, title, description, city, district, status: 'active', is_paid: true }
-            ]);
-
-            if (error) {
-                alert("Talep oluşturulamadı: " + error.message);
-            } else {
-                alert("Talebiniz yayınlandı ve ustalara iletildi!");
-                switchTab('masters');
-            }
-        }
-
-        // Usta Belge Gönderimi
-        async function submitMasterDocuments() {
-            if (!currentUser) { alert("Lütfen giriş yapın!"); openAuthModal(); return; }
-            const tc = document.getElementById('verify_tc').value;
-            const docUrl = document.getElementById('verify_doc_url').value;
-
-            if (!tc) { alert("T.C. Kimlik zorunludur."); return; }
-
-            const { error } = await supabase.from('master_details').upsert([
-                { user_id: currentUser.id, category: 'Tesisat', national_id: tc, document_url: docUrl, is_verified: false }
-            ], { onConflict: 'user_id' });
-
-            if (error) alert("Hata: " + error.message);
-            else alert("Belgeleriniz alındı! Admin onayından sonra Doğrulanmış Usta rozetiniz eklenecektir.");
-        }
-
-        // Admin Paneli İçin Onay Bekleyen Ustalar
-        async function loadAdminPendingMasters() {
-            const container = document.getElementById('admin-pending-masters');
-            const { data: masters, error } = await supabase.from('master_details').select(`*, profiles(full_name)`).eq('is_verified', false);
-
-            if (error || !masters || masters.length === 0) {
-                container.innerHTML = `<div class="text-center py-3 text-xs text-slate-400">Onay bekleyen yeni usta belgesi bulunmuyor.</div>`;
-                return;
-            }
-
-            container.innerHTML = "";
-            masters.forEach(m => {
-                const name = m.profiles ? m.profiles.full_name : "Usta";
-                container.innerHTML += `
-                    <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="font-bold text-slate-900">${name}</p>
-                            <p class="text-slate-500">TC: ${m.national_id || 'Belirtilmedi'}</p>
-                        </div>
-                        <button onclick="approveMaster('${m.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">
-                            ✓ Onayla
-                        </button>
-                    </div>
-                `;
-            });
-        }
-
-        // Admin Usta Onaylama
-        async function approveMaster(masterDetailId) {
-            const { error } = await supabase.from('master_details').update({ is_verified: true }).eq('id', masterDetailId);
-            if (error) alert("Hata: " + error.message);
-            else {
-                alert("Usta başarıyla onaylandı ve Doğrulanmış Usta rozeti verildi!");
-                loadAdminPendingMasters();
-            }
-        }
-
-        window.onload = () => {
-            checkUserSession();
-            loadMasters();
-        };
     </script>
 </body>
-        </html>
+</html>
