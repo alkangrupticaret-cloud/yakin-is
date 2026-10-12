@@ -3,116 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Giriş ve Kayıt</title>
-    <!-- Supabase CDN -->
+    <title>Yakın-İş | Talep ve Teklif Yönetimi</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #0056b3; }
-        .switch-text { text-align: center; margin-top: 15px; font-size: 14px; color: #666; cursor: pointer; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        textarea { resize: vertical; height: 100px; }
+        button { background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 10px; }
+        button:hover { background: #218838; }
+        .request-card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .request-card h4 { margin: 0 0 10px 0; color: #007bff; }
+        .offer-box { background: #fff; padding: 10px; border-left: 4px solid #ffc107; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 id="form-title">Giriş Yap</h2>
-    
-    <div class="form-group" id="name-group" style="display:none;">
-        <label>Ad Soyad</label>
-        <input type="text" id="full_name" placeholder="Adınız Soyadınız">
-    </div>
-
-    <div class="form-group" id="phone-group" style="display:none;">
-        <label>Telefon Numarası</label>
-        <input type="text" id="phone" placeholder="05XXXXXXXXX">
-    </div>
-
-    <div class="form-group" id="type-group" style="display:none;">
-        <label>Üyelik Tipi</label>
-        <select id="user_type">
-            <option value="client">Hizmet Almak İstiyorum (Müşteri)</option>
-            <option value="master">Hizmet Vermek İstiyorum (Usta)</option>
+<!-- MÜŞTERİ: TALEP OLUŞTURMA (9.99 TL) -->
+<div class="container" id="client-section">
+    <h2>Hizmet Talebi Oluştur (9.99 TL)</h2>
+    <div class="form-group">
+        <label>Hizmet Kategorisi</label>
+        <select id="req_category">
+            <option value="Tesisatçı">Su Tesisatçısı</option>
+            <option value="Elektrikçi">Elektrikçi</option>
+            <option value="Oto Tamir">Oto Tamir / Servis</option>
+            <option value="Nakliye">Nakliyat</option>
         </select>
     </div>
-
     <div class="form-group">
-        <label>E-posta</label>
-        <input type="email" id="email" placeholder="ornek@mail.com">
+        <label>Talep Başlığı</label>
+        <input type="text" id="req_title" placeholder="Örn: Mutfak gideri tıkanıklığı">
     </div>
-
     <div class="form-group">
-        <label>Şifre</label>
-        <input type="password" id="password" placeholder="******">
+        <label>Açıklama</label>
+        <textarea id="req_desc" placeholder="Sorununuzu detaylıca yazın..."></textarea>
     </div>
+    <div class="form-group">
+        <label>İl / İlçe</label>
+        <input type="text" id="req_location" placeholder="Örn: Ankara / Çankaya">
+    </div>
+    <button onclick="createRequestWithPayment()">Ödeme Yap ve Talebi Yayınla (9.99 TL)</button>
+</div>
 
-    <button id="action-btn" onclick="handleAuth()">Giriş Yap</button>
-    <div class="switch-text" id="switch-btn" onclick="toggleMode()">Hesabın yok mu? Kayıt ol</div>
+<!-- USTA: AÇIK TALEPLER VE TEKLİF VERME (24.99 TL) -->
+<div class="container" id="master-section">
+    <h2>Açık Talepler & Teklif Ver (24.99 TL)</h2>
+    <div id="requests-list">Yükleniyor...</div>
 </div>
 
 <script>
-    // Supabase Bağlantı Bilgilerinizi Buraya Ekleyin
     const SUPABASE_URL = 'SUPABASE_PROJE_URL_BURAYA';
     const SUPABASE_ANON_KEY = 'SUPABASE_ANON_KEY_BURAYA';
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let isLoginMode = true;
+    // 1. Talep Oluşturma ve 9.99 TL Ödeme Simülasyonu
+    async function createRequestWithPayment() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            alert("Lütfen önce giriş yapın!");
+            return;
+        }
 
-    function toggleMode() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('form-title').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
-        document.getElementById('action-btn').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
-        document.getElementById('switch-btn').innerText = isLoginMode ? "Hesabın yok mu? Kayıt ol" : "Zaten hesabın var mı? Giriş yap";
-        
-        document.getElementById('name-group').style.display = isLoginMode ? "none" : "block";
-        document.getElementById('phone-group').style.display = isLoginMode ? "none" : "block";
-        document.getElementById('type-group').style.display = isLoginMode ? "none" : "block";
-    }
+        const category = document.getElementById('req_category').value;
+        const title = document.getElementById('req_title').value;
+        const description = document.getElementById('req_desc').value;
+        const locationParts = document.getElementById('req_location').value.split('/');
+        const city = locationParts[0] ? locationParts[0].trim() : "Bilinmiyor";
+        const district = locationParts[1] ? locationParts[1].trim() : "Bilinmiyor";
 
-    async function handleAuth() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        if (!title || !description) {
+            alert("Lütfen tüm alanları doldurun.");
+            return;
+        }
 
-        if (isLoginMode) {
-            // Giriş Yapma İşlemi
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) alert("Giriş Hatası: " + error.message);
-            else {
-                alert("Giriş başarılı!");
-                window.location.reload();
+        // Ödeme Adımı Simülasyonu (Gerçekte iyzico / PayTR entegrasyonu buraya gelecek)
+        const onay = confirm("Talep yayınlamak için 9.99 TL ödeme alınacaktır. Onaylıyor musunuz?");
+        if (!onay) return;
+
+        // Talebi Kaydet
+        const { data, error } = await supabase.from('requests').insert([
+            {
+                client_id: user.id,
+                category,
+                title,
+                description,
+                city,
+                district,
+                status: 'active',
+                is_paid: true
             }
+        ]).select();
+
+        if (error) {
+            alert("Talep oluşturulamadı: " + error.message);
         } else {
-            // Kayıt Olma İşlemi
-            const fullName = document.getElementById('full_name').value;
-            const phone = document.getElementById('phone').value;
-            const userType = document.getElementById('user_type').value;
-
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: { full_name: fullName, phone: phone, user_type: userType }
-                }
-            });
-
-            if (error) {
-                alert("Kayıt Hatası: " + error.message);
-            } else {
-                // Profiller tablosuna da kaydı işleyelim
-                if (data.user) {
-                    await supabase.from('profiles').insert([
-                        { id: data.user.id, full_name: fullName, phone: phone, user_type: userType }
-                    ]);
-                }
-                alert("Kayıt başarılı! Lütfen e-postanızı onaylayın.");
-            }
+            alert("Ödeme başarılı! Talebiniz yayınlandı ve ustalara iletildi.");
+            loadActiveRequests();
         }
     }
+
+    // 2. Ustalar İçin Açık Talepleri Listeleme
+    async function loadActiveRequests() {
+        const container = document.getElementById('requests-list');
+        container.innerHTML = "Yükleniyor...";
+
+        const { data: requests, error } = await supabase
+            .from('requests')
+            .select('*')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            container.innerHTML = "Talepler yüklenirken hata oluştu.";
+            return;
+        }
+
+        if (requests.length === 0) {
+            container.innerHTML = "<p>Şu anda aktif talep bulunmuyor.</p>";
+            return;
+        }
+
+        container.innerHTML = "";
+        requests.forEach(req => {
+            container.innerHTML += `
+                <div class="request-card">
+                    <h4>${req.title} (${req.category})</h4>
+                    <p><b>Konum:</b> ${req.city} / ${req.district}</p>
+                    <p>${req.description}</p>
+                    <div class="form-group" style="margin-top:10px;">
+                        <input type="number" id="price_${req.id}" placeholder="Teklif Fiyatınız (TL)" style="margin-bottom:5px;">
+                        <input type="text" id="msg_${req.id}" placeholder="Usta mesajı / açıklama" style="margin-bottom:5px;">
+                        <button onclick="sendOffer('${req.id}')" style="background:#007bff;">Teklif Ver (24.99 TL)</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // 3. Usta Teklif Verme ve 24.99 TL Ödeme (veya VIP kontrolü)
+    async function sendOffer(requestId) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            alert("Lütfen usta hesabınızla giriş yapın!");
+            return;
+        }
+
+        const priceOffer = document.getElementById(`price_${requestId}`).value;
+        const message = document.getElementById(`msg_${requestId}`).value;
+
+        if (!priceOffer) {
+            alert("Lütfen bir teklif fiyatı girin.");
+            return;
+        }
+
+        // Ustanın VIP durumu kontrol edilebilir (Örnek akış)
+        const onay = confirm("Teklif göndermek için 24.99 TL (veya VIP hakkınız) düşülecektir. Onaylıyor musunuz?");
+        if (!onay) return;
+
+        const { error } = await supabase.from('offers').insert([
+            {
+                request_id: requestId,
+                master_id: user.id,
+                price_offer: parseFloat(priceOffer),
+                message: message,
+                is_paid: true
+            }
+        ]);
+
+        if (error) {
+            alert("Teklif gönderilemedi (Zaten teklif vermiş olabilirsiniz): " + error.message);
+        } else {
+            alert("Teklifiniz başarıyla kullanıcıya iletildi!");
+        }
+    }
+
+    // Sayfa yüklenince talepleri getir
+    window.onload = loadActiveRequests;
 </script>
 
 </body>
