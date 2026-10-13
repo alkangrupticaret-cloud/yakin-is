@@ -231,10 +231,9 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://nvhczlshbifcxfkofmhd.supabase.co';
-        
-        // BURADAKİ TIRNAKLARIN İÇİNE SUPABASE PANELİNDEN KOPYALADIĞIN GERÇEK "anon public" KODU YAPIŞTIR
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+        // Supabase Proje Bilgileri (Doğru ve Eşleşen Bilgiler)
+        const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
         
         let supabaseClient = null;
         let clientRegisterMode = false;
@@ -318,24 +317,27 @@
                     if (error) throw error;
 
                     if (data.user) {
-                        await supabaseClient.from('profiles').insert([{ 
+                        const { error: profileError } = await supabaseClient.from('profiles').insert([{ 
                             id: data.user.id, 
                             full_name: fullName, 
                             phone: phone, 
                             user_type: role 
                         }]);
 
+                        if (profileError) throw profileError;
+
                         if (role === 'master') {
                             const category = document.getElementById('master_category').value;
                             const tc = document.getElementById('master_tc').value.trim();
                             const doc = document.getElementById('master_doc').value.trim();
-                            await supabaseClient.from('master_details').insert([{ 
+                            const { error: masterError } = await supabaseClient.from('master_details').insert([{ 
                                 user_id: data.user.id, 
                                 category: category, 
                                 tc_number: tc, 
                                 document_url: doc, 
                                 is_verified: false 
                             }]);
+                            if (masterError) throw masterError;
                         }
 
                         alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
@@ -347,7 +349,7 @@
                     checkSessionAndRedirect();
                 }
             } catch (err) {
-                alert("İşlem Hatası: " + (err.message || err));
+                alert("İşlem Hatası: " + (err.message || JSON.stringify(err)));
             }
         }
 
