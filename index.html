@@ -58,25 +58,22 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
-                        <div class="relative">
-                            <input type="password" id="client_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <!-- Sol Tarafta Şifreyi Göster Seçeneği -->
+                        <input type="password" id="client_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <div class="flex items-center gap-2 mt-1.5">
                             <input type="checkbox" id="show_pwd_client" onchange="togglePasswordVisibility('client')" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                             <label for="show_pwd_client" class="text-[11px] text-slate-500 font-medium cursor-pointer">Şifreyi Göster</label>
                         </div>
                     </div>
 
-                    <button onclick="handleAuth('client')" id="btn-client-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-blue-500/30">
+                    <button type="button" onclick="handleAuth('client')" id="btn-client-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-blue-500/30">
                         Kullanıcı Girişi Yap
                     </button>
                 </div>
 
                 <div class="text-center pt-2">
-                    <span id="client-toggle-text" onclick="toggleMode('client')" class="text-xs text-blue-600 font-bold cursor-pointer hover:underline">
+                    <button type="button" id="client-toggle-text" onclick="toggleMode('client')" class="text-xs text-blue-600 font-bold cursor-pointer hover:underline bg-transparent border-0">
                         Hesabın yok mu? Müşteri olarak kayıt ol
-                    </span>
+                    </button>
                 </div>
             </div>
 
@@ -113,8 +110,8 @@
                                 <input type="text" id="master_tc" placeholder="11 haneli T.C." maxlength="11" class="w-full px-3 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Belge / Vergi No URL</label>
-                                <input type="text" id="master_doc" placeholder="Belge linki" class="w-full px-3 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Belge Linki</label>
+                                <input type="text" id="master_doc" placeholder="Belge URL" class="w-full px-3 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
                         </div>
                     </div>
@@ -126,25 +123,22 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
-                        <div class="relative">
-                            <input type="password" id="master_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <!-- Sol Tarafta Şifreyi Göster Seçeneği -->
+                        <input type="password" id="master_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         <div class="flex items-center gap-2 mt-1.5">
                             <input type="checkbox" id="show_pwd_master" onchange="togglePasswordVisibility('master')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                             <label for="show_pwd_master" class="text-[11px] text-slate-500 font-medium cursor-pointer">Şifreyi Göster</label>
                         </div>
                     </div>
 
-                    <button onclick="handleAuth('master')" id="btn-master-submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/30">
+                    <button type="button" onclick="handleAuth('master')" id="btn-master-submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/30">
                         Usta Girişi Yap
                     </button>
                 </div>
 
                 <div class="text-center pt-2">
-                    <span id="master-toggle-text" onclick="toggleMode('master')" class="text-xs text-emerald-600 font-bold cursor-pointer hover:underline">
+                    <button type="button" id="master-toggle-text" onclick="toggleMode('master')" class="text-xs text-emerald-600 font-bold cursor-pointer hover:underline bg-transparent border-0">
                         Usta hesabın yok mu? Hemen Usta Ol
-                    </span>
+                    </button>
                 </div>
             </div>
 
@@ -159,7 +153,7 @@
                 <h2 id="dash-welcome-title" class="text-xl font-bold text-slate-900 mt-2">Hoş geldin!</h2>
                 <p id="dash-welcome-sub" class="text-xs text-slate-500">Hizmet talepleri oluşturabilir veya ustaları inceleyebilirsin.</p>
             </div>
-            <button onclick="openRequestModal()" id="btn-new-request" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-2xl text-xs transition shadow-lg shadow-emerald-600/20">
+            <button type="button" onclick="openRequestModal()" id="btn-new-request" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-2xl text-xs transition shadow-lg shadow-emerald-600/20">
                 + Hizmet Talebi Oluştur (9.99 TL)
             </button>
         </div>
@@ -184,7 +178,7 @@
     <!-- 3. ÖDEME SİMÜLASYONU MODALI -->
     <div id="payment-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            <button type="button" onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
             <div class="text-center">
                 <span class="text-2xl">🔒</span>
                 <h3 class="text-lg font-bold text-slate-900">Güvenli Ödeme (iyzico / PayTR)</h3>
@@ -198,7 +192,7 @@
                     <input type="password" placeholder="CVV" maxlength="3" class="px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
                 </div>
             </div>
-            <button onclick="completePaymentSimulation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
+            <button type="button" onclick="completePaymentSimulation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
                 Ödemeyi Onayla ve Tamamla
             </button>
         </div>
@@ -207,7 +201,7 @@
     <!-- 4. MÜŞTERİ TALEP MODALI -->
     <div id="request-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            <button onclick="closeRequestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            <button type="button" onclick="closeRequestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
             <h3 class="text-lg font-bold text-slate-900">Yeni Hizmet Talebi (9.99 TL)</h3>
             <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
@@ -226,7 +220,7 @@
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Açıklama</label>
                 <textarea id="req_desc" rows="3" placeholder="Sorunu kısaca açıklayın..." class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200"></textarea>
             </div>
-            <button onclick="openPaymentModalForRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
+            <button type="button" onclick="openPaymentModalForRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
                 Devam Et ve Ödeme Yap (9.99 TL)
             </button>
         </div>
@@ -240,17 +234,22 @@
         const SUPABASE_URL = 'https://nvhczlshbifcxfkofmhd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52aGN6bHNoYmlmY3hma29mbWhkIiwicm9sZSI6ImFub24iLCJpWFAtSWQiOjIsImlhdCI6MTc1MDAwMDAwMCwiZXhwIjoyMDY1NTc2MDAwfQ.ornek_anon_key_guvenli_baglanti';
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+        let supabaseClient = null;
         let clientRegisterMode = false;
         let masterRegisterMode = false;
         let currentUser = null;
         let pendingPaymentType = null;
 
-        window.onload = () => { checkSessionAndRedirect(); };
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+            checkSessionAndRedirect();
+        });
 
         async function checkSessionAndRedirect() {
-            const { data: { session } } = await supabase.auth.getSession();
+            if (!supabaseClient) return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 document.getElementById('page-login').classList.add('hidden');
@@ -268,11 +267,10 @@
         }
 
         async function handleLogout() {
-            await supabase.auth.signOut();
+            if (supabaseClient) await supabaseClient.auth.signOut();
             checkSessionAndRedirect();
         }
 
-        // Şifreyi Göster / Gizle Fonksiyonu
         function togglePasswordVisibility(role) {
             const pwdInput = document.getElementById(`${role}_password`);
             const checkbox = document.getElementById(`show_pwd_${role}`);
@@ -298,25 +296,26 @@
         }
 
         async function handleAuth(role) {
+            if (!supabaseClient) {
+                alert("Bağlantı kuruluyor, lütfen birkaç saniye sonra tekrar deneyin.");
+                return;
+            }
             const isRegister = role === 'client' ? clientRegisterMode : masterRegisterMode;
-            const email = document.getElementById(`${role}_email`).value;
-            const password = document.getElementById(`${role}_password`).value;
+            const email = document.getElementById(`${role}_email`).value.trim();
+            const password = document.getElementById(`${role}_password`).value.trim();
 
             if (!email || !password) { alert("Lütfen e-posta ve şifrenizi girin."); return; }
 
             if (isRegister) {
-                const fullName = document.getElementById(`${role}_name`).value;
-                const phone = document.getElementById(`${role}_phone`).value;
+                const fullName = document.getElementById(`${role}_name`).value.trim();
+                const phone = document.getElementById(`${role}_phone`).value.trim();
                 if (!fullName || !phone) { alert("Lütfen tüm alanları doldurun."); return; }
 
-                const { data, error } = await supabase.auth.signUp({ email, password });
-                if (error) { 
-                    alert("Kayıt Hatası: " + error.message); 
-                    return; 
-                }
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) { alert("Kayıt Hatası: " + error.message); return; }
 
                 if (data.user) {
-                    await supabase.from('profiles').insert([{ 
+                    await supabaseClient.from('profiles').insert([{ 
                         id: data.user.id, 
                         full_name: fullName, 
                         phone: phone, 
@@ -325,9 +324,9 @@
 
                     if (role === 'master') {
                         const category = document.getElementById('master_category').value;
-                        const tc = document.getElementById('master_tc').value;
-                        const doc = document.getElementById('master_doc').value;
-                        await supabase.from('master_details').insert([{ 
+                        const tc = document.getElementById('master_tc').value.trim();
+                        const doc = document.getElementById('master_doc').value.trim();
+                        await supabaseClient.from('master_details').insert([{ 
                             user_id: data.user.id, 
                             category: category, 
                             tc_number: tc, 
@@ -340,15 +339,16 @@
                     toggleMode(role);
                 }
             } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) { alert("Giriş Hatası: " + error.message); }
                 else { checkSessionAndRedirect(); }
             }
         }
 
         async function loadDashboardData() {
+            if (!supabaseClient || !currentUser) return;
             const listContainer = document.getElementById('dashboard-content-list');
-            const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
 
             if (profile) {
                 document.getElementById('dash-welcome-title').innerText = `Hoş geldin, ${profile.full_name || 'Kullanıcı'}!`;
@@ -360,7 +360,6 @@
                 } else if (profile.user_type === 'admin') {
                     document.getElementById('dash-role-badge').innerText = "Yönetici Paneli";
                     document.getElementById('admin-panel-box').classList.remove('hidden');
-                    loadAdminVerificationList();
                 } else {
                     document.getElementById('dash-role-badge').innerText = "Kullanıcı Paneli";
                     document.getElementById('section-title').innerText = "Aktif Ustalar & Hizmet Verenler";
@@ -370,7 +369,7 @@
         }
 
         async function loadClientMastersFeed(container) {
-            const { data: masters } = await supabase.from('master_details').select(`*, profiles(full_name, phone)`);
+            const { data: masters } = await supabaseClient.from('master_details').select(`*, profiles(full_name, phone)`);
             if (masters && masters.length > 0) {
                 container.innerHTML = "";
                 masters.forEach(m => {
@@ -404,7 +403,7 @@
                     <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Su Tesisatı</span>
                     <h4 class="font-bold text-slate-900 text-sm">Mutfak Batarya Arızası & Değişimi</h4>
                     <p class="text-xs text-slate-500">Mutfak musluğumdan su damlatıyor, contanın değişmesi gerekiyor.</p>
-                    <button onclick="openPaymentModalForLead()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+                    <button type="button" onclick="openPaymentModalForLead()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
                         Teklif Ver (24.99 TL)
                     </button>
                 </div>
@@ -436,18 +435,6 @@
                 alert("Ödeme başarılı (24.99 TL)! Teklifiniz müşteriye iletildi ve iletişim bilgileri açıldı.");
             }
             closePaymentModal();
-        }
-
-        async function loadAdminVerificationList() {
-            const list = document.getElementById('admin-pending-list');
-            list.innerHTML = `
-                <div class="bg-white p-3 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
-                    <div>
-                        <span class="font-bold">Usta Mehmet</span> (Tesisat) - Belge Kontrolü Bekliyor
-                    </div>
-                    <button onclick="alert('Usta onaylandı ve VIP rozeti verildi!')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold">Onayla & Rozet Ver</button>
-                </div>
-            `;
         }
     </script>
 </body>
