@@ -232,7 +232,9 @@
 
     <script>
         const SUPABASE_URL = 'https://nvhczlshbifcxfkofmhd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+        
+        // BURADAKİ TIRNAKLARIN İÇİNE SUPABASE PANELİNDEN KOPYALADIĞIN GERÇEK "anon public" KODU YAPIŞTIR
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
         
         let supabaseClient = null;
         let clientRegisterMode = false;
@@ -306,42 +308,46 @@
 
             if (!email || !password) { alert("Lütfen e-posta ve şifrenizi girin."); return; }
 
-            if (isRegister) {
-                const fullName = document.getElementById(`${role}_name`).value.trim();
-                const phone = document.getElementById(`${role}_phone`).value.trim();
-                if (!fullName || !phone) { alert("Lütfen tüm alanları doldurun."); return; }
+            try {
+                if (isRegister) {
+                    const fullName = document.getElementById(`${role}_name`).value.trim();
+                    const phone = document.getElementById(`${role}_phone`).value.trim();
+                    if (!fullName || !phone) { alert("Lütfen tüm alanları doldurun."); return; }
 
-                const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                if (error) { alert("Kayıt Hatası: " + error.message); return; }
+                    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                    if (error) throw error;
 
-                if (data.user) {
-                    await supabaseClient.from('profiles').insert([{ 
-                        id: data.user.id, 
-                        full_name: fullName, 
-                        phone: phone, 
-                        user_type: role 
-                    }]);
-
-                    if (role === 'master') {
-                        const category = document.getElementById('master_category').value;
-                        const tc = document.getElementById('master_tc').value.trim();
-                        const doc = document.getElementById('master_doc').value.trim();
-                        await supabaseClient.from('master_details').insert([{ 
-                            user_id: data.user.id, 
-                            category: category, 
-                            tc_number: tc, 
-                            document_url: doc, 
-                            is_verified: false 
+                    if (data.user) {
+                        await supabaseClient.from('profiles').insert([{ 
+                            id: data.user.id, 
+                            full_name: fullName, 
+                            phone: phone, 
+                            user_type: role 
                         }]);
-                    }
 
-                    alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
-                    toggleMode(role);
+                        if (role === 'master') {
+                            const category = document.getElementById('master_category').value;
+                            const tc = document.getElementById('master_tc').value.trim();
+                            const doc = document.getElementById('master_doc').value.trim();
+                            await supabaseClient.from('master_details').insert([{ 
+                                user_id: data.user.id, 
+                                category: category, 
+                                tc_number: tc, 
+                                document_url: doc, 
+                                is_verified: false 
+                            }]);
+                        }
+
+                        alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
+                        toggleMode(role);
+                    }
+                } else {
+                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    checkSessionAndRedirect();
                 }
-            } else {
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) { alert("Giriş Hatası: " + error.message); }
-                else { checkSessionAndRedirect(); }
+            } catch (err) {
+                alert("İşlem Hatası: " + (err.message || err));
             }
         }
 
