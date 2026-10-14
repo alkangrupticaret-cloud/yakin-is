@@ -29,7 +29,7 @@
             <div class="flex items-center space-x-3">
                 <i class="fa-solid font-bold text-2xl text-amber-600 fa-wrench"></i>
                 <h1 class="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-500">Yakın-İş</h1>
-                <span id="headerVerTag" class="hidden sm:inline-block text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-200">v1.0.0 Pro</span>
+                <span class="hidden sm:inline-block text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-200">Global Pro</span>
             </div>
             
             <div class="flex items-center space-x-3">
@@ -75,8 +75,8 @@
                 </div>
 
                 <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1 mb-4">
-                    <button onclick="switchMode('usta', 'login')" id="btnUstaLoginTab" data-i18n="loginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition">Giriş Yap</button>
-                    <button onclick="switchMode('usta', 'register')" id="btnUstaRegTab" data-i18n="registerTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500 transition">Kaydol</button>
+                    <button type="button" onclick="switchMode('usta', 'login')" id="btnUstaLoginTab" data-i18n="loginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition">Giriş Yap</button>
+                    <button type="button" onclick="switchMode('usta', 'register')" id="btnUstaRegTab" data-i18n="registerTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500 transition">Kaydol</button>
                 </div>
 
                 <!-- Usta Giriş -->
@@ -152,8 +152,8 @@
                 </div>
 
                 <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1 mb-4">
-                    <button onclick="switchMode('cust', 'login')" id="btnCustLoginTab" data-i18n="loginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition">Giriş Yap</button>
-                    <button onclick="switchMode('cust', 'register')" id="btnCustRegTab" data-i18n="registerTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500 transition">Kaydol</button>
+                    <button type="button" onclick="switchMode('cust', 'login')" id="btnCustLoginTab" data-i18n="loginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition">Giriş Yap</button>
+                    <button type="button" onclick="switchMode('cust', 'register')" id="btnCustRegTab" data-i18n="registerTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500 transition">Kaydol</button>
                 </div>
 
                 <!-- Müşteri Giriş -->
@@ -172,7 +172,7 @@
                     </button>
                 </form>
 
-                <!-- Müşteri Kayıt -->
+                <!-- Müşteri Kayıt (Düzeltildi ve Aktifleştirildi) -->
                 <form id="custRegForm" onsubmit="handleAuth(event, 'customer', 'register')" class="space-y-3 hidden">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -208,7 +208,7 @@
                     <h3 data-i18n="custPanelActive" class="font-bold text-blue-700 dark:text-blue-300"><i class="fa-solid fa-circle-check mr-2"></i>Müşteri Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="custLogInfo">Giriş yapıldı.</p>
                 </div>
-                <button onclick="logout('customer')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
+                <button type="button" onclick="logout('customer')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
             </div>
 
             <!-- İlan Oluşturma Formu -->
@@ -278,17 +278,6 @@
                     <p class="text-xs text-gray-500">Henüz yayınlanmış ilanınız bulunmuyor.</p>
                 </div>
             </div>
-
-            <!-- Onaylı Ustaları Keşfet -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
-                <h4 class="font-bold text-lg text-amber-600 flex items-center space-x-2">
-                    <i class="fa-solid fa-star"></i>
-                    <span>Sistemdeki Onaylı Ustalar & Favoriler</span>
-                </h4>
-                <div id="exploreUstasList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <p class="text-xs text-gray-500">Şu an sistemde onaylı usta bulunmuyor.</p>
-                </div>
-            </div>
         </div>
 
         <!-- USTA PANELİ -->
@@ -298,7 +287,7 @@
                     <h3 data-i18n="ustaPanelActive" class="font-bold text-amber-700 dark:text-amber-300"><i class="fa-solid fa-circle-check mr-2"></i>Usta Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="ustaLogInfo">Giriş yapıldı.</p>
                 </div>
-                <button onclick="logout('usta')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
+                <button type="button" onclick="logout('usta')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
             </div>
 
             <!-- Profil ve Uzmanlık Alanı -->
@@ -321,22 +310,11 @@
                     </h3>
                     <div class="flex space-x-2 w-full md:w-auto">
                         <input type="text" id="filterCity" oninput="loadJobs()" placeholder="Şehre göre filtrele..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-48">
-                        <button onclick="loadJobs()" data-i18n="btnRefresh" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg whitespace-nowrap">Yenile</button>
+                        <button type="button" onclick="loadJobs()" data-i18n="btnRefresh" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg whitespace-nowrap">Yenile</button>
                     </div>
                 </div>
                 <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- İlanlar -->
-                </div>
-            </div>
-
-            <!-- Teklif Verilenler Takibi -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-3">
-                <h4 class="font-bold text-lg text-green-600 flex items-center space-x-2">
-                    <i class="fa-solid fa-handshake"></i>
-                    <span>Teklif Götürülen İşler Takip Paneli</span>
-                </h4>
-                <div id="offeredJobsList" class="space-y-2">
-                    <p class="text-xs text-gray-500">Henüz teklif verdiğiniz bir ilan kaydedilmedi.</p>
                 </div>
             </div>
         </div>
@@ -358,349 +336,4 @@
                 custPortalTitle: "Müşteri Portalı",
                 portalDesc: "Kayıt olun veya giriş yapın.",
                 loginTab: "Giriş Yap",
-                registerTab: "Kaydol",
-                lblEmail: "E-Posta Adresi (Zorunlu)",
-                lblPhone: "Cep Numarası (Zorunlu)",
-                lblName: "Adı Soyadı (Zorunlu)",
-                lblAge: "Yaş (Zorunlu)",
-                lblTax: "Vergi Numarası (Zorunlu)",
-                lblBranch: "Branş / Uzmanlık (Zorunlu)",
-                btnLogin: "Giriş Yap",
-                btnRegister: "Kayıt Ol ve Onaya Gönder",
-                custPanelActive: "Müşteri Paneli Aktif",
-                ustaPanelActive: "Usta Paneli Aktif",
-                btnLogout: "Çıkış Yap",
-                newJobHeader: "Yeni Tamir / Tadilat İlanı Oluştur",
-                lblJobTitle: "İş Başlığı",
-                lblJobCat: "Kategori / Branş",
-                lblJobDesc: "İşin Detayı ve Sorun",
-                lblCountry: "Ülke",
-                lblCity: "Şehir",
-                lblDistrict: "İlçe / Bölge",
-                btnSubmitJob: "İlanı Yayınla & Usta Çağır",
-                activeJobsHeader: "Bölgenizdeki ve Dünya Genelindeki İlanlar",
-                btnRefresh: "Yenile"
-            },
-            en: {
-                heroTitle: "Find Reliable Contractors Worldwide",
-                heroSub: "Get immediate service for plumbing, electrical, painting, and repair jobs in your city and country.",
-                ustaPortalTitle: "Craftsman Portal",
-                custPortalTitle: "Customer Portal",
-                portalDesc: "Register or login to continue.",
-                loginTab: "Login",
-                registerTab: "Register",
-                lblEmail: "Email Address (Required)",
-                lblPhone: "Phone Number (Required)",
-                lblName: "Full Name (Required)",
-                lblAge: "Age (Required)",
-                lblTax: "Tax Number (Required)",
-                lblBranch: "Branch / Specialty (Required)",
-                btnLogin: "Login",
-                btnRegister: "Register & Send for Approval",
-                custPanelActive: "Customer Panel Active",
-                ustaPanelActive: "Craftsman Panel Active",
-                btnLogout: "Logout",
-                newJobHeader: "Create New Repair Request",
-                lblJobTitle: "Job Title",
-                lblJobCat: "Category / Branch",
-                lblJobDesc: "Job Details & Issue",
-                lblCountry: "Country",
-                lblCity: "City",
-                lblDistrict: "District / Area",
-                btnSubmitJob: "Publish Job & Get Bids",
-                activeJobsHeader: "Active Repair Jobs Near You & Worldwide",
-                btnRefresh: "Refresh"
-            }
-        };
-
-        function changeLanguage(lang) {
-            const t = translations[lang];
-            if (!t) return;
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (t[key]) el.innerText = t[key];
-            });
-        }
-
-        function toggleTheme() {
-            const htmlClass = document.documentElement.classList;
-            const icon = document.getElementById('themeIcon');
-            if (htmlClass.contains('dark')) {
-                htmlClass.remove('dark');
-                icon.className = 'fa-solid fa-moon text-lg';
-            } else {
-                htmlClass.add('dark');
-                icon.className = 'fa-solid fa-sun text-lg text-amber-400';
-            }
-        }
-
-        function switchMode(userType, mode) {
-            if (userType === 'usta') {
-                const loginTab = document.getElementById('btnUstaLoginTab');
-                const regTab = document.getElementById('btnUstaRegTab');
-                const loginForm = document.getElementById('ustaLoginForm');
-                const regForm = document.getElementById('ustaRegForm');
-
-                if (mode === 'login') {
-                    loginTab.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition";
-                    regTab.className = "flex-1 py-1.5 text-xs font-semibold text-gray-500 transition";
-                    loginForm.classList.remove('hidden');
-                    regForm.classList.add('hidden');
-                } else {
-                    regTab.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition";
-                    loginTab.className = "flex-1 py-1.5 text-xs font-semibold text-gray-500 transition";
-                    regForm.classList.remove('hidden');
-                    loginForm.classList.add('hidden');
-                }
-            } else {
-                const loginTab = document.getElementById('btnCustLoginTab');
-                const regTab = document.getElementById('btnCustRegTab');
-                const loginForm = document.getElementById('custLoginForm');
-                const regForm = document.getElementById('custRegForm');
-
-                if (mode === 'login') {
-                    loginTab.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition";
-                    regTab.className = "flex-1 py-1.5 text-xs font-semibold text-gray-500 transition";
-                    loginForm.classList.remove('hidden');
-                    regForm.classList.add('hidden');
-                } else {
-                    regTab.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition";
-                    loginTab.className = "flex-1 py-1.5 text-xs font-semibold text-gray-500 transition";
-                    regForm.classList.add('hidden');
-                    loginForm.classList.remove('hidden');
-                }
-            }
-        }
-
-        function sanitizeInput(str) {
-            const temp = document.createElement('div');
-            temp.textContent = str;
-            return temp.innerHTML;
-        }
-
-        let pendingUstas = JSON.parse(localStorage.getItem('pendingUstas')) || [];
-        let approvedUstas = JSON.parse(localStorage.getItem('approvedUstas')) || [];
-        let registeredCustomers = JSON.parse(localStorage.getItem('registeredCustomers')) || [];
-        let mockJobs = JSON.parse(localStorage.getItem('mockJobs')) || [
-            { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor.', status: 'Ustalar İnceliyor' },
-            { id: 2, title: 'Salon Duvar Boyası & Badana', category: 'Boya', country: 'Almanya', city: 'Berlin', district: 'Mitte', desc: 'Salon duvarları boyanacaktır.', status: 'Ustalar İnceliyor' }
-        ];
-
-        let currentCustomer = null;
-        let currentUsta = null;
-
-        function saveData() {
-            localStorage.setItem('pendingUstas', JSON.stringify(pendingUstas));
-            localStorage.setItem('approvedUstas', JSON.stringify(approvedUstas));
-            localStorage.setItem('registeredCustomers', JSON.stringify(registeredCustomers));
-            localStorage.setItem('mockJobs', JSON.stringify(mockJobs));
-        }
-
-        function handleAuth(event, type, action) {
-            event.preventDefault();
-            let email, phone, name, age, tax, branch;
-
-            if (type === 'usta') {
-                if (action === 'login') {
-                    email = sanitizeInput(document.getElementById('ustaLoginEmail').value);
-                    phone = sanitizeInput(document.getElementById('ustaLoginPhone').value);
-                    
-                    const usta = approvedUstas.find(u => u.email === email);
-                    if (!usta) {
-                        alert('Hesabınız henüz onaylanmamış veya kayıt bulunamadı!');
-                        return;
-                    }
-                    
-                    currentUsta = usta;
-                    alert('Giriş başarılı!');
-                    document.getElementById('authContainer').classList.add('hidden');
-                    document.getElementById('ustaDashboard').classList.remove('hidden');
-                    document.getElementById('ustaLogInfo').innerText = `${usta.name} (${phone})`;
-                    
-                    document.getElementById('ustaProfileBox').innerHTML = `
-                        <b>Ad Soyad:</b> ${usta.name} | <b>Yaş:</b> ${usta.age}<br>
-                        <b>E-Posta:</b> ${usta.email} | <b>Tel:</b> ${usta.phone}<br>
-                        <b>Branş:</b> <span class="text-amber-600 font-bold">${usta.branch}</span> | <b>Vergi No:</b> ${usta.tax}
-                    `;
-                    loadJobs();
-                } else {
-                    name = sanitizeInput(document.getElementById('ustaRegName').value);
-                    age = sanitizeInput(document.getElementById('ustaRegAge').value);
-                    email = sanitizeInput(document.getElementById('ustaRegEmail').value);
-                    phone = sanitizeInput(document.getElementById('ustaRegPhone').value);
-                    tax = sanitizeInput(document.getElementById('ustaRegTax').value);
-                    branch = sanitizeInput(document.getElementById('ustaRegBranch').value);
-                    
-                    pendingUstas.push({ id: Date.now(), name, age, email, phone, tax, branch });
-                    saveData();
-                    alert('Kayıt başvurunuz alındı! Yönetici onayından sonra giriş yapabilirsiniz.');
-                    document.getElementById('ustaRegForm').reset();
-                    switchMode('usta', 'login');
-                }
-            } else {
-                if (action === 'login') {
-                    email = sanitizeInput(document.getElementById('custLoginEmail').value);
-                    phone = sanitizeInput(document.getElementById('custLoginPhone').value);
-                    
-                    const cust = registeredCustomers.find(c => c.email === email);
-                    if (!cust) {
-                        alert('Müşteri kaydı bulunamadı. Lütfen önce Kaydolun!');
-                        return;
-                    }
-
-                    currentCustomer = cust;
-                    alert('Giriş başarılı!');
-                    document.getElementById('authContainer').classList.add('hidden');
-                    document.getElementById('customerDashboard').classList.remove('hidden');
-                    document.getElementById('custLogInfo').innerText = `${cust.name} (${phone})`;
-                    loadMyJobs();
-                    loadExploreUstas();
-                } else {
-                    name = sanitizeInput(document.getElementById('custRegName').value);
-                    age = sanitizeInput(document.getElementById('custRegAge').value);
-                    email = sanitizeInput(document.getElementById('custRegEmail').value);
-                    phone = sanitizeInput(document.getElementById('custRegPhone').value);
-                    
-                    registeredCustomers.push({ id: Date.now(), name, age, email, phone, myJobs: [], favorites: [] });
-                    saveData();
-                    alert('Kayıt işlemi başarılı! Şimdi giriş yapabilirsiniz.');
-                    document.getElementById('custRegForm').reset();
-                    switchMode('cust', 'login');
-                }
-            }
-        }
-
-        function logout(type) {
-            document.getElementById('authContainer').classList.remove('hidden');
-            if (type === 'usta') {
-                currentUsta = null;
-                document.getElementById('ustaDashboard').classList.add('hidden');
-                document.getElementById('ustaLoginForm').reset();
-            } else {
-                currentCustomer = null;
-                document.getElementById('customerDashboard').classList.add('hidden');
-                document.getElementById('custLoginForm').reset();
-            }
-        }
-
-        function submitJob(event) {
-            event.preventDefault();
-            const title = sanitizeInput(document.getElementById('jobTitle').value);
-            const category = sanitizeInput(document.getElementById('jobCategory').value);
-            const desc = sanitizeInput(document.getElementById('jobDesc').value);
-            const country = sanitizeInput(document.getElementById('jobCountry').value);
-            const city = sanitizeInput(document.getElementById('jobCity').value);
-            const district = sanitizeInput(document.getElementById('jobDistrict').value);
-
-            const newJob = { id: Date.now(), title, category, country, city, district, desc, status: 'Ustalar İnceliyor' };
-            mockJobs.unshift(newJob);
-            if (currentCustomer) {
-                if (!currentCustomer.myJobs) currentCustomer.myJobs = [];
-                currentCustomer.myJobs.unshift(newJob);
-                loadMyJobs();
-            }
-
-            saveData();
-            alert('İlanınız başarıyla yayınlandı!');
-            event.target.reset();
-        }
-
-        function loadMyJobs() {
-            const container = document.getElementById('myJobList');
-            container.innerHTML = '';
-            if (!currentCustomer || !currentCustomer.myJobs || currentCustomer.myJobs.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500">Henüz yayınlanmış ilanınız bulunmuyor.</p>';
-                return;
-            }
-
-            currentCustomer.myJobs.forEach(job => {
-                container.innerHTML += `
-                    <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 flex justify-between items-center text-xs">
-                        <div>
-                            <span class="font-bold text-blue-600">[${job.category}]</span> <b>${job.title}</b> (${job.city}/${job.district})<br>
-                            <span class="text-gray-500">Durum: <span class="text-amber-600 font-semibold">${job.status}</span></span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function loadExploreUstas() {
-            const container = document.getElementById('exploreUstasList');
-            container.innerHTML = '';
-            if (approvedUstas.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Şu an sistemde onaylı usta bulunmuyor.</p>';
-                return;
-            }
-
-            approvedUstas.forEach(usta => {
-                const isFav = currentCustomer?.favorites?.some(f => f.email === usta.email);
-                container.innerHTML += `
-                    <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
-                        <div>
-                            <span class="font-bold text-amber-600">${usta.name}</span> (${usta.branch})<br>
-                            <span class="text-gray-500">Tel: ${usta.phone}</span>
-                        </div>
-                        <button onclick="toggleFavorite('${usta.email}')" class="px-2.5 py-1 rounded text-white ${isFav ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-600 hover:bg-amber-700'} transition">
-                            <i class="fa-solid fa-star"></i> ${isFav ? 'Favoriden Çıkar' : 'Favorile'}
-                        </button>
-                    </div>
-                `;
-            });
-        }
-
-        function toggleFavorite(email) {
-            if (!currentCustomer) return;
-            const usta = approvedUstas.find(u => u.email === email);
-            if (!usta) return;
-
-            if (!currentCustomer.favorites) currentCustomer.favorites = [];
-            const idx = currentCustomer.favorites.findIndex(f => f.email === email);
-            if (idx > -1) {
-                currentCustomer.favorites.splice(idx, 1);
-                alert('Usta favorilerden çıkarıldı.');
-            } else {
-                currentCustomer.favorites.push(usta);
-                alert('Usta favorilere eklendi!');
-            }
-            saveData();
-            loadExploreUstas();
-        }
-
-        function loadJobs() {
-            const container = document.getElementById('jobList');
-            container.innerHTML = '';
-            const cityFilter = (document.getElementById('filterCity')?.value || "").toLowerCase();
-
-            const filteredJobs = mockJobs.filter(job => job.city.toLowerCase().includes(cityFilter));
-
-            if (filteredJobs.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Aramaya uygun ilan bulunamadı.</p>';
-                return;
-            }
-
-            filteredJobs.forEach(job => {
-                container.innerHTML += `
-                    <div class="p-4 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-2 py-0.5 rounded">${job.category}</span>
-                                <span class="text-[10px] bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded">${job.country}</span>
-                            </div>
-                            <h4 class="font-bold text-base mb-1">${job.title}</h4>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">${job.desc}</p>
-                        </div>
-                        <div class="pt-2 border-t dark:border-gray-600 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-                            <span><i class="fa-solid fa-location-dot text-amber-600 mr-1"></i>${job.district}, ${job.city}</span>
-                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
-                                <i class="fa-brands fa-whatsapp"></i>
-                                <span>Teklif Ver</span>
-                            </a>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-    </script>
-</body>
-</html>
+                registerTab: "
