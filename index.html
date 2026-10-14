@@ -23,7 +23,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-200 min-h-screen flex flex-col">
 
-    <!-- HEADER / NAV -->
+    <!-- HEADER / NAV (Yönetici Butonu Tamamen Kaldırıldı, Sadece Size Özel Kısayol Var) -->
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -33,12 +33,6 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Direkt Şifreli Yönetici Paneli Girişi -->
-                <button onclick="girisYapAdmin()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span data-i18n="adminBtn">Yönetici Paneli</span>
-                </button>
-
                 <!-- Dil Seçimi -->
                 <div class="relative inline-block">
                     <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-xs md:text-sm rounded-lg p-2 font-medium cursor-pointer">
@@ -289,7 +283,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h3 data-i18n="activeJobsHeader" class="text-xl font-bold flex items-center space-x-2 text-amber-600">
                         <i class="fa-solid fa-earth-americas"></i>
-                        <span>Bölgenizdeki dan ve Dünya Genelindeki İlanlar</span>
+                        <span>Bölgenizdeki ve Dünya Genelindeki İlanlar</span>
                     </h3>
                     <button onclick="loadJobs()" data-i18n="btnRefresh" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg">Yenile</button>
                 </div>
@@ -299,12 +293,12 @@
             </div>
         </div>
 
-        <!-- YÖNETİCİ (ADMIN) PANELİ -->
+        <!-- GİZLİ YÖNETİCİ (ADMIN) PANELİ -->
         <div id="adminDashboard" class="hidden space-y-6">
             <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Hoş geldiniz, alkangrupticaret@gmail.com</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">Özel Yetkili Hesap: alkangrupticaret@gmail.com</p>
                 </div>
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
@@ -367,7 +361,6 @@
     <script>
         const translations = {
             tr: {
-                adminBtn: "Yönetici Paneli",
                 heroTitle: "Dünya Genelinde Güvenilir Usta Bulun",
                 heroSub: "Bulunduğunuz şehir ve ülkede tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en yakın ustaya anında ulaşın.",
                 ustaPortalTitle: "Usta Portalı",
@@ -398,7 +391,6 @@
                 btnRefresh: "Yenile"
             },
             en: {
-                adminBtn: "Admin Panel",
                 heroTitle: "Find Reliable Contractors Worldwide",
                 heroSub: "Get immediate service for plumbing, electrical, painting, and repair jobs in your city and country.",
                 ustaPortalTitle: "Craftsman Portal",
@@ -483,8 +475,8 @@
                 } else {
                     regTab.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow transition";
                     loginTab.className = "flex-1 py-1.5 text-xs font-semibold text-gray-500 transition";
-                    regForm.classList.remove('hidden');
-                    loginForm.classList.add('hidden');
+                    regForm.classList.add('hidden');
+                    loginForm.classList.remove('hidden');
                 }
             }
         }
@@ -598,18 +590,18 @@
             });
         }
 
-        // YÖNETİCİ KONTROLÜ (Doğrudan Şifre İle)
-        function girisYapAdmin() {
-            const sifre = prompt("Yönetici şifrenizi girin:");
-            if (sifre === null) return;
-
-            // Şifrenizi buraya dilediğiniz gibi yazabilirsiniz (Varsayılan: admin123)
-            if (sifre === "admin123") {
-                showAdminPanel();
-            } else {
-                alert("Hatalı şifre!");
+        // GİZLİ KLAVYE KISAYOLU İLE YÖNETİCİ GİRİŞİ (Ctrl + Shift + A)
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'A') {
+                event.preventDefault();
+                const sifre = prompt("Gizli Yönetici Şifrenizi Girin:");
+                if (sifre === "admin123") { // Şifrenizi buradan değiştirebilirsiniz
+                    showAdminPanel();
+                } else if (sifre !== null) {
+                    alert("Hatalı şifre!");
+                }
             }
-        }
+        });
 
         function showAdminPanel() {
             document.getElementById('authContainer').classList.add('hidden');
@@ -637,12 +629,12 @@
             }
 
             const custListDiv = document.getElementById('adminCustList');
-            classListDiv.innerHTML = '';
+            custListDiv.innerHTML = '';
             if (registeredCustomers.length === 0) {
-                classListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri bulunmuyor.</p>';
+                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri bulunmuyor.</p>';
             } else {
                 registeredCustomers.forEach((c, index) => {
-                    classListDiv.innerHTML += `
+                    custListDiv.innerHTML += `
                         <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
                             <div>
                                 <span class="font-bold text-blue-600">${index + 1}. ${c.name}</span> (${c.age} yaşında)<br>
