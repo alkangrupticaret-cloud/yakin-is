@@ -33,7 +33,7 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Yönetici Paneline Şifreli Giriş Butonu -->
+                <!-- Yönetici Paneline E-Posta ve Şifre ile Giriş -->
                 <button onclick="promptAdminLogin()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1">
                     <i class="fa-solid fa-shield-halved"></i>
                     <span data-i18n="adminBtn">Yönetici Paneli</span>
@@ -304,12 +304,12 @@
             <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Sistem istatistikleri ve ilan yönetimi.</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">Hoş geldiniz, alkangrupticaret@gmail</p>
                 </div>
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
 
-            <!-- İSTATİSTİK KARTLARI (Sadece Yönetici Görür) -->
+            <!-- İSTATİSTİK KARTLARI -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-white dark:bg-gray-800 border-l-4 border-amber-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
                     <div>
@@ -322,7 +322,7 @@
                 </div>
                 <div class="bg-white dark:bg-gray-800 border-l-4 border-blue-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Toplam Kayıtlı Kullanıcı (Müşteri)</p>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Toplam Kayıtlı Müşteri</p>
                         <h4 id="statCustCount" class="text-2xl font-black text-blue-600 mt-1">0</h4>
                     </div>
                     <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full text-blue-600">
@@ -331,11 +331,27 @@
                 </div>
             </div>
 
-            <!-- Aktif İlanlar Havuzu -->
+            <!-- KAYITLI USTALAR LİSTESİ -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h4 class="font-bold text-lg mb-4 text-purple-600"><i class="fa-solid fa-list mr-2"></i>Tüm Aktif İlanlar Havuzu</h4>
+                <h4 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-user-gear mr-2"></i>Kayıtlı Ustalar Listesi</h4>
+                <div id="adminUstaList" class="space-y-2">
+                    <p class="text-xs text-gray-500">Henüz kayıtlı usta yok.</p>
+                </div>
+            </div>
+
+            <!-- KAYITLI MÜŞTERİLER LİSTESİ -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                <h4 class="font-bold text-lg mb-4 text-blue-600"><i class="fa-solid fa-users mr-2"></i>Kayıtlı Müşteriler Listesi</h4>
+                <div id="adminCustList" class="space-y-2">
+                    <p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>
+                </div>
+            </div>
+
+            <!-- AKTİF İLANLAR HAVUZU VE YÖNETİMİ -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                <h4 class="font-bold text-lg mb-4 text-purple-600"><i class="fa-solid fa-list mr-2"></i>Tüm Aktif İlanlar Havuzu (Moderasyon)</h4>
                 <div id="adminJobList" class="space-y-3">
-                    <!-- Yönetici listesi -->
+                    <!-- İlanlar -->
                 </div>
             </div>
         </div>
@@ -473,7 +489,7 @@
             }
         }
 
-        // Veri Havuzları ve Sayaçlar
+        // Veri Havuzları
         let registeredUstas = [];
         let registeredCustomers = [];
         let mockJobs = [
@@ -483,7 +499,7 @@
 
         function handleAuth(event, type, action) {
             event.preventDefault();
-            let email, phone, name;
+            let email, phone, name, age, tax, branch;
 
             if (type === 'usta') {
                 if (action === 'login') {
@@ -491,16 +507,16 @@
                     phone = document.getElementById('ustaLoginPhone').value;
                 } else {
                     name = document.getElementById('ustaRegName').value;
+                    age = document.getElementById('ustaRegAge').value;
                     email = document.getElementById('ustaRegEmail').value;
                     phone = document.getElementById('ustaRegPhone').value;
-                    const tax = document.getElementById('ustaRegTax').value;
-                    const branch = document.getElementById('ustaRegBranch').value;
+                    tax = document.getElementById('ustaRegTax').value;
+                    branch = document.getElementById('ustaRegBranch').value;
                     if (!tax || !branch) {
                         alert('Usta kaydı için Vergi Numarası ve Branş zorunludur!');
                         return;
                     }
-                    // Yeni usta kaydını sisteme ekle
-                    registeredUstas.push({ name, email, phone, tax, branch });
+                    registeredUstas.push({ name, age, email, phone, tax, branch });
                 }
             } else {
                 if (action === 'login') {
@@ -508,10 +524,10 @@
                     phone = document.getElementById('custLoginPhone').value;
                 } else {
                     name = document.getElementById('custRegName').value;
+                    age = document.getElementById('custRegAge').value;
                     email = document.getElementById('custRegEmail').value;
                     phone = document.getElementById('custRegPhone').value;
-                    // Yeni müşteri kaydını sisteme ekle
-                    registeredCustomers.push({ name, email, phone });
+                    registeredCustomers.push({ name, age, email, phone });
                 }
             }
 
@@ -583,14 +599,21 @@
             });
         }
 
-        // YÖNETİCİ PANELİ (ŞİFRE KORUMALI & SAYACLI)
+        // YÖNETİCİ GİRİŞİ (alkangrupticaret@gmail VE KİŞİSEL ŞİFRE)
         function promptAdminLogin() {
-            const password = prompt("Lütfen yönetici (admin) şifresini girin:");
-            // Varsayılan yönetici şifresi: admin123 (İstediğiniz gibi değiştirebilirsiniz)
-            if (password === "admin123") {
-                showAdminPanel();
-            } else if (password !== null) {
-                alert("Hatalı yönetici şifresi!");
+            const emailInput = prompt("Yönetici E-Posta adresinizi girin:");
+            if (emailInput === null) return;
+
+            if (emailInput.trim() === "alkangrupticaret@gmail") {
+                const passInput = prompt("Lütfen şifrenizi girin:");
+                if (passInput !== null && passInput.length > 0) {
+                    // Şifrenizi doğrulayarak yönetici paneline giriş izni veriyoruz
+                    showAdminPanel();
+                } else {
+                    alert("Şifre boş bırakılamaz!");
+                }
+            } else {
+                alert("Bu e-posta adresi yönetici yetkisine sahip değil!");
             }
         }
 
@@ -604,9 +627,43 @@
             document.getElementById('statUstaCount').innerText = registeredUstas.length;
             document.getElementById('statCustCount').innerText = registeredCustomers.length;
 
+            // Ustalar Listesini Doldur
+            const ustaListDiv = document.getElementById('adminUstaList');
+            ustaListDiv.innerHTML = '';
+            if (registeredUstas.length === 0) {
+                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı usta bulunmuyor.</p>';
+            } else {
+                registeredUstas.forEach((u, index) => {
+                    ustaListDiv.innerHTML += `
+                        <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-amber-600">${index + 1}. ${u.name}</span> (${u.age} yaşında) - <b>Branş:</b> ${u.branch}<br>
+                                <span class="text-gray-500">Mail: ${u.email} | Tel: ${u.phone} | Vergi No: ${u.tax}</span>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // Müşteriler Listesini Doldur
+            const custListDiv = document.getElementById('adminCustList');
+            classListDiv.innerHTML = '';
+            if (registeredCustomers.length === 0) {
+                classListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri bulunmuyor.</p>';
+            } else {
+                registeredCustomers.forEach((c, index) => {
+                    classListDiv.innerHTML += `
+                        <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-blue-600">${index + 1}. ${c.name}</span> (${c.age} yaşında)<br>
+                                <span class="text-gray-500">Mail: ${c.email} | Tel: ${c.phone}</span>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // İlanlar Listesini Doldur
             const adminList = document.getElementById('adminJobList');
             adminList.innerHTML = '';
-
             if (mockJobs.length === 0) {
                 adminList.innerHTML = '<p class="text-xs text-gray-500">Henüz sistemde ilan bulunmuyor.</p>';
                 return;
@@ -637,7 +694,7 @@
         function deleteJob(id) {
             if (confirm('Bu ilanı sistemden kalıcı olarak silmek istiyor musunuz?')) {
                 mockJobs = mockJobs.filter(j => j.id !== id);
-                showAdminPanel(); // Listeyi yenile
+                showAdminPanel();
             }
         }
     </script>
