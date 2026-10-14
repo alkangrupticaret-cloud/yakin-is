@@ -3,392 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Mahallenizin Ustası Parmaklarınızın Ucunda</title>
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --primary-color: #0d6efd;
-            --primary-hover: #0b5ed7;
-            --border-color: #dee2e6;
-            --success-color: #198754;
-        }
-
-        body.dark-mode {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #f1f1f1;
-            --primary-color: #3d8bfd;
-            --primary-hover: #6ea8fe;
-            --border-color: #2c2c2c;
-            --success-color: #20c997;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        button, select {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button.btn-primary {
-            background: var(--primary-color);
-            color: #fff;
-            border: none;
-        }
-
-        button.btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .card h2 {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        .job-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 10px;
-        }
-
-        .job-item:last-child {
-            border-bottom: none;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            background: #e9ecef;
-            color: #495057;
-            margin-bottom: 5px;
-        }
-
-        .whatsapp-btn {
-            background: #25d366;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        .whatsapp-btn:hover { background: #1ebe5d; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <!-- ÜST MENÜ & KONTROLLER -->
-        <header>
-            <h1 data-i18n="appTitle">Yakın-İş</h1>
-            <div class="controls">
-                <select id="langSelect" onchange="changeLanguage(this.value)">
-                    <option value="tr">TR</option>
-                    <option value="en">EN</option>
-                </select>
-                <button onclick="toggleTheme()" id="themeBtn">🌙 Tema</button>
-            </div>
-        </header>
-
-        <!-- KULLANICI / GİRİŞ DURUMU -->
-        <div class="card">
-            <h2 data-i18n="authTitle">Oturum & Kimlik</h2>
-            <div id="authStatus">Giriş yapılıyor veya kimlik bilgisi bekleniyor...</div>
-        </div>
-
-        <!-- İŞ İLANI OLUŞTURMA (Müşteri Paneli) -->
-        <div class="card">
-            <h2 data-i18n="postJobTitle">Yeni İlan / Hizmet Talebi Oluştur</h2>
-            <input type="text" id="jobTitle" placeholder="İş Başlığı (Örn: Musluk Tamiri)">
-            <input type="text" id="jobCategory" placeholder="Kategori (Örn: Tesisat)">
-            <textarea id="jobDesc" placeholder="İşin detaylarını açıklayın..."></textarea>
-            <input type="text" id="jobCity" placeholder="Şehir (Örn: Bursa)">
-            <input type="text" id="jobDistrict" placeholder="İlçe (Örn: Nilüfer)">
-            <button class="btn-primary" onclick="createJob()" data-i18n="postBtn">İlanı Yayınla</button>
-        </div>
-
-        <!-- CANLI İLANLAR VE MESAFE / LİSTELEME -->
-        <div class="card">
-            <h2 data-i18n="jobsListTitle">Mahallenizdeki Aktif İlanlar</h2>
-            <button onclick="loadJobs()" style="margin-bottom: 10px;" data-i18n="refreshBtn">İlanları Yenile</button>
-            <div id="jobListContainer">İlanlar yükleniyor...</div>
-        </div>
-    </div>
-
+    <title>Yakın-İş | Tamir & Tadilat Usta Hizmetleri</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // ==========================================
-        // 1. SUPABASE BAĞLANTI AYARLARI
-        // ==========================================
-        const SUPABASE_URL = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#d97706', // Tamir/Tadilat Teması: Amber/Turuncu Usta Rengi
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Iconlar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-200 min-h-screen flex flex-col">
 
-        // ==========================================
-        // 2. ÇOKLU DİL (i18n) SÖZLÜĞÜ
-        // ==========================================
+    <!-- HEADER / NAV -->
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid font-bold text-2xl text-amber-600 fa-wrench"></i>
+                <h1 class="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-500">Yakın-İş</h1>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Dil Seçimi -->
+                <div class="relative inline-block">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-xs md:text-sm rounded-lg p-2 font-medium cursor-pointer">
+                        <option value="tr">🇹🇷 TR</option>
+                        <option value="en">🇬🇧 EN</option>
+                    </select>
+                </div>
+
+                <!-- Dark / Light Tema ToggIe -->
+                <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- BANNER / HERO SECTION -->
+    <section class="bg-gradient-to-r from-amber-600 to-amber-700 text-white py-8 px-4 text-center shadow-inner">
+        <div class="max-w-4xl mx-auto space-y-2">
+            <h2 id="txt-hero-title" class="text-2xl md:text-4xl font-extrabold">Ev & İş Yeriniz İçin Güvenilir Usta Bulun</h2>
+            <p id="txt-hero-sub" class="text-sm md:text-base text-amber-100">Bursa ve çevresinde tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en yakın ustaya anında ulaşın.</p>
+        </div>
+    </section>
+
+    <!-- ANA İÇERİK CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-8">
+
+        <!-- GİRİŞ & KAYIT PANELLERİ (SOL: USTA - SAĞ: MÜŞTERİ) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- SOL PANEL: USTA GİRİŞİ / KAYDI -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-amber-600">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-full text-amber-600 dark:text-amber-400">
+                        <i class="fa-solid fa-user-gear text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="txt-usta-title" class="text-lg font-bold">Usta Girişi / Kaydı</h3>
+                        <p id="txt-usta-desc" class="text-xs text-gray-500 dark:text-gray-400">Hizmet veren olarak ilanlara teklif verin.</p>
+                    </div>
+                </div>
+
+                <form id="ustaAuthForm" class="space-y-3" onsubmit="handleAuth(event, 'usta')">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-usta-email">E-Posta Adresi</label>
+                        <input type="email" required placeholder="usta@example.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-usta-pass">Şifre</label>
+                        <input type="password" required placeholder="••••••••" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-usta-cat">Uzmanlık Alanınız</label>
+                        <select class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="tesisat">Su / Sıhhi Tesisat</option>
+                            <option value="elektrik">Elektrik Arıza & Montaj</option>
+                            <option value="boya">Boya, Badana & Dekorasyon</option>
+                            <option value="marangoz">Marangoz & Mobilya Montaj</option>
+                            <option value="kombi">Kombi, Klima & Isıtma</option>
+                            <option value="diger">Diğer Tamir / Tadilat</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btn-usta-login" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg transition text-sm flex justify-center items-center space-x-2">
+                        <i class="fa-solid fa-hammer"></i>
+                        <span>Usta Olarak Giriş Yap / Kaydol</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- SAĞ PANEL: MÜŞTERİ GİRİŞİ / KAYDI -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-blue-600">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full text-blue-600 dark:text-blue-400">
+                        <i class="fa-solid fa-user text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="txt-customer-title" class="text-lg font-bold">Müşteri / Hizmet Alan Girişi</h3>
+                        <p id="txt-customer-desc" class="text-xs text-gray-500 dark:text-gray-400">Tamir & tadilat ilanı verin, usta çağırın.</p>
+                    </div>
+                </div>
+
+                <form id="customerAuthForm" class="space-y-3" onsubmit="handleAuth(event, 'customer')">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-cust-email">E-Posta Adresi</label>
+                        <input type="email" required placeholder="musteri@example.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-cust-pass">Şifre</label>
+                        <input type="password" required placeholder="••••••••" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <button type="submit" id="btn-cust-login" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition text-sm flex justify-center items-center space-x-2">
+                        <i class="fa-solid fa-house-chimney-crack"></i>
+                        <span>Müşteri Olarak Giriş Yap / Kaydol</span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- İLAN OLUŞTURMA BÖLÜMÜ (MÜŞTERİ İÇİN) -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+            <h3 id="txt-new-job-title" class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center space-x-2">
+                <i class="fa-solid fa-plus-circle text-amber-600"></i>
+                <span>Yeni Tamir / Tadilat İlanı Oluştur</span>
+            </h3>
+
+            <form id="jobForm" onsubmit="submitJob(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-job-title">İş Başlığı</label>
+                        <input type="text" id="jobTitle" required placeholder="Örn: Mutfak Musluğu Sızdırıyor, Boya Badana" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-job-cat">Kategori</label>
+                        <select id="jobCategory" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="tesisat">Su / Sıhhi Tesisat</option>
+                            <option value="elektrik">Elektrik & Aydınlatma</option>
+                            <option value="boya">Boya & Badana İşleri</option>
+                            <option value="marangoz">Marangoz & Mobilya</option>
+                            <option value="kombi">Kombi & Petek Temizliği</option>
+                            <option value="diger">Diğer Ev Tamiratı</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1" id="lbl-job-desc">İşin Detayı ve Sorun</label>
+                    <textarea id="jobDesc" rows="3" required placeholder="Lütfen yapılacak işi, sorunu açıkça yazın..." class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-job-city">Şehir</label>
+                        <input type="text" id="jobCity" value="Bursa" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1" id="lbl-job-dist">İlçe / Semt</label>
+                        <input type="text" id="jobDistrict" placeholder="Örn: Nilüfer / Osmangazi" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-job-submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-lg transition flex justify-center items-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>İlanı Yayınla & Usta Çağır</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- AKTİF İLANLAR BÖLÜMÜ -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="txt-active-jobs" class="text-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check text-amber-600"></i>
+                    <span>Bölgenizdeki Tamir / Tadilat İlanları</span>
+                </h3>
+                <button onclick="loadJobs()" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-300 transition">
+                    <i class="fa-solid fa-arrows-rotate mr-1"></i> <span id="btn-refresh">Yenile</span>
+                </button>
+            </div>
+
+            <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dinamik olarak yüklenecek -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 dark:text-gray-400 mt-auto">
+        <p>&copy; 2026 Yakın-İş | Tamir, Tadilat & Usta Hizmetleri Platformu</p>
+    </footer>
+
+    <!-- JS MANTIĞI & SUPABASE & İ18N -->
+    <script>
+        // Dil Sözlüğü (TR / EN)
         const translations = {
             tr: {
-                appTitle: "Yakın-İş",
-                authTitle: "Oturum & Kimlik",
-                postJobTitle: "Yeni İlan / Hizmet Talebi Oluştur",
-                postBtn: "İlanı Yayınla",
-                jobsListTitle: "Mahallenizdeki Aktif İlanlar",
-                refreshBtn: "İlanları Yenile",
-                successJob: "İlan başarıyla oluşturuldu!",
-                errorJob: "İlan oluşturulurken hata:",
-                distanceInfo: "Mesafe:"
+                heroTitle: "Ev & İş Yeriniz İçin Güvenilir Usta Bulun",
+                heroSub: "Bursa ve çevresinde tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en yakın ustaya anında ulaşın.",
+                ustaTitle: "Usta Girişi / Kaydı",
+                ustaDesc: "Hizmet veren olarak ilanlara teklif verin.",
+                lblEmail: "E-Posta Adresi",
+                lblPass: "Şifre",
+                lblUstaCat: "Uzmanlık Alanınız",
+                btnUstaLogin: "Usta Olarak Giriş Yap / Kaydol",
+                custTitle: "Müşteri / Hizmet Alan Girişi",
+                custDesc: "Tamir & tadilat ilanı verin, usta çağırın.",
+                btnCustLogin: "Müşteri Olarak Giriş Yap / Kaydol",
+                newJobTitle: "Yeni Tamir / Tadilat İlanı Oluştur",
+                lblJobTitle: "İş Başlığı",
+                lblJobCat: "Kategori",
+                lblJobDesc: "İşin Detayı ve Sorun",
+                lblJobCity: "Şehir",
+                lblJobDist: "İlçe / Semt",
+                btnJobSubmit: "İlanı Yayınla & Usta Çağır",
+                activeJobs: "Bölgenizdeki Tamir / Tadilat İlanları",
+                btnRefresh: "Yenile"
             },
             en: {
-                appTitle: "Yakın-İş",
-                authTitle: "Session & Auth",
-                postJobTitle: "Post a New Job / Service Request",
-                postBtn: "Publish Job",
-                jobsListTitle: "Active Jobs in Your Area",
-                refreshBtn: "Refresh Jobs",
-                successJob: "Job successfully created!",
-                errorJob: "Error creating job:",
-                distanceInfo: "Distance:"
+                heroTitle: "Find Reliable Contractors & Craftsmen",
+                heroSub: "Get immediate service for plumbing, electrical, painting, and repair jobs in Bursa.",
+                ustaTitle: "Craftsman / Pro Login",
+                ustaDesc: "Bid on repair requests as a service provider.",
+                lblEmail: "Email Address",
+                lblPass: "Password",
+                lblUstaCat: "Specialty Area",
+                btnUstaLogin: "Login / Register as Craftsman",
+                custTitle: "Customer / Client Login",
+                custDesc: "Post repair jobs and request quotes.",
+                btnCustLogin: "Login / Register as Customer",
+                newJobTitle: "Create New Repair Request",
+                lblJobTitle: "Job Title",
+                lblJobCat: "Category",
+                lblJobDesc: "Job Details & Issue",
+                lblJobCity: "City",
+                lblJobDist: "District / Area",
+                btnJobSubmit: "Publish Job & Get Bids",
+                activeJobs: "Active Repair Jobs Near You",
+                btnRefresh: "Refresh"
             }
         };
 
-        let currentLang = 'tr';
-
+        // Dil Değiştirme Fonksiyonu
         function changeLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
+            const t = translations[lang];
+            if (!t) return;
+
+            document.getElementById('txt-hero-title').innerText = t.heroTitle;
+            document.getElementById('txt-hero-sub').innerText = t.heroSub;
+            
+            document.getElementById('txt-usta-title').innerText = t.ustaTitle;
+            document.getElementById('txt-usta-desc').innerText = t.ustaDesc;
+            document.getElementById('lbl-usta-email').innerText = t.lblEmail;
+            document.getElementById('lbl-usta-pass').innerText = t.lblPass;
+            document.getElementById('lbl-usta-cat').innerText = t.lblUstaCat;
+            document.getElementById('btn-usta-login').innerText = t.btnUstaLogin;
+
+            document.getElementById('txt-customer-title').innerText = t.custTitle;
+            document.getElementById('txt-customer-desc').innerText = t.custDesc;
+            document.getElementById('lbl-cust-email').innerText = t.lblEmail;
+            document.getElementById('lbl-cust-pass').innerText = t.lblPass;
+            document.getElementById('btn-cust-login').innerText = t.btnCustLogin;
+
+            document.getElementById('txt-new-job-title').innerText = t.newJobTitle;
+            document.getElementById('lbl-job-title').innerText = t.lblJobTitle;
+            document.getElementById('lbl-job-cat').innerText = t.lblJobCat;
+            document.getElementById('lbl-job-desc').innerText = t.lblJobDesc;
+            document.getElementById('lbl-job-city').innerText = t.lblJobCity;
+            document.getElementById('lbl-job-dist').innerText = t.lblJobDist;
+            document.getElementById('btn-job-submit').innerText = t.btnJobSubmit;
+
+            document.getElementById('txt-active-jobs').innerText = t.activeJobs;
+            document.getElementById('btn-refresh').innerText = t.btnRefresh;
+        }
+
+        // Tema ToggIe Fonksiyonu
+        function toggleTheme() {
+            const htmlClass = document.documentElement.classList;
+            const themeIcon = document.getElementById('themeIcon');
+            if (htmlClass.contains('dark')) {
+                htmlClass.remove('dark');
+                themeIcon.className = 'fa-solid fa-moon text-lg';
+            } else {
+                htmlClass.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-lg text-amber-400';
+            }
+        }
+
+        // Supabase Bağlantı Başlatma
+        const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        let supabaseClient = null;
+
+        if (SUPABASE_URL.includes('YOUR_SUPABASE_PROJECT_ID') === false) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // Örnek İlan Verileri (Supabase olmadan veya test için)
+        const mockJobs = [
+            { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor, acil usta gerekiyor.' },
+            { id: 2, title: '3+1 Daire Salon ve Antre Boyası', category: 'Boya', city: 'Bursa', district: 'Osmangazi', desc: 'Duvarlar Jotun marka silinebilir boya ile boyanacak.' }
+        ];
+
+        function loadJobs() {
+            const container = document.getElementById('jobList');
+            container.innerHTML = '';
+
+            mockJobs.forEach(job => {
+                const card = `
+                    <div class="p-4 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-2 py-0.5 rounded mb-2">${job.category}</span>
+                            <h4 class="font-bold text-base mb-1">${job.title}</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">${job.desc}</p>
+                        </div>
+                        <div class="pt-2 border-t dark:border-gray-600 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                            <span><i class="fa-solid font-bold fa-location-dot text-amber-600 mr-1"></i>${job.district}, ${job.city}</span>
+                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>Teklif Ver</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
             });
         }
 
-        // ==========================================
-        // 3. DARK / LIGHT TEMA YÖNETİMİ
-        // ==========================================
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            document.getElementById('themeBtn').textContent = isDark ? '☀️ Tema' : '🌙 Tema';
+        function handleAuth(event, type) {
+            event.preventDefault();
+            alert(type === 'usta' ? 'Usta girişi/kaydı simüle edildi!' : 'Müşteri girişi/kaydı simüle edildi!');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('themeBtn').textContent = '☀️ Tema';
-            }
-            checkUserSession();
-            loadJobs();
-            getUserLocationAndCalculate();
-        });
-
-        // ==========================================
-        // 4. OTURUM KONTROLÜ
-        // ==========================================
-        async function checkUserSession() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            const statusDiv = document.getElementById('authStatus');
-            if (session) {
-                statusDiv.innerHTML = `Giriş yapıldı: <b>${session.user.email}</b>`;
-            } else {
-                statusDiv.innerHTML = `Misafir Modu (Test oturumu aktif)`;
-            }
-        }
-
-        // ==========================================
-        // 5. KONUM BAZLI HESAPLAMA (Haversine Formülü)
-        // ==========================================
-        let userCoords = { lat: 40.1885, lng: 29.0610 }; // Varsayılan Bursa
-
-        function getUserLocationAndCalculate() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    userCoords.lat = position.coords.latitude;
-                    userCoords.lng = position.coords.longitude;
-                });
-            }
-        }
-
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            if (!lat1 || !lon1 || !lat2 || !lon2) return 'Bilinmiyor';
-            const R = 6371; // km
-            const dLat = (lat2 - lat1) * (Math.PI / 180);
-            const dLon = (lon2 - lon1) * (Math.PI / 180);
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return (R * c).toFixed(1) + ' km';
-        }
-
-        // ==========================================
-        // 6. WHATSAPP İLETİŞİM ENTEGRASYONU
-        // ==========================================
-        function openWhatsAppChat(phone, jobTitle) {
-            const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '905000000000';
-            const message = `Merhaba, Yakın-İş üzerindeki "${jobTitle}" ilanınız için ulaştım.`;
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        // ==========================================
-        // 7. İŞ İLANI OLUŞTURMA VE LİSTELEME
-        // ==========================================
-        async function createJob() {
+        function submitJob(event) {
+            event.preventDefault();
             const title = document.getElementById('jobTitle').value;
             const category = document.getElementById('jobCategory').value;
-            const description = document.getElementById('jobDesc').value;
+            const desc = document.getElementById('jobDesc').value;
             const city = document.getElementById('jobCity').value;
             const district = document.getElementById('jobDistrict').value;
 
-            if (!title || !category) {
-                alert('Lütfen başlık ve kategori alanlarını doldurun.');
-                return;
-            }
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            const customerId = session ? session.user.id : null;
-
-            if (!customerId) {
-                alert('İlan vermek için lütfen giriş yapın veya test kullanıcısı tanımlayın.');
-                return;
-            }
-
-            const { error } = await supabaseClient.from('jobs').insert([{
-                customer_id: customerId,
-                title,
-                category,
-                description,
-                city,
-                district,
-                latitude: userCoords.lat,
-                longitude: userCoords.lng,
-                status: 'active'
-            }]);
-
-            if (error) {
-                alert(translations[currentLang].errorJob + ' ' + error.message);
-            } else {
-                alert(translations[currentLang].successJob);
-                loadJobs();
-            }
+            mockJobs.unshift({ id: Date.now(), title, category, city, district, desc });
+            loadJobs();
+            document.getElementById('jobForm').reset();
+            alert('Tamir/Tadilat ilanınız başarıyla oluşturuldu!');
         }
 
-        async function loadJobs() {
-            const container = document.getElementById('jobListContainer');
-            container.innerHTML = 'Yükleniyor...';
-
-            const { data, error } = await supabaseClient
-                .from('jobs')
-                .select('*, profiles(full_name, phone, latitude, longitude)')
-                .eq('status', 'active')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                container.innerHTML = `<span style="color:red;">İlanlar yüklenirken hata oluştu: ${error.message}</span>`;
-                return;
-            }
-
-            if (!data || data.length === 0) {
-                container.innerHTML = 'Henüz aktif bir ilan bulunmuyor.';
-                return;
-            }
-
-            container.innerHTML = '';
-            data.forEach(job => {
-                const dist = calculateDistance(userCoords.lat, userCoords.lng, job.latitude, job.longitude);
-                const phone = job.profiles ? job.profiles.phone : '905555555555';
-                
-                const item = document.createElement('div');
-                item.className = 'job-item';
-                item.innerHTML = `
-                    <span class="badge">${job.category}</span>
-                    <h3>${job.title}</h3>
-                    <p>${job.description}</p>
-                    <small>📍 ${job.city} / ${job.district} | Mesafe: <b>${dist}</b></small><br>
-                    <button class="whatsapp-btn" onclick="openWhatsAppChat('${phone}', '${job.title}')">
-                        💬 WhatsApp ile İletişim
-                    </button>
-                `;
-                container.appendChild(item);
-            });
-        }
+        // Sayfa Yüklendiğinde
+        window.onload = function() {
+            loadJobs();
+        };
     </script>
 </body>
 </html>
