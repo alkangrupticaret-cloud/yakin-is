@@ -134,7 +134,7 @@
                     </div>
                     <button type="submit" data-i18n="btnRegister" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg transition text-sm flex justify-center items-center space-x-2">
                         <i class="fa-solid fa-user-plus"></i>
-                        <span>Kayıt Ol ve Doğrula</span>
+                        <span>Kayıt Ol ve Onaya Gönder</span>
                     </button>
                 </form>
             </div>
@@ -303,11 +303,11 @@
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
 
-            <!-- İSTATİSTİK KARTLARI -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- İSTATİSTİK KARTLARI & BİLDİRİM -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-white dark:bg-gray-800 border-l-4 border-amber-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Toplam Kayıtlı Usta</p>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Aktif Ustalar</p>
                         <h4 id="statUstaCount" class="text-2xl font-black text-amber-600 mt-1">0</h4>
                     </div>
                     <div class="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-full text-amber-600">
@@ -316,20 +316,40 @@
                 </div>
                 <div class="bg-white dark:bg-gray-800 border-l-4 border-blue-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Toplam Kayıtlı Müşteri</p>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Kayıtlı Müşteriler</p>
                         <h4 id="statCustCount" class="text-2xl font-black text-blue-600 mt-1">0</h4>
                     </div>
                     <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full text-blue-600">
                         <i class="fa-solid fa-users text-xl"></i>
                     </div>
                 </div>
+                <div class="bg-white dark:bg-gray-800 border-l-4 border-red-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Onay Bekleyen Usta</p>
+                        <h4 id="statPendingCount" class="text-2xl font-black text-red-600 mt-1">0</h4>
+                    </div>
+                    <div class="p-3 bg-red-100 dark:bg-red-900/40 rounded-full text-red-600">
+                        <i class="fa-solid fa-bell text-xl animate-bounce"></i>
+                    </div>
+                </div>
             </div>
 
-            <!-- KAYITLI USTALAR LİSTESİ -->
+            <!-- ONAY BEKLEYEN USTALAR BÖLÜMÜ -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-amber-500/30">
+                <h4 class="font-bold text-lg mb-4 text-amber-600 flex items-center justify-between">
+                    <span><i class="fa-solid fa-user-clock mr-2"></i>Onay Bekleyen Usta Başvuruları</span>
+                    <span id="pendingBadge" class="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0 yeni</span>
+                </h4>
+                <div id="adminPendingUstaList" class="space-y-2">
+                    <p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>
+                </div>
+            </div>
+
+            <!-- ONAYLANMIŞ AKTİF USTALAR -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h4 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-user-gear mr-2"></i>Kayıtlı Ustalar Listesi</h4>
+                <h4 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-user-check mr-2"></i>Kayıtlı ve Onaylı Ustalar Listesi</h4>
                 <div id="adminUstaList" class="space-y-2">
-                    <p class="text-xs text-gray-500">Henüz kayıtlı usta yok.</p>
+                    <p class="text-xs text-gray-500">Henüz onaylı usta yok.</p>
                 </div>
             </div>
 
@@ -352,7 +372,7 @@
 
     </main>
 
-    <!-- FOOTER (TELEFONLAR İÇİN GİZLİ YÖNETİCİ TETİKLEYİCİSİ: Buraya 5 Kez Art Arda Dokunun) -->
+    <!-- FOOTER -->
     <footer id="secretAdminTrigger" class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto cursor-pointer select-none">
         <p>&copy; 2026 Yakın-İş | Küresel Tamir, Tadilat & Usta Hizmetleri Platformu</p>
     </footer>
@@ -375,7 +395,7 @@
                 lblTax: "Vergi Numarası (Zorunlu)",
                 lblBranch: "Branş / Uzmanlık (Zorunlu)",
                 btnLogin: "Giriş Yap",
-                btnRegister: "Kayıt Ol ve Doğrula",
+                btnRegister: "Kayıt Ol ve Onaya Gönder",
                 custPanelActive: "Müşteri Paneli Aktif",
                 ustaPanelActive: "Usta Paneli Aktif",
                 btnLogout: "Çıkış Yap",
@@ -405,7 +425,7 @@
                 lblTax: "Tax Number (Required)",
                 lblBranch: "Branch / Specialty (Required)",
                 btnLogin: "Login",
-                btnRegister: "Register & Verify",
+                btnRegister: "Register & Send for Approval",
                 custPanelActive: "Customer Panel Active",
                 ustaPanelActive: "Craftsman Panel Active",
                 btnLogout: "Logout",
@@ -481,7 +501,9 @@
             }
         }
 
-        let registeredUstas = [];
+        // Veri Havuzları (Onay bekleyen ve onaylanmışlar ayrı)
+        let pendingUstas = [];
+        let approvedUstas = [];
         let registeredCustomers = [];
         let mockJobs = [
             { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor.' },
@@ -496,6 +518,19 @@
                 if (action === 'login') {
                     email = document.getElementById('ustaLoginEmail').value;
                     phone = document.getElementById('ustaLoginPhone').value;
+                    
+                    // Onaylı mı kontrol et
+                    const usta = approvedUstas.find(u => u.email === email);
+                    if (!usta) {
+                        alert('Hesabınız henüz yönetici tarafından onaylanmamış veya kayıt bulunamadı!');
+                        return;
+                    }
+                    
+                    alert('Giriş başarılı!');
+                    document.getElementById('authContainer').classList.add('hidden');
+                    document.getElementById('ustaDashboard').classList.remove('hidden');
+                    document.getElementById('ustaLogInfo').innerText = `${usta.name} (${phone})`;
+                    loadJobs();
                 } else {
                     name = document.getElementById('ustaRegName').value;
                     age = document.getElementById('ustaRegAge').value;
@@ -503,35 +538,44 @@
                     phone = document.getElementById('ustaRegPhone').value;
                     tax = document.getElementById('ustaRegTax').value;
                     branch = document.getElementById('ustaRegBranch').value;
+                    
                     if (!tax || !branch) {
                         alert('Usta kaydı için Vergi Numarası ve Branş zorunludur!');
                         return;
                     }
-                    registeredUstas.push({ name, age, email, phone, tax, branch });
+
+                    // Onay bekleyenler havuzuna at
+                    pendingUstas.push({ id: Date.now(), name, age, email, phone, tax, branch });
+                    alert('Kayıt başvurunuz alındı! Yönetici onayından sonra giriş yapabilirsiniz.');
+                    document.getElementById('ustaRegForm').reset();
+                    switchMode('usta', 'login');
                 }
             } else {
                 if (action === 'login') {
                     email = document.getElementById('custLoginEmail').value;
                     phone = document.getElementById('custLoginPhone').value;
+                    
+                    const cust = registeredCustomers.find(c => c.email === email);
+                    if (!cust) {
+                        alert('Müşteri kaydı bulunamadı. Lütfen önce Kaydolun!');
+                        return;
+                    }
+
+                    alert('Giriş başarılı!');
+                    document.getElementById('authContainer').classList.add('hidden');
+                    document.getElementById('customerDashboard').classList.remove('hidden');
+                    document.getElementById('custLogInfo').innerText = `${cust.name} (${phone})`;
                 } else {
                     name = document.getElementById('custRegName').value;
                     age = document.getElementById('custRegAge').value;
                     email = document.getElementById('custRegEmail').value;
                     phone = document.getElementById('custRegPhone').value;
-                    registeredCustomers.push({ name, age, email, phone });
+                    
+                    registeredCustomers.push({ id: Date.now(), name, age, email, phone });
+                    alert('Kayıt işlemi başarılı! Şimdi giriş yapabilirsiniz.');
+                    document.getElementById('custRegForm').reset();
+                    switchMode('cust', 'login');
                 }
-            }
-
-            alert(action === 'register' ? 'Kayıt işlemi başarılı!' : 'Giriş başarılı!');
-            document.getElementById('authContainer').classList.add('hidden');
-
-            if (type === 'usta') {
-                document.getElementById('ustaDashboard').classList.remove('hidden');
-                document.getElementById('ustaLogInfo').innerText = `${name || email} (${phone})`;
-                loadJobs();
-            } else {
-                document.getElementById('customerDashboard').classList.remove('hidden');
-                document.getElementById('custLogInfo').innerText = `${name || email} (${phone})`;
             }
         }
 
@@ -540,11 +584,9 @@
             if (type === 'usta') {
                 document.getElementById('ustaDashboard').classList.add('hidden');
                 document.getElementById('ustaLoginForm').reset();
-                document.getElementById('ustaRegForm').reset();
             } else {
                 document.getElementById('customerDashboard').classList.add('hidden');
                 document.getElementById('custLoginForm').reset();
-                document.getElementById('custRegForm').reset();
             }
         }
 
@@ -590,7 +632,7 @@
             });
         }
 
-        // TELEFONLAR İÇİN DOKUNMA TETİKLEYİCİSİ (Footer'a 5 kez hızlıca tıklama)
+        // --- GİZLİ YÖNETİCİ TETİKLEYİCİLERİ ---
         let clickCount = 0;
         document.getElementById('secretAdminTrigger').addEventListener('click', function() {
             clickCount++;
@@ -603,11 +645,9 @@
                     alert("Hatalı şifre!");
                 }
             }
-            // 2 saniye içinde tıklanmazsa sayacı sıfırla
             setTimeout(() => { clickCount = 0; }, 2000);
         });
 
-        // BİLGİSAYARLAR İÇİN KLAVYE KISAYOLU (Ctrl + Shift + A)
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'A') {
                 event.preventDefault();
@@ -626,29 +666,56 @@
             document.getElementById('ustaDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
 
-            document.getElementById('statUstaCount').innerText = registeredUstas.length;
+            // Sayaçlar
+            document.getElementById('statUstaCount').innerText = approvedUstas.length;
             document.getElementById('statCustCount').innerText = registeredCustomers.length;
+            document.getElementById('statPendingCount').innerText = pendingUstas.length;
+            document.getElementById('pendingBadge').innerText = `${pendingUstas.length} yeni`;
 
+            // 1. Onay Bekleyen Ustalar Listesi
+            const pendingDiv = document.getElementById('adminPendingUstaList');
+            pendingDiv.innerHTML = '';
+            if (pendingUstas.length === 0) {
+                pendingDiv.innerHTML = '<p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>';
+            } else {
+                pendingUstas.forEach((u) => {
+                    pendingDiv.innerHTML += `
+                        <div class="p-3 border border-amber-300 dark:border-amber-700 rounded-lg bg-amber-50/50 dark:bg-amber-900/20 text-xs flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">${u.name}</span> (${u.age} yaşında) - <b>Branş:</b> ${u.branch}<br>
+                                <span class="text-gray-500">Mail: ${u.email} | Tel: ${u.phone} | Vergi No: ${u.tax}</span>
+                            </div>
+                            <div class="space-x-1">
+                                <button onclick="approveUsta(${u.id})" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded transition font-bold"><i class="fa-solid fa-check"></i> Onayla</button>
+                                <button onclick="rejectUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded transition"><i class="fa-solid xmark"></i> Reddet</button>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // 2. Onaylı Ustalar Listesi (Çıkarma yetkisi ile)
             const ustaListDiv = document.getElementById('adminUstaList');
             ustaListDiv.innerHTML = '';
-            if (registeredUstas.length === 0) {
-                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı usta bulunmuyor.</p>';
+            if (approvedUstas.length === 0) {
+                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz onaylı usta yok.</p>';
             } else {
-                registeredUstas.forEach((u, index) => {
+                approvedUstas.forEach((u, index) => {
                     ustaListDiv.innerHTML += `
                         <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
                             <div>
                                 <span class="font-bold text-amber-600">${index + 1}. ${u.name}</span> (${u.age} yaşında) - <b>Branş:</b> ${u.branch}<br>
                                 <span class="text-gray-500">Mail: ${u.email} | Tel: ${u.phone} | Vergi No: ${u.tax}</span>
                             </div>
+                            <button onclick="removeUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded transition"><i class="fa-solid fa-user-minus"></i> Sistemden Çıkar</button>
                         </div>`;
                 });
             }
 
+            // 3. Müşteriler Listesi (Çıkarma yetkisi ile)
             const custListDiv = document.getElementById('adminCustList');
             custListDiv.innerHTML = '';
             if (registeredCustomers.length === 0) {
-                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri bulunmuyor.</p>';
+                classListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>';
             } else {
                 registeredCustomers.forEach((c, index) => {
                     custListDiv.innerHTML += `
@@ -657,10 +724,12 @@
                                 <span class="font-bold text-blue-600">${index + 1}. ${c.name}</span> (${c.age} yaşında)<br>
                                 <span class="text-gray-500">Mail: ${c.email} | Tel: ${c.phone}</span>
                             </div>
+                            <button onclick="removeCustomer(${c.id})" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded transition"><i class="fa-solid fa-user-minus"></i> Sistemden Çıkar</button>
                         </div>`;
                 });
             }
 
+            // 4. İlanlar Listesi
             const adminList = document.getElementById('adminJobList');
             adminList.innerHTML = '';
             if (mockJobs.length === 0) {
@@ -677,12 +746,44 @@
                             <p class="text-xs text-gray-500">${job.country} / ${job.city} - ${job.district}</p>
                         </div>
                         <button onclick="deleteJob(${job.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
-                            <i class="fa-solid fa-trash"></i> Sil / Kaldır
+                            <i class="fa-solid fa-trash"></i> İlanı Kaldır
                         </button>
                     </div>
                 `;
                 adminList.innerHTML += item;
             });
+        }
+
+        // Yönetici Onay ve Silme Fonksiyonları
+        function approveUsta(id) {
+            const usta = pendingUstas.find(u => u.id === id);
+            if (usta) {
+                pendingUstas = pendingUstas.filter(u => u.id !== id);
+                approvedUstas.push(usta);
+                alert(`${usta.name} adlı usta onaylandı ve sisteme eklendi!`);
+                showAdminPanel();
+            }
+        }
+
+        function rejectUsta(id) {
+            if (confirm('Bu usta başvurusunu reddetmek istediğinize emin misiniz?')) {
+                pendingUstas = pendingUstas.filter(u => u.id !== id);
+                showAdminPanel();
+            }
+        }
+
+        function removeUsta(id) {
+            if (confirm('Bu ustayı sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
+                approvedUstas = approvedUstas.filter(u => u.id !== id);
+                showAdminPanel();
+            }
+        }
+
+        function removeCustomer(id) {
+            if (confirm('Bu müşteriyi sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
+                registeredCustomers = registeredCustomers.filter(c => c.id !== id);
+                showAdminPanel();
+            }
         }
 
         function closeAdminPanel() {
