@@ -3,446 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Yerel Hizmet & VIP Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Yakın-İş | Mahallenizin Ustası Parmaklarınızın Ucunda</title>
+    <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .bg-repair-image {
-            background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #0d6efd;
+            --primary-hover: #0b5ed7;
+            --border-color: #dee2e6;
+            --success-color: #198754;
         }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #f1f1f1;
+            --primary-color: #3d8bfd;
+            --primary-hover: #6ea8fe;
+            --border-color: #2c2c2c;
+            --success-color: #20c997;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button, select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+
+        button.btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .job-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            background: #e9ecef;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .whatsapp-btn:hover { background: #1ebe5d; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- Üst Menü / Navbar -->
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 onclick="checkSessionAndRedirect()" class="text-xl font-black text-emerald-600 tracking-tight cursor-pointer">Yakın-İş</h1>
-            <div id="user-menu-area" class="flex gap-2 items-center">
-                <span id="user-status-tag" class="hidden text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">Oturum Açık</span>
-                <button id="btn-logout" onclick="handleLogout()" class="hidden bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold px-3.5 py-2 rounded-xl transition border border-rose-100">Çıkış Yap</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 1. GİRİŞ VE DETAYLI KAYIT EKRANI -->
-    <div id="page-login" class="bg-repair-image min-h-[calc(100vh-60px)] py-8 px-4 flex flex-col justify-center">
-        <main class="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-
-            <!-- Kullanıcı Giriş / Kayıt Kartı -->
-            <div class="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl space-y-4 border border-white/20">
-                <div class="text-center space-y-1">
-                    <div class="inline-block bg-blue-100 text-blue-600 p-3 rounded-2xl mb-1 text-2xl">👤</div>
-                    <h2 id="client-card-title" class="text-2xl font-bold text-slate-900">Kullanıcı Girişi</h2>
-                    <p id="client-card-desc" class="text-xs text-slate-500">Hizmet almak ve talep oluşturmak için</p>
-                </div>
-
-                <div class="space-y-3">
-                    <div id="client-extra-fields" class="hidden space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad</label>
-                            <input type="text" id="client_name" placeholder="Ahmet Yılmaz" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Telefon Numarası</label>
-                            <input type="text" id="client_phone" placeholder="0555 444 33 22" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta Adresi</label>
-                        <input type="email" id="client_email" placeholder="ornek@mail.com" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
-                        <input type="password" id="client_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <div class="flex items-center gap-2 mt-1.5">
-                            <input type="checkbox" id="show_pwd_client" onchange="togglePasswordVisibility('client')" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <label for="show_pwd_client" class="text-[11px] text-slate-500 font-medium cursor-pointer">Şifreyi Göster</label>
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="handleAuth('client')" id="btn-client-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-blue-500/30">
-                        Kullanıcı Girişi Yap
-                    </button>
-                </div>
-
-                <div class="text-center pt-2">
-                    <button type="button" id="client-toggle-text" onclick="toggleMode('client')" class="text-xs text-blue-600 font-bold cursor-pointer hover:underline bg-transparent border-0">
-                        Hesabın yok mu? Müşteri olarak kayıt ol
-                    </button>
-                </div>
-            </div>
-
-            <!-- Usta Giriş / Detaylı Kayıt Kartı -->
-            <div class="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl space-y-4 border border-white/20">
-                <div class="text-center space-y-1">
-                    <div class="inline-block bg-emerald-100 text-emerald-600 p-3 rounded-2xl mb-1 text-2xl">🛠️</div>
-                    <h2 id="master-card-title" class="text-2xl font-bold text-slate-900">Usta Girişi</h2>
-                    <p id="master-card-desc" class="text-xs text-slate-500">Teklif vermek ve iş almak için</p>
-                </div>
-
-                <div class="space-y-3">
-                    <div id="master-extra-fields" class="hidden space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Ad Soyad / Firma Adı</label>
-                            <input type="text" id="master_name" placeholder="Usta Mehmet" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Telefon Numarası</label>
-                            <input type="text" id="master_phone" placeholder="0533 222 11 00" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Uzmanlık Alanı</label>
-                            <select id="master_category" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <option value="Tesisat">Su Tesisatı</option>
-                                <option value="Elektrik">Elektrik</option>
-                                <option value="Otomotiv">Oto Tamir / Servis</option>
-                                <option value="Boya / Tadilat">Boya / Dekorasyon</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">T.C. Kimlik No</label>
-                                <input type="text" id="master_tc" placeholder="11 haneli T.C." maxlength="11" class="w-full px-3 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Belge Linki</label>
-                                <input type="text" id="master_doc" placeholder="Belge URL" class="w-full px-3 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">E-posta Adresi</label>
-                        <input type="email" id="master_email" placeholder="usta@mail.com" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Şifre</label>
-                        <input type="password" id="master_password" placeholder="••••••••" class="w-full px-4 py-3 text-sm rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <div class="flex items-center gap-2 mt-1.5">
-                            <input type="checkbox" id="show_pwd_master" onchange="togglePasswordVisibility('master')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                            <label for="show_pwd_master" class="text-[11px] text-slate-500 font-medium cursor-pointer">Şifreyi Göster</label>
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="handleAuth('master')" id="btn-master-submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/30">
-                        Usta Girişi Yap
-                    </button>
-                </div>
-
-                <div class="text-center pt-2">
-                    <button type="button" id="master-toggle-text" onclick="toggleMode('master')" class="text-xs text-emerald-600 font-bold cursor-pointer hover:underline bg-transparent border-0">
-                        Usta hesabın yok mu? Hemen Usta Ol
-                    </button>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- 2. ANA PANEL (DASHBOARD) -->
-    <div id="page-dashboard" class="hidden max-w-4xl mx-auto w-full px-4 py-6 space-y-6">
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center flex-wrap gap-4">
-            <div>
-                <span id="dash-role-badge" class="text-[11px] font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">Kullanıcı Paneli</span>
-                <h2 id="dash-welcome-title" class="text-xl font-bold text-slate-900 mt-2">Hoş geldin!</h2>
-                <p id="dash-welcome-sub" class="text-xs text-slate-500">Hizmet talepleri oluşturabilir veya ustaları inceleyebilirsin.</p>
-            </div>
-            <button type="button" onclick="openRequestModal()" id="btn-new-request" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-2xl text-xs transition shadow-lg shadow-emerald-600/20">
-                + Hizmet Talebi Oluştur (9.99 TL)
-            </button>
-        </div>
-
-        <div class="space-y-4">
-            <h3 id="section-title" class="font-bold text-slate-900 text-base">Aktif Müşteri Talepleri & Ustalar</h3>
-            <div id="dashboard-content-list" class="grid grid-cols-1 gap-4">
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Veriler yükleniyor...</div>
-            </div>
-        </div>
-
-        <!-- Admin Paneli Bölümü -->
-        <div id="admin-panel-box" class="hidden bg-amber-50 p-6 rounded-3xl shadow-sm border border-amber-200 space-y-4">
-            <h3 class="font-bold text-amber-900 text-base">👑 Yönetici (Admin) Onay Paneli</h3>
-            <p class="text-xs text-amber-700">Bekleyen usta belgelerini buradan inceleyip onaylayabilirsin.</p>
-            <div id="admin-pending-list" class="space-y-2">
-                <div class="text-xs text-slate-500">Onay bekleyen başvuru yok.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. ÖDEME SİMÜLASYONU MODALI -->
-    <div id="payment-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            <button type="button" onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
-            <div class="text-center">
-                <span class="text-2xl">🔒</span>
-                <h3 class="text-lg font-bold text-slate-900">Güvenli Ödeme (iyzico / PayTR)</h3>
-                <p id="payment-amount-desc" class="text-xs text-slate-500">Tutar: 9.99 TL</p>
-            </div>
-            <div class="space-y-3">
-                <input type="text" placeholder="Kart Üzerindeki İsim" class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
-                <input type="text" placeholder="Kart Numarası (4111 1111...)" class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200" maxlength="19">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" placeholder="AA / YY" class="px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
-                    <input type="password" placeholder="CVV" maxlength="3" class="px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
-                </div>
-            </div>
-            <button type="button" onclick="completePaymentSimulation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
-                Ödemeyi Onayla ve Tamamla
-            </button>
-        </div>
-    </div>
-
-    <!-- 4. MÜŞTERİ TALEP MODALI -->
-    <div id="request-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            <button type="button" onclick="closeRequestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
-            <h3 class="text-lg font-bold text-slate-900">Yeni Hizmet Talebi (9.99 TL)</h3>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-                <select id="req_category" class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
-                    <option value="Tesisat">Su Tesisatı</option>
-                    <option value="Elektrik">Elektrik</option>
-                    <option value="Otomotiv">Oto Tamir / Servis</option>
-                    <option value="Boya / Tadilat">Boya / Dekorasyon</option>
+    <div class="container">
+        <!-- ÜST MENÜ & KONTROLLER -->
+        <header>
+            <h1 data-i18n="appTitle">Yakın-İş</h1>
+            <div class="controls">
+                <select id="langSelect" onchange="changeLanguage(this.value)">
+                    <option value="tr">TR</option>
+                    <option value="en">EN</option>
                 </select>
+                <button onclick="toggleTheme()" id="themeBtn">🌙 Tema</button>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Talep Başlığı</label>
-                <input type="text" id="req_title" placeholder="Örn: Mutfak batarya değişimi" class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Açıklama</label>
-                <textarea id="req_desc" rows="3" placeholder="Sorunu kısaca açıklayın..." class="w-full px-3 py-2.5 text-sm rounded-xl bg-slate-50 border border-slate-200"></textarea>
-            </div>
-            <button type="button" onclick="openPaymentModalForRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
-                Devam Et ve Ödeme Yap (9.99 TL)
-            </button>
+        </header>
+
+        <!-- KULLANICI / GİRİŞ DURUMU -->
+        <div class="card">
+            <h2 data-i18n="authTitle">Oturum & Kimlik</h2>
+            <div id="authStatus">Giriş yapılıyor veya kimlik bilgisi bekleniyor...</div>
+        </div>
+
+        <!-- İŞ İLANI OLUŞTURMA (Müşteri Paneli) -->
+        <div class="card">
+            <h2 data-i18n="postJobTitle">Yeni İlan / Hizmet Talebi Oluştur</h2>
+            <input type="text" id="jobTitle" placeholder="İş Başlığı (Örn: Musluk Tamiri)">
+            <input type="text" id="jobCategory" placeholder="Kategori (Örn: Tesisat)">
+            <textarea id="jobDesc" placeholder="İşin detaylarını açıklayın..."></textarea>
+            <input type="text" id="jobCity" placeholder="Şehir (Örn: Bursa)">
+            <input type="text" id="jobDistrict" placeholder="İlçe (Örn: Nilüfer)">
+            <button class="btn-primary" onclick="createJob()" data-i18n="postBtn">İlanı Yayınla</button>
+        </div>
+
+        <!-- CANLI İLANLAR VE MESAFE / LİSTELEME -->
+        <div class="card">
+            <h2 data-i18n="jobsListTitle">Mahallenizdeki Aktif İlanlar</h2>
+            <button onclick="loadJobs()" style="margin-bottom: 10px;" data-i18n="refreshBtn">İlanları Yenile</button>
+            <div id="jobListContainer">İlanlar yükleniyor...</div>
         </div>
     </div>
-
-    <footer class="w-full py-4 text-center text-xs text-slate-400 bg-white border-t border-slate-100 mt-auto">
-        © 2026 Yakın-İş (yakinis.com) — Tüm Hakları Saklıdır.
-    </footer>
 
     <script>
-        // Supabase Proje Bilgileri (Doğru ve Eşleşen Bilgiler)
-        const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
+        // ==========================================
+        // 1. SUPABASE BAĞLANTI AYARLARI
+        // ==========================================
+        const SUPABASE_URL = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-        
-        let supabaseClient = null;
-        let clientRegisterMode = false;
-        let masterRegisterMode = false;
-        let currentUser = null;
-        let pendingPaymentType = null;
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ==========================================
+        // 2. ÇOKLU DİL (i18n) SÖZLÜĞÜ
+        // ==========================================
+        const translations = {
+            tr: {
+                appTitle: "Yakın-İş",
+                authTitle: "Oturum & Kimlik",
+                postJobTitle: "Yeni İlan / Hizmet Talebi Oluştur",
+                postBtn: "İlanı Yayınla",
+                jobsListTitle: "Mahallenizdeki Aktif İlanlar",
+                refreshBtn: "İlanları Yenile",
+                successJob: "İlan başarıyla oluşturuldu!",
+                errorJob: "İlan oluşturulurken hata:",
+                distanceInfo: "Mesafe:"
+            },
+            en: {
+                appTitle: "Yakın-İş",
+                authTitle: "Session & Auth",
+                postJobTitle: "Post a New Job / Service Request",
+                postBtn: "Publish Job",
+                jobsListTitle: "Active Jobs in Your Area",
+                refreshBtn: "Refresh Jobs",
+                successJob: "Job successfully created!",
+                errorJob: "Error creating job:",
+                distanceInfo: "Distance:"
+            }
+        };
+
+        let currentLang = 'tr';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // ==========================================
+        // 3. DARK / LIGHT TEMA YÖNETİMİ
+        // ==========================================
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeBtn').textContent = isDark ? '☀️ Tema' : '🌙 Tema';
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (window.supabase) {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeBtn').textContent = '☀️ Tema';
             }
-            checkSessionAndRedirect();
+            checkUserSession();
+            loadJobs();
+            getUserLocationAndCalculate();
         });
 
-        async function checkSessionAndRedirect() {
-            if (!supabaseClient) return;
+        // ==========================================
+        // 4. OTURUM KONTROLÜ
+        // ==========================================
+        async function checkUserSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
+            const statusDiv = document.getElementById('authStatus');
             if (session) {
-                currentUser = session.user;
-                document.getElementById('page-login').classList.add('hidden');
-                document.getElementById('page-dashboard').classList.remove('hidden');
-                document.getElementById('user-status-tag').classList.remove('hidden');
-                document.getElementById('btn-logout').classList.remove('hidden');
-                loadDashboardData();
+                statusDiv.innerHTML = `Giriş yapıldı: <b>${session.user.email}</b>`;
             } else {
-                currentUser = null;
-                document.getElementById('page-login').classList.remove('hidden');
-                document.getElementById('page-dashboard').classList.add('hidden');
-                document.getElementById('user-status-tag').classList.add('hidden');
-                document.getElementById('btn-logout').classList.add('hidden');
+                statusDiv.innerHTML = `Misafir Modu (Test oturumu aktif)`;
             }
         }
 
-        async function handleLogout() {
-            if (supabaseClient) await supabaseClient.auth.signOut();
-            checkSessionAndRedirect();
-        }
+        // ==========================================
+        // 5. KONUM BAZLI HESAPLAMA (Haversine Formülü)
+        // ==========================================
+        let userCoords = { lat: 40.1885, lng: 29.0610 }; // Varsayılan Bursa
 
-        function togglePasswordVisibility(role) {
-            const pwdInput = document.getElementById(`${role}_password`);
-            const checkbox = document.getElementById(`show_pwd_${role}`);
-            pwdInput.type = checkbox.checked ? 'text' : 'password';
-        }
-
-        function toggleMode(role) {
-            if (role === 'client') {
-                clientRegisterMode = !clientRegisterMode;
-                document.getElementById('client-extra-fields').classList.toggle('hidden', !clientRegisterMode);
-                document.getElementById('client-card-title').innerText = clientRegisterMode ? "Müşteri Kayıt Ol" : "Kullanıcı Girişi";
-                document.getElementById('client-card-desc').innerText = clientRegisterMode ? "Yeni hesap oluşturarak hemen başla" : "Hizmet almak ve talep oluşturmak için";
-                document.getElementById('btn-client-submit').innerText = clientRegisterMode ? "Müşteri Olarak Kayıt Ol" : "Kullanıcı Girişi Yap";
-                document.getElementById('client-toggle-text').innerText = clientRegisterMode ? "Zaten hesabın var mı? Giriş yap" : "Hesabın yok mu? Müşteri olarak kayıt ol";
-            } else {
-                masterRegisterMode = !masterRegisterMode;
-                document.getElementById('master-extra-fields').classList.toggle('hidden', !masterRegisterMode);
-                document.getElementById('master-card-title').innerText = masterRegisterMode ? "Usta Kayıt Ol" : "Usta Girişi";
-                document.getElementById('master-card-desc').innerText = masterRegisterMode ? "Bilgilerini girerek usta ağına katıl" : "Teklif vermek ve iş almak için";
-                document.getElementById('btn-master-submit').innerText = masterRegisterMode ? "Usta Olarak Kayıt Ol" : "Usta Girişi Yap";
-                document.getElementById('master-toggle-text').innerText = masterRegisterMode ? "Zaten hesabın var mı? Giriş yap" : "Usta hesabın yok mu? Hemen Usta Ol";
+        function getUserLocationAndCalculate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    userCoords.lat = position.coords.latitude;
+                    userCoords.lng = position.coords.longitude;
+                });
             }
         }
 
-        async function handleAuth(role) {
-            if (!supabaseClient) {
-                alert("Bağlantı kuruluyor, lütfen birkaç saniye sonra tekrar deneyin.");
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return 'Bilinmiyor';
+            const R = 6371; // km
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return (R * c).toFixed(1) + ' km';
+        }
+
+        // ==========================================
+        // 6. WHATSAPP İLETİŞİM ENTEGRASYONU
+        // ==========================================
+        function openWhatsAppChat(phone, jobTitle) {
+            const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '905000000000';
+            const message = `Merhaba, Yakın-İş üzerindeki "${jobTitle}" ilanınız için ulaştım.`;
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // ==========================================
+        // 7. İŞ İLANI OLUŞTURMA VE LİSTELEME
+        // ==========================================
+        async function createJob() {
+            const title = document.getElementById('jobTitle').value;
+            const category = document.getElementById('jobCategory').value;
+            const description = document.getElementById('jobDesc').value;
+            const city = document.getElementById('jobCity').value;
+            const district = document.getElementById('jobDistrict').value;
+
+            if (!title || !category) {
+                alert('Lütfen başlık ve kategori alanlarını doldurun.');
                 return;
             }
-            const isRegister = role === 'client' ? clientRegisterMode : masterRegisterMode;
-            const email = document.getElementById(`${role}_email`).value.trim();
-            const password = document.getElementById(`${role}_password`).value.trim();
 
-            if (!email || !password) { alert("Lütfen e-posta ve şifrenizi girin."); return; }
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const customerId = session ? session.user.id : null;
 
-            try {
-                if (isRegister) {
-                    const fullName = document.getElementById(`${role}_name`).value.trim();
-                    const phone = document.getElementById(`${role}_phone`).value.trim();
-                    if (!fullName || !phone) { alert("Lütfen tüm alanları doldurun."); return; }
-
-                    const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                    if (error) throw error;
-
-                    if (data.user) {
-                        const { error: profileError } = await supabaseClient.from('profiles').insert([{ 
-                            id: data.user.id, 
-                            full_name: fullName, 
-                            phone: phone, 
-                            user_type: role 
-                        }]);
-
-                        if (profileError) throw profileError;
-
-                        if (role === 'master') {
-                            const category = document.getElementById('master_category').value;
-                            const tc = document.getElementById('master_tc').value.trim();
-                            const doc = document.getElementById('master_doc').value.trim();
-                            const { error: masterError } = await supabaseClient.from('master_details').insert([{ 
-                                user_id: data.user.id, 
-                                category: category, 
-                                tc_number: tc, 
-                                document_url: doc, 
-                                is_verified: false 
-                            }]);
-                            if (masterError) throw masterError;
-                        }
-
-                        alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
-                        toggleMode(role);
-                    }
-                } else {
-                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                    if (error) throw error;
-                    checkSessionAndRedirect();
-                }
-            } catch (err) {
-                alert("İşlem Hatası: " + (err.message || JSON.stringify(err)));
+            if (!customerId) {
+                alert('İlan vermek için lütfen giriş yapın veya test kullanıcısı tanımlayın.');
+                return;
             }
-        }
 
-        async function loadDashboardData() {
-            if (!supabaseClient || !currentUser) return;
-            const listContainer = document.getElementById('dashboard-content-list');
-            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
+            const { error } = await supabaseClient.from('jobs').insert([{
+                customer_id: customerId,
+                title,
+                category,
+                description,
+                city,
+                district,
+                latitude: userCoords.lat,
+                longitude: userCoords.lng,
+                status: 'active'
+            }]);
 
-            if (profile) {
-                document.getElementById('dash-welcome-title').innerText = `Hoş geldin, ${profile.full_name || 'Kullanıcı'}!`;
-                if (profile.user_type === 'master') {
-                    document.getElementById('dash-role-badge').innerText = "Usta Paneli";
-                    document.getElementById('btn-new-request').classList.add('hidden');
-                    document.getElementById('section-title').innerText = "Müşteri Hizmet Talepleri (Teklif Ver)";
-                    loadMasterRequestsFeed(listContainer);
-                } else if (profile.user_type === 'admin') {
-                    document.getElementById('dash-role-badge').innerText = "Yönetici Paneli";
-                    document.getElementById('admin-panel-box').classList.remove('hidden');
-                } else {
-                    document.getElementById('dash-role-badge').innerText = "Kullanıcı Paneli";
-                    document.getElementById('section-title').innerText = "Aktif Ustalar & Hizmet Verenler";
-                    loadClientMastersFeed(listContainer);
-                }
-            }
-        }
-
-        async function loadClientMastersFeed(container) {
-            const { data: masters } = await supabaseClient.from('master_details').select(`*, profiles(full_name, phone)`);
-            if (masters && masters.length > 0) {
-                container.innerHTML = "";
-                masters.forEach(m => {
-                    const name = m.profiles ? m.profiles.full_name : "Usta";
-                    const phone = m.profiles ? m.profiles.phone : "05000000000";
-                    const badge = m.is_verified ? '<span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">✓ Doğrulanmış VIP</span>' : '';
-                    container.innerHTML += `
-                        <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-bold text-slate-900 text-sm">${name}</h4>
-                                    ${badge}
-                                </div>
-                                <p class="text-xs text-slate-500">${m.category}</p>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <a href="tel:${phone}" class="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-bold">📞 Arayın</a>
-                                <a href="https://wa.me/${phone}" target="_blank" class="bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs font-bold">💬 WhatsApp</a>
-                            </div>
-                        </div>
-                    `;
-                });
+            if (error) {
+                alert(translations[currentLang].errorJob + ' ' + error.message);
             } else {
-                container.innerHTML = `<div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-sm">Kayıtlı usta bulunamadı.</div>`;
+                alert(translations[currentLang].successJob);
+                loadJobs();
             }
         }
 
-        async function loadMasterRequestsFeed(container) {
-            container.innerHTML = `
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 space-y-2 shadow-sm">
-                    <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Su Tesisatı</span>
-                    <h4 class="font-bold text-slate-900 text-sm">Mutfak Batarya Arızası & Değişimi</h4>
-                    <p class="text-xs text-slate-500">Mutfak musluğumdan su damlatıyor, contanın değişmesi gerekiyor.</p>
-                    <button type="button" onclick="openPaymentModalForLead()" class="mt-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
-                        Teklif Ver (24.99 TL)
+        async function loadJobs() {
+            const container = document.getElementById('jobListContainer');
+            container.innerHTML = 'Yükleniyor...';
+
+            const { data, error } = await supabaseClient
+                .from('jobs')
+                .select('*, profiles(full_name, phone, latitude, longitude)')
+                .eq('status', 'active')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                container.innerHTML = `<span style="color:red;">İlanlar yüklenirken hata oluştu: ${error.message}</span>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = 'Henüz aktif bir ilan bulunmuyor.';
+                return;
+            }
+
+            container.innerHTML = '';
+            data.forEach(job => {
+                const dist = calculateDistance(userCoords.lat, userCoords.lng, job.latitude, job.longitude);
+                const phone = job.profiles ? job.profiles.phone : '905555555555';
+                
+                const item = document.createElement('div');
+                item.className = 'job-item';
+                item.innerHTML = `
+                    <span class="badge">${job.category}</span>
+                    <h3>${job.title}</h3>
+                    <p>${job.description}</p>
+                    <small>📍 ${job.city} / ${job.district} | Mesafe: <b>${dist}</b></small><br>
+                    <button class="whatsapp-btn" onclick="openWhatsAppChat('${phone}', '${job.title}')">
+                        💬 WhatsApp ile İletişim
                     </button>
-                </div>
-            `;
-        }
-
-        function openRequestModal() { document.getElementById('request-modal').classList.remove('hidden'); }
-        function closeRequestModal() { document.getElementById('request-modal').classList.add('hidden'); }
-
-        function openPaymentModalForRequest() {
-            pendingPaymentType = 'request';
-            document.getElementById('payment-amount-desc').innerText = "Tutar: 9.99 TL (Hizmet Talebi Yayınlama)";
-            closeRequestModal();
-            document.getElementById('payment-modal').classList.remove('hidden');
-        }
-
-        function openPaymentModalForLead() {
-            pendingPaymentType = 'lead';
-            document.getElementById('payment-amount-desc').innerText = "Tutar: 24.99 TL (Müşteriye Teklif Gönderme)";
-            document.getElementById('payment-modal').classList.remove('hidden');
-        }
-
-        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
-
-        function completePaymentSimulation() {
-            if (pendingPaymentType === 'request') {
-                alert("Ödeme başarılı (9.99 TL)! Talebiniz başarıyla yayınlandı.");
-            } else {
-                alert("Ödeme başarılı (24.99 TL)! Teklifiniz müşteriye iletildi ve iletişim bilgileri açıldı.");
-            }
-            closePaymentModal();
+                `;
+                container.appendChild(item);
+            });
         }
     </script>
 </body>
