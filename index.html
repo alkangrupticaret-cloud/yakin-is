@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Tamir & Tadilat Usta Hizmetleri</title>
+    <title>Yakın-İş | Küresel Usta, Tamir & Tadilat Hizmetleri</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -29,15 +29,19 @@
             <div class="flex items-center space-x-3">
                 <i class="fa-solid font-bold text-2xl text-amber-600 fa-wrench"></i>
                 <h1 class="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-500">Yakın-İş</h1>
+                <span class="hidden sm:inline-block text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-200">Global</span>
             </div>
             
             <div class="flex items-center space-x-3">
+                <!-- Dil Seçimi -->
                 <div class="relative inline-block">
                     <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-xs md:text-sm rounded-lg p-2 font-medium cursor-pointer">
                         <option value="tr">🇹🇷 TR</option>
                         <option value="en">🇬🇧 EN</option>
                     </select>
                 </div>
+
+                <!-- Dark / Light Tema -->
                 <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                     <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
                 </button>
@@ -45,102 +49,125 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (DÜNYA GENELİ KONSEPTİ) -->
     <section class="bg-gradient-to-r from-amber-600 to-amber-700 text-white py-8 px-4 text-center shadow-inner">
         <div class="max-w-4xl mx-auto space-y-2">
-            <h2 id="txt-hero-title" class="text-2xl md:text-4xl font-extrabold">Ev & İş Yeriniz İçin Güvenilir Usta Bulun</h2>
-            <p id="txt-hero-sub" class="text-sm md:text-base text-amber-100">Bursa ve çevresinde tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en güvenilir platform.</p>
+            <h2 id="txt-hero-title" class="text-2xl md:text-4xl font-extrabold">Dünya Genelinde Güvenilir Usta Bulun</h2>
+            <p id="txt-hero-sub" class="text-sm md:text-base text-amber-100">Bulunduğunuz şehir ve ülkede tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en yakın ustaya anında ulaşın.</p>
         </div>
     </section>
 
-    <!-- ANA İÇERİK -->
+    <!-- ANA İÇERİK CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-8">
 
-        <!-- GİRİŞ & KAYIT PANELLERİ (USTA SOL - MÜŞTERİ SAĞ) -->
+        <!-- GİRİŞ YAP & KAYDOL PANELLERİ (SOL: USTA - SAĞ: MÜŞTERİ) -->
         <div id="authContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- USTA GİRİŞ/KAYIT (SOL) -->
+            <!-- SOL PANEL: USTA GİRİŞİ / KAYDI -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-amber-600">
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-full text-amber-600 dark:text-amber-400">
                         <i class="fa-solid fa-user-gear text-xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold">Usta Girişi / Kaydı</h3>
-                        <p class="text-xs text-gray-500">İlanları görün, teklif verin.</p>
+                        <h3 class="text-lg font-bold">Usta Giriş Yap / Kaydol</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Hizmet veren olarak global ilanlara teklif verin.</p>
                     </div>
                 </div>
 
                 <form id="ustaForm" onsubmit="handleAuth(event, 'usta')" class="space-y-3">
                     <div>
                         <label class="block text-xs font-semibold mb-1">E-Posta Adresi</label>
-                        <input type="email" id="ustaEmail" required placeholder="usta@example.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="email" id="ustaEmail" required placeholder="usta@domain.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Telefon Numarası (SMS Doğrulama İçin)</label>
-                        <input type="tel" id="ustaPhone" required placeholder="0555 123 45 67" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <label class="block text-xs font-semibold mb-1">Telefon Numarası (Uluslararası Kodu İle)</label>
+                        <div class="flex space-x-2">
+                            <select id="ustaCountryCode" class="text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="+90">🇹🇷 +90</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+971">🇦🇪 +971</option>
+                            </select>
+                            <input type="tel" id="ustaPhone" required placeholder="555 123 45 67" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Uzmanlık Alanı</label>
+                        <label class="block text-xs font-semibold mb-1">Uzmanlık Alanınız</label>
                         <select class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="tesisat">Su / Sıhhi Tesisat</option>
-                            <option value="elektrik">Elektrik Arıza</option>
-                            <option value="boya">Boya & Badana</option>
-                            <option value="marangoz">Marangoz</option>
-                            <option value="kombi">Kombi / Klima</option>
+                            <option value="elektrik">Elektrik & Aydınlatma</option>
+                            <option value="boya">Boya, Badana & Dekorasyon</option>
+                            <option value="marangoz">Marangoz & Mobilya</option>
+                            <option value="kombi">Kombi, İklimlendirme & Isıtma</option>
+                            <option value="diger">Diğer Tamir / Tadilat</option>
                         </select>
                     </div>
                     <div id="ustaOtpBox" class="hidden">
                         <label class="block text-xs font-semibold mb-1 text-amber-600 font-bold">SMS / E-Posta Doğrulama Kodu (Örn: 1234)</label>
-                        <input type="text" id="ustaOtpCode" placeholder="4 haneli kod" class="w-full text-sm p-2.5 rounded-lg border border-amber-500 dark:bg-gray-700 dark:text-white">
+                        <input type="text" id="ustaOtpCode" placeholder="4 haneli doğrulama kodu" class="w-full text-sm p-2.5 rounded-lg border border-amber-500 dark:bg-gray-700 dark:text-white">
                     </div>
-                    <button type="submit" id="ustaBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg transition text-sm">
-                        Doğrulama Kodu Gönder & Kaydol/Giriş Yap
+                    <button type="submit" id="ustaBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg transition text-sm flex justify-center items-center space-x-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Doğrulama Kodu Gönder & Giriş Yap / Kaydol</span>
                     </button>
                 </form>
             </div>
 
-            <!-- MÜŞTERİ GİRİŞ/KAYIT (SAĞ) -->
+            <!-- SAĞ PANEL: MÜŞTERİ GİRİŞİ / KAYDI -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-blue-600">
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full text-blue-600 dark:text-blue-400">
                         <i class="fa-solid fa-user text-xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold">Müşteri Girişi / Kaydı</h3>
-                        <p class="text-xs text-gray-500">Tamir & tadilat ilanı verin.</p>
+                        <h3 class="text-lg font-bold">Müşteri Giriş Yap / Kaydol</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Tamir & tadilat ilanı verin, usta çağırın.</p>
                     </div>
                 </div>
 
                 <form id="custForm" onsubmit="handleAuth(event, 'customer')" class="space-y-3">
                     <div>
                         <label class="block text-xs font-semibold mb-1">E-Posta Adresi</label>
-                        <input type="email" id="custEmail" required placeholder="musteri@example.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="email" id="custEmail" required placeholder="musteri@domain.com" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1">Telefon Numarası (SMS Doğrulama İçin)</label>
-                        <input type="tel" id="custPhone" required placeholder="0532 987 65 43" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <label class="block text-xs font-semibold mb-1">Telefon Numarası (Uluslararası Kodu İle)</label>
+                        <div class="flex space-x-2">
+                            <select id="custCountryCode" class="text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="+90">🇹🇷 +90</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+971">🇦🇪 +971</option>
+                            </select>
+                            <input type="tel" id="custPhone" required placeholder="532 987 65 43" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
                     </div>
                     <div id="custOtpBox" class="hidden">
                         <label class="block text-xs font-semibold mb-1 text-blue-600 font-bold">SMS / E-Posta Doğrulama Kodu (Örn: 1234)</label>
-                        <input type="text" id="custOtpCode" placeholder="4 haneli kod" class="w-full text-sm p-2.5 rounded-lg border border-blue-500 dark:bg-gray-700 dark:text-white">
+                        <input type="text" id="custOtpCode" placeholder="4 haneli doğrulama kodu" class="w-full text-sm p-2.5 rounded-lg border border-blue-500 dark:bg-gray-700 dark:text-white">
                     </div>
-                    <button type="submit" id="custBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition text-sm">
-                        Doğrulama Kodu Gönder & Kaydol/Giriş Yap
+                    <button type="submit" id="custBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition text-sm flex justify-center items-center space-x-2">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Doğrulama Kodu Gönder & Giriş Yap / Kaydol</span>
                     </button>
                 </form>
             </div>
 
         </div>
 
-        <!-- 1. MÜŞTERİ PANELİ (SADECE MÜŞTERİ GİRİŞİ YAPINCA GÖRÜNÜR) -->
+        <!-- MÜŞTERİ PANELİ (SADECE MÜŞTERİ GİRİŞ YAPTIĞINDA ÇIKAR) -->
         <div id="customerDashboard" class="hidden space-y-6">
             <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-blue-700 dark:text-blue-300"><i class="fa-solid fa-circle-check mr-2"></i>Müşteri Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="custLogInfo">Giriş yapıldı.</p>
                 </div>
-                <button onclick="logout('customer')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg">Çıkış Yap</button>
+                <button onclick="logout('customer')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
             </div>
 
             <!-- İlan Oluşturma Formu -->
@@ -154,7 +181,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold mb-1">İş Başlığı</label>
-                            <input type="text" id="jobTitle" required placeholder="Örn: Mutfak Musluğu Sızdırıyor" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" id="jobTitle" required placeholder="Örn: Mutfak Musluğu Sızdırıyor, Kombi Arızası" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold mb-1">Kategori</label>
@@ -163,53 +190,71 @@
                                 <option value="elektrik">Elektrik & Aydınlatma</option>
                                 <option value="boya">Boya & Badana İşleri</option>
                                 <option value="marangoz">Marangoz & Mobilya</option>
-                                <option value="kombi">Kombi & Petek</option>
+                                <option value="kombi">Kombi & İklimlendirme</option>
+                                <option value="diger">Diğer</option>
                             </select>
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold mb-1">İşin Detayı ve Sorun</label>
-                        <textarea id="jobDesc" rows="3" required placeholder="Yapılacak işi detaylı yazın..." class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                        <textarea id="jobDesc" rows="3" required placeholder="Lütfen yapılacak işi detaylı bir şekilde açıklayın..." class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- DÜNYA GENELİ KONUM SEÇİMİ -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Ülke</label>
+                            <select id="jobCountry" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="Türkiye">Türkiye</option>
+                                <option value="Almanya">Almanya</option>
+                                <option value="İngiltere">İngiltere</option>
+                                <option value="ABD">ABD</option>
+                                <option value="Fransa">Fransa</option>
+                                <option value="BAE">Birleşik Arap Emirlikleri</option>
+                                <option value="Diğer">Diğer Ülke</option>
+                            </select>
+                        </div>
                         <div>
                             <label class="block text-xs font-semibold mb-1">Şehir</label>
-                            <input type="text" id="jobCity" value="Bursa" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <input type="text" id="jobCity" required placeholder="Örn: Bursa, Berlin, Londra" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold mb-1">İlçe / Semt</label>
-                            <input type="text" id="jobDistrict" placeholder="Örn: Nilüfer" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <label class="block text-xs font-semibold mb-1">İlçe / Bölge / Semt</label>
+                            <input type="text" id="jobDistrict" required placeholder="Örn: Nilüfer, Mitte, Westminster" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         </div>
                     </div>
+
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition flex justify-center items-center space-x-2">
                         <i class="fa-solid fa-paper-plane"></i>
-                        <span>İlanı Yayınla</span>
+                        <span>İlanı Yayınla & Usta Çağır</span>
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- 2. USTA PANELİ & AKTİF İLANLAR (SADECE USTA GİRİŞİ YAPINCA GÖRÜNÜR) -->
+        <!-- USTA PANELİ & AKTİF İLANLAR (SADECE USTA GİRİŞ YAPTIĞINDA ÇIKAR) -->
         <div id="ustaDashboard" class="hidden space-y-6">
             <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-amber-700 dark:text-amber-300"><i class="fa-solid fa-circle-check mr-2"></i>Usta Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="ustaLogInfo">Giriş yapıldı.</p>
                 </div>
-                <button onclick="logout('usta')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg">Çıkış Yap</button>
+                <button onclick="logout('usta')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
             </div>
 
-            <!-- Bölgedeki İlanlar -->
+            <!-- Bölgesel / Dünya Genelindeki İlanlar -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
                     <h3 class="text-xl font-bold flex items-center space-x-2 text-amber-600">
-                        <i class="fa-solid fa-list-check"></i>
-                        <span>Bölgenizdeki Tamir / Tadilat İlanları</span>
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <span>Bölgenizdeki ve Dünya Genelindeki İlanlar</span>
                     </h3>
-                    <button onclick="loadJobs()" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg">Yenile</button>
+                    <button onclick="loadJobs()" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-300">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Yenile
+                    </button>
                 </div>
                 <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Dinamik ilanlar -->
+                    <!-- Dinamik ilanlar yüklenecektir -->
                 </div>
             </div>
         </div>
@@ -217,19 +262,30 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto">
-        <p>&copy; 2026 Yakın-İş | Tamir, Tadilat & Usta Hizmetleri Platformu</p>
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 dark:text-gray-400 mt-auto">
+        <p>&copy; 2026 Yakın-İş | Küresel Tamir, Tadilat & Usta Hizmetleri Platformu</p>
     </footer>
 
-    <!-- JS MANTIĞI -->
+    <!-- JS MANTIĞI & i18N & AUTH -->
     <script>
-        let isUstaVerified = false;
-        let isCustVerified = false;
-        
-        let mockJobs = [
-            { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor, acil usta gerekiyor.' },
-            { id: 2, title: '3+1 Daire Salon ve Antre Boyası', category: 'Boya', city: 'Bursa', district: 'Osmangazi', desc: 'Duvarlar Jotun marka silinebilir boya ile boyanacak.' }
-        ];
+        // Dil Sözlüğü (TR / EN)
+        const translations = {
+            tr: {
+                heroTitle: "Dünya Genelinde Güvenilir Usta Bulun",
+                heroSub: "Bulunduğunuz şehir ve ülkede tesisat, elektrik, boya ve tüm tamir-tadilat işleriniz için en yakın ustaya anında ulaşın."
+            },
+            en: {
+                heroTitle: "Find Reliable Contractors Worldwide",
+                heroSub: "Get immediate service for plumbing, electrical, painting, and repair jobs in your city and country."
+            }
+        };
+
+        function changeLanguage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+            document.getElementById('txt-hero-title').innerText = t.heroTitle;
+            document.getElementById('txt-hero-sub').innerText = t.heroSub;
+        }
 
         function toggleTheme() {
             const htmlClass = document.documentElement.classList;
@@ -243,36 +299,42 @@
             }
         }
 
+        // Örnek Global İlanlar (Küresel Örnekler)
+        let mockJobs = [
+            { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor, acil usta gerekiyor.' },
+            { id: 2, title: 'Salon Duvar Boyası & Badana', category: 'Boya', country: 'Almanya', city: 'Berlin', district: 'Mitte', desc: 'Salon duvarları açık gri boya ile boyanacaktır.' },
+            { id: 3, title: 'Klima Bakımı ve Petek Temizliği', category: 'Kombi', country: 'Birleşik Arap Emirlikleri', city: 'Dubai', district: 'Marina', desc: 'Ofis iklimlendirme sistemleri genel bakımı.' }
+        ];
+
         function handleAuth(event, type) {
             event.preventDefault();
             const email = document.getElementById(type === 'usta' ? 'ustaEmail' : 'custEmail').value;
+            const code = document.getElementById(type === 'usta' ? 'ustaCountryCode' : 'custCountryCode').value;
             const phone = document.getElementById(type === 'usta' ? 'ustaPhone' : 'custPhone').value;
             const otpBox = document.getElementById(type === 'usta' ? 'ustaOtpBox' : 'custOtpBox');
             const otpInput = document.getElementById(type === 'usta' ? 'ustaOtpCode' : 'custOtpCode');
             const btn = document.getElementById(type === 'usta' ? 'ustaBtn' : 'custBtn');
 
             if (!otpBox.classList.contains('hidden')) {
-                // Kod girilmiş, doğrula
                 if (otpInput.value.length >= 4) {
-                    alert('Doğrulama başarılı! Giriş yapıldı.');
+                    alert('Doğrulama başarılı! Hesabınıza giriş yapıldı.');
+                    document.getElementById('authContainer').classList.add('hidden');
+
                     if (type === 'usta') {
-                        document.getElementById('authContainer').classList.add('hidden');
                         document.getElementById('ustaDashboard').classList.remove('hidden');
-                        document.getElementById('ustaLogInfo').innerText = `${email} (${phone})`;
+                        document.getElementById('ustaLogInfo').innerText = `${email} (${code} ${phone})`;
                         loadJobs();
                     } else {
-                        document.getElementById('authContainer').classList.add('hidden');
                         document.getElementById('customerDashboard').classList.remove('hidden');
-                        document.getElementById('custLogInfo').innerText = `${email} (${phone})`;
+                        document.getElementById('custLogInfo').innerText = `${email} (${code} ${phone})`;
                     }
                 } else {
-                    alert('Lütfen geçerli 4 haneli doğrulama kodunu girin!');
+                    alert('Lütfen 4 haneli doğrulama kodunu eksiksiz girin!');
                 }
             } else {
-                // İlk adım: SMS/E-Posta kodu gönder
                 otpBox.classList.remove('hidden');
                 btn.innerText = "Kodu Doğrula & Giriş Yap";
-                alert(`Doğrulama kodu ${phone} numaralı telefona ve ${email} adresine gönderildi! (Test için kod: 1234)`);
+                alert(`Doğrulama kodu ${code} ${phone} numarasına ve ${email} adresine gönderildi! (Test Kodu: 1234)`);
             }
         }
 
@@ -282,12 +344,12 @@
                 document.getElementById('ustaDashboard').classList.add('hidden');
                 document.getElementById('ustaForm').reset();
                 document.getElementById('ustaOtpBox').classList.add('hidden');
-                document.getElementById('ustaBtn').innerText = "Doğrulama Kodu Gönder & Kaydol/Giriş Yap";
+                document.getElementById('ustaBtn').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i><span>Doğrulama Kodu Gönder & Giriş Yap / Kaydol</span>';
             } else {
                 document.getElementById('customerDashboard').classList.add('hidden');
                 document.getElementById('custForm').reset();
                 document.getElementById('custOtpBox').classList.add('hidden');
-                document.getElementById('custBtn').innerText = "Doğrulama Kodu Gönder & Kaydol/Giriş Yap";
+                document.getElementById('custBtn').innerHTML = '<i class="fa-solid fa-user-plus"></i><span>Doğrulama Kodu Gönder & Giriş Yap / Kaydol</span>';
             }
         }
 
@@ -296,11 +358,12 @@
             const title = document.getElementById('jobTitle').value;
             const category = document.getElementById('jobCategory').value;
             const desc = document.getElementById('jobDesc').value;
+            const country = document.getElementById('jobCountry').value;
             const city = document.getElementById('jobCity').value;
             const district = document.getElementById('jobDistrict').value;
 
-            mockJobs.unshift({ id: Date.now(), title, category, city, district, desc });
-            alert('Tamir/Tadilat ilanınız başarıyla oluşturuldu ve ustaların paneline eklendi!');
+            mockJobs.unshift({ id: Date.now(), title, category, country, city, district, desc });
+            alert('Tamir/Tadilat ilanınız küresel usta ağına başarıyla eklendi!');
             event.target.reset();
         }
 
@@ -310,15 +373,18 @@
 
             mockJobs.forEach(job => {
                 const card = `
-                    <div class="p-4 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex flex-col justify-between">
+                    <div class="p-4 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex flex-col justify-between shadow-sm hover:shadow transition">
                         <div>
-                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-2 py-0.5 rounded mb-2">${job.category}</span>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-2 py-0.5 rounded">${job.category}</span>
+                                <span class="text-[10px] bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded font-medium">${job.country}</span>
+                            </div>
                             <h4 class="font-bold text-base mb-1">${job.title}</h4>
                             <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">${job.desc}</p>
                         </div>
-                        <div class="pt-2 border-t dark:border-gray-600 flex justify-between items-center text-xs text-gray-500">
-                            <span><i class="fa-solid font-bold fa-location-dot text-amber-600 mr-1"></i>${job.district}, ${job.city}</span>
-                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
+                        <div class="pt-2 border-t dark:border-gray-600 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                            <span><i class="fa-solid fa-location-dot text-amber-600 mr-1"></i>${job.district}, ${job.city}</span>
+                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20Global%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
                                 <i class="fa-brands fa-whatsapp"></i>
                                 <span>Teklif Ver</span>
                             </a>
