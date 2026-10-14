@@ -29,7 +29,7 @@
             <div class="flex items-center space-x-3">
                 <i class="fa-solid font-bold text-2xl text-amber-600 fa-wrench"></i>
                 <h1 class="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-500">Yakın-İş</h1>
-                <span class="hidden sm:inline-block text-[10px] bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-200">Global Pro</span>
+                <span id="headerVerTag" class="hidden sm:inline-block text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-200">v1.0.0 Pro</span>
             </div>
             
             <div class="flex items-center space-x-3">
@@ -201,11 +201,11 @@
 
         </div>
 
-        <!-- MÜŞTERİ PANELİ PRO -->
+        <!-- MÜŞTERİ PANELİ -->
         <div id="customerDashboard" class="hidden space-y-6">
             <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-xl flex justify-between items-center shadow-sm">
                 <div>
-                    <h3 data-i18n="custPanelActive" class="font-bold text-blue-700 dark:text-blue-300"><i class="fa-solid fa-circle-check mr-2"></i>Müşteri Paneli Aktif (Pro)</h3>
+                    <h3 data-i18n="custPanelActive" class="font-bold text-blue-700 dark:text-blue-300"><i class="fa-solid fa-circle-check mr-2"></i>Müşteri Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="custLogInfo">Giriş yapıldı.</p>
                 </div>
                 <button onclick="logout('customer')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
@@ -279,10 +279,10 @@
                 </div>
             </div>
 
-            <!-- Onaylı Ustaları Keşfet & Favorile -->
+            <!-- Onaylı Ustaları Keşfet -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
                 <h4 class="font-bold text-lg text-amber-600 flex items-center space-x-2">
-                    <i class="fa-solid id-badge fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
                     <span>Sistemdeki Onaylı Ustalar & Favoriler</span>
                 </h4>
                 <div id="exploreUstasList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -291,11 +291,11 @@
             </div>
         </div>
 
-        <!-- USTA PANELİ PRO -->
+        <!-- USTA PANELİ -->
         <div id="ustaDashboard" class="hidden space-y-6">
             <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex justify-between items-center shadow-sm">
                 <div>
-                    <h3 data-i18n="ustaPanelActive" class="font-bold text-amber-700 dark:text-amber-300"><i class="fa-solid fa-circle-check mr-2"></i>Usta Paneli Aktif (Pro)</h3>
+                    <h3 data-i18n="ustaPanelActive" class="font-bold text-amber-700 dark:text-amber-300"><i class="fa-solid fa-circle-check mr-2"></i>Usta Paneli Aktif</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-300" id="ustaLogInfo">Giriş yapıldı.</p>
                 </div>
                 <button onclick="logout('usta')" data-i18n="btnLogout" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700">Çıkış Yap</button>
@@ -341,111 +341,14 @@
             </div>
         </div>
 
-        <!-- GİZLİ YÖNETİCİ (ADMIN) PANELİ PRO -->
-        <div id="adminDashboard" class="hidden space-y-6">
-            <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center shadow-sm">
-                <div>
-                    <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli Pro</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Güvenli Mod Aktif (SHA-256 Korumalı & 5 Dk Otomatik Zaman Aşımı)</p>
-                </div>
-                <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
-            </div>
-
-            <!-- İSTATİSTİK KARTLARI -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white dark:bg-gray-800 border-l-4 border-amber-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Aktif Ustalar</p>
-                        <h4 id="statUstaCount" class="text-2xl font-black text-amber-600 mt-1">0</h4>
-                    </div>
-                    <div class="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-full text-amber-600">
-                        <i class="fa-solid fa-user-gear text-xl"></i>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 border-l-4 border-blue-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Kayıtlı Müşteriler</p>
-                        <h4 id="statCustCount" class="text-2xl font-black text-blue-600 mt-1">0</h4>
-                    </div>
-                    <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full text-blue-600">
-                        <i class="fa-solid fa-users text-xl"></i>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 border-l-4 border-red-600 p-4 rounded-xl shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Onay Bekleyen Usta</p>
-                        <h4 id="statPendingCount" class="text-2xl font-black text-red-600 mt-1">0</h4>
-                    </div>
-                    <div class="p-3 bg-red-100 dark:bg-red-900/40 rounded-full text-red-600">
-                        <i class="fa-solid fa-bell text-xl animate-bounce"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ONAY BEKLEYENLER -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-amber-500/30 space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-                    <h4 class="font-bold text-lg text-amber-600 flex items-center space-x-2">
-                        <i class="fa-solid fa-user-clock"></i>
-                        <span>Onay Bekleyen Usta Başvuruları</span>
-                        <span id="pendingBadge" class="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0 yeni</span>
-                    </h4>
-                    <input type="text" id="searchPending" oninput="showAdminPanel()" placeholder="Bekleyen usta ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
-                </div>
-                <div id="adminPendingUstaList" class="space-y-2">
-                    <p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>
-                </div>
-            </div>
-
-            <!-- ONAYLI USTALAR -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-                    <h4 class="font-bold text-lg text-amber-600"><i class="fa-solid fa-user-check mr-2"></i>Kayıtlı ve Onaylı Ustalar Listesi</h4>
-                    <input type="text" id="searchApproved" oninput="showAdminPanel()" placeholder="Onaylı usta ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
-                </div>
-                <div id="adminUstaList" class="space-y-2">
-                    <p class="text-xs text-gray-500">Henüz onaylı usta yok.</p>
-                </div>
-            </div>
-
-            <!-- MÜŞTERİLER -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-                    <h4 class="font-bold text-lg text-blue-600"><i class="fa-solid fa-users mr-2"></i>Kayıtlı Müşteriler Listesi</h4>
-                    <input type="text" id="searchCust" oninput="showAdminPanel()" placeholder="Müşteri ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
-                </div>
-                <div id="adminCustList" class="space-y-2">
-                    <p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>
-                </div>
-            </div>
-
-            <!-- İLANLAR -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h4 class="font-bold text-lg mb-4 text-purple-600"><i class="fa-solid fa-list mr-2"></i>Tüm Aktif İlanlar Havuzu</h4>
-                <div id="adminJobList" class="space-y-3">
-                    <!-- İlanlar -->
-                </div>
-            </div>
-
-            <!-- İŞLEM GEÇMİŞİ (AUDIT LOG) -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-300 dark:border-gray-700">
-                <h4 class="font-bold text-sm mb-3 text-gray-600 dark:text-gray-400 flex items-center">
-                    <i class="fa-solid fa-clock-rotate-left mr-2"></i>Yönetici İşlem Geçmişi (Audit Log Pro)
-                </h4>
-                <div id="auditLogList" class="space-y-1.5 max-h-40 overflow-y-auto text-xs text-gray-500 font-mono">
-                    <p>Sistem Pro modunda başlatıldı.</p>
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <!-- FOOTER -->
-    <footer id="secretAdminTrigger" class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto cursor-pointer select-none">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto select-none">
         <p>&copy; 2026 Yakın-İş | Küresel Tamir, Tadilat & Usta Hizmetleri Platformu</p>
     </footer>
 
-    <!-- SCRIPT & PRO LOGIC -->
+    <!-- SCRIPT -->
     <script>
         const translations = {
             tr: {
@@ -575,11 +478,10 @@
             return temp.innerHTML;
         }
 
-        let pendingUstas = [];
-        let approvedUstas = [];
-        let registeredCustomers = [];
-        let auditLogs = [];
-        let mockJobs = [
+        let pendingUstas = JSON.parse(localStorage.getItem('pendingUstas')) || [];
+        let approvedUstas = JSON.parse(localStorage.getItem('approvedUstas')) || [];
+        let registeredCustomers = JSON.parse(localStorage.getItem('registeredCustomers')) || [];
+        let mockJobs = JSON.parse(localStorage.getItem('mockJobs')) || [
             { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor.', status: 'Ustalar İnceliyor' },
             { id: 2, title: 'Salon Duvar Boyası & Badana', category: 'Boya', country: 'Almanya', city: 'Berlin', district: 'Mitte', desc: 'Salon duvarları boyanacaktır.', status: 'Ustalar İnceliyor' }
         ];
@@ -587,10 +489,11 @@
         let currentCustomer = null;
         let currentUsta = null;
 
-        function addLog(actionText) {
-            const time = new Date().toLocaleTimeString('tr-TR');
-            auditLogs.unshift(`[${time}] ${actionText}`);
-            if (auditLogs.length > 25) auditLogs.pop();
+        function saveData() {
+            localStorage.setItem('pendingUstas', JSON.stringify(pendingUstas));
+            localStorage.setItem('approvedUstas', JSON.stringify(approvedUstas));
+            localStorage.setItem('registeredCustomers', JSON.stringify(registeredCustomers));
+            localStorage.setItem('mockJobs', JSON.stringify(mockJobs));
         }
 
         function handleAuth(event, type, action) {
@@ -620,7 +523,6 @@
                         <b>Branş:</b> <span class="text-amber-600 font-bold">${usta.branch}</span> | <b>Vergi No:</b> ${usta.tax}
                     `;
                     loadJobs();
-                    loadOfferedJobs();
                 } else {
                     name = sanitizeInput(document.getElementById('ustaRegName').value);
                     age = sanitizeInput(document.getElementById('ustaRegAge').value);
@@ -629,13 +531,8 @@
                     tax = sanitizeInput(document.getElementById('ustaRegTax').value);
                     branch = sanitizeInput(document.getElementById('ustaRegBranch').value);
                     
-                    if (!tax || !branch) {
-                        alert('Usta kaydı için Vergi Numarası ve Branş zorunludur!');
-                        return;
-                    }
-
                     pendingUstas.push({ id: Date.now(), name, age, email, phone, tax, branch });
-                    addLog(`Pro Başvuru: Usta kaydı alındı -> ${name} (${branch})`);
+                    saveData();
                     alert('Kayıt başvurunuz alındı! Yönetici onayından sonra giriş yapabilirsiniz.');
                     document.getElementById('ustaRegForm').reset();
                     switchMode('usta', 'login');
@@ -665,7 +562,7 @@
                     phone = sanitizeInput(document.getElementById('custRegPhone').value);
                     
                     registeredCustomers.push({ id: Date.now(), name, age, email, phone, myJobs: [], favorites: [] });
-                    addLog(`Pro Kayıt: Yeni müşteri -> ${name}`);
+                    saveData();
                     alert('Kayıt işlemi başarılı! Şimdi giriş yapabilirsiniz.');
                     document.getElementById('custRegForm').reset();
                     switchMode('cust', 'login');
@@ -703,7 +600,7 @@
                 loadMyJobs();
             }
 
-            addLog(`Pro İlan: Yayınlandı -> ${title} (${city})`);
+            saveData();
             alert('İlanınız başarıyla yayınlandı!');
             event.target.reset();
         }
@@ -723,28 +620,16 @@
                             <span class="font-bold text-blue-600">[${job.category}]</span> <b>${job.title}</b> (${job.city}/${job.district})<br>
                             <span class="text-gray-500">Durum: <span class="text-amber-600 font-semibold">${job.status}</span></span>
                         </div>
-                        <button onclick="republishJob(${job.id})" class="bg-blue-600 text-white px-2.5 py-1 rounded hover:bg-blue-700 transition">Tekrar Yayınla</button>
                     </div>
                 `;
             });
-        }
-
-        function republishJob(id) {
-            const job = mockJobs.find(j => j.id === id) || currentCustomer?.myJobs.find(j => j.id === id);
-            if (job) {
-                const cloned = { ...job, id: Date.now(), status: 'Ustalar İnceliyor' };
-                mockJobs.unshift(cloned);
-                currentCustomer.myJobs.unshift(cloned);
-                loadMyJobs();
-                alert('İlan başarıyla yeniden yayına alındı!');
-            }
         }
 
         function loadExploreUstas() {
             const container = document.getElementById('exploreUstasList');
             container.innerHTML = '';
             if (approvedUstas.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Henüz onaylı usta bulunmuyor.</p>';
+                container.innerHTML = '<p class="text-xs text-gray-500 col-span-full">Şu an sistemde onaylı usta bulunmuyor.</p>';
                 return;
             }
 
@@ -778,6 +663,7 @@
                 currentCustomer.favorites.push(usta);
                 alert('Usta favorilere eklendi!');
             }
+            saveData();
             loadExploreUstas();
         }
 
@@ -806,7 +692,7 @@
                         </div>
                         <div class="pt-2 border-t dark:border-gray-600 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
                             <span><i class="fa-solid fa-location-dot text-amber-600 mr-1"></i>${job.district}, ${job.city}</span>
-                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" onclick="trackOffer(${job.id})" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
+                            <a href="https://wa.me/?text=Yak%C4%B1n-%C4%B0%C5%9F%20%C4%B0lan%C4%B1%3A%20${encodeURIComponent(job.title)}" target="_blank" class="bg-green-600 text-white px-2.5 py-1 rounded hover:bg-green-700 transition flex items-center space-x-1">
                                 <i class="fa-brands fa-whatsapp"></i>
                                 <span>Teklif Ver</span>
                             </a>
@@ -814,261 +700,6 @@
                     </div>
                 `;
             });
-        }
-
-        let offeredJobs = [];
-        function trackOffer(jobId) {
-            const job = mockJobs.find(j => j.id === jobId);
-            if (job && currentUsta && !offeredJobs.some(o => o.id === jobId)) {
-                offeredJobs.push(job);
-                loadOfferedJobs();
-            }
-        }
-
-        function loadOfferedJobs() {
-            const container = document.getElementById('offeredJobsList');
-            if (!container) return;
-            container.innerHTML = '';
-            if (offeredJobs.length === 0) {
-                container.innerHTML = '<p class="text-xs text-gray-500">Henüz teklif verdiğiniz bir ilan bulunmuyor.</p>';
-                return;
-            }
-            offeredJobs.forEach(job => {
-                container.innerHTML += `
-                    <div class="p-2.5 border rounded-lg bg-green-50 dark:bg-green-900/20 text-xs flex justify-between items-center">
-                        <span><b>${job.title}</b> (${job.district}, ${job.city})</span>
-                        <span class="text-green-700 dark:text-green-300 font-semibold">Teklif Verildi</span>
-                    </div>
-                `;
-            });
-        }
-
-        // --- GÜVENLİK & OTURUM ZAMAN AŞIMI (5 DK) ---
-        let failedAttempts = 0;
-        let lockUntil = 0;
-        let idleTimer = null;
-        const ADMIN_HASH_CHECK = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
-
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function triggerAdminCheck() {
-            const now = Date.now();
-            if (now < lockUntil) {
-                const kalanSaniye = Math.ceil((lockUntil - now) / 1000);
-                alert(`Çok fazla hatalı deneme! Güvenlik nedeniyle ${kalanSaniye} saniye bekleyin.`);
-                return;
-            }
-
-            const sifre = prompt("Güvenli Yönetici Şifrenizi Girin (Pro):");
-            if (sifre === null) return;
-
-            const hashedInput = await sha256(sifre);
-
-            if (hashedInput === ADMIN_HASH_CHECK) {
-                failedAttempts = 0;
-                addLog("Pro Yönetici: Güvenli giriş yapıldı.");
-                showAdminPanel();
-                resetIdleTimer();
-            } else {
-                failedAttempts++;
-                if (failedAttempts >= 3) {
-                    lockUntil = Date.now() + 30000;
-                    failedAttempts = 0;
-                    alert("3 kez hatalı şifre! 30 saniye süreyle engellendiniz.");
-                } else {
-                    alert(`Hatalı şifre! Kalan hakkınız: ${3 - failedAttempts}`);
-                }
-            }
-        }
-
-        function resetIdleTimer() {
-            clearTimeout(idleTimer);
-            const adminPanel = document.getElementById('adminDashboard');
-            if (!adminPanel.classList.contains('hidden')) {
-                idleTimer = setTimeout(() => {
-                    closeAdminPanel();
-                    alert("5 dakika hareketsizlik nedeniyle yönetici oturumunuz koruma amaçlı kapatıldı.");
-                    addLog("Pro Güvenlik: Oturum zaman aşımına uğradı.");
-                }, 300000);
-            }
-        }
-
-        ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
-            window.addEventListener(evt, resetIdleTimer);
-        });
-
-        let clickCount = 0;
-        document.getElementById('secretAdminTrigger').addEventListener('click', function() {
-            clickCount++;
-            if (clickCount === 5) {
-                clickCount = 0;
-                triggerAdminCheck();
-            }
-            setTimeout(() => { clickCount = 0; }, 2000);
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'A') {
-                event.preventDefault();
-                triggerAdminCheck();
-            }
-        });
-
-        function showAdminPanel() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('customerDashboard').classList.add('hidden');
-            document.getElementById('ustaDashboard').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-
-            document.getElementById('statUstaCount').innerText = approvedUstas.length;
-            document.getElementById('statCustCount').innerText = registeredCustomers.length;
-            document.getElementById('statPendingCount').innerText = pendingUstas.length;
-            document.getElementById('pendingBadge').innerText = `${pendingUstas.length} yeni`;
-
-            const searchPendVal = (document.getElementById('searchPending')?.value || "").toLowerCase();
-            const searchApprVal = (document.getElementById('searchApproved')?.value || "").toLowerCase();
-            const searchCustVal = (document.getElementById('searchCust')?.value || "").toLowerCase();
-
-            const pendingDiv = document.getElementById('adminPendingUstaList');
-            pendingDiv.innerHTML = '';
-            const filteredPending = pendingUstas.filter(u => u.name.toLowerCase().includes(searchPendVal) || u.branch.toLowerCase().includes(searchPendVal));
-            
-            if (filteredPending.length === 0) {
-                pendingDiv.innerHTML = '<p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>';
-            } else {
-                filteredPending.forEach((u) => {
-                    pendingDiv.innerHTML += `
-                        <div class="p-3 border border-amber-300 dark:border-amber-700 rounded-lg bg-amber-50/50 dark:bg-amber-900/20 text-xs flex justify-between items-center">
-                            <div>
-                                <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">${u.name}</span> (${u.age} yaşında) - <b>Branş:</b> ${u.branch}<br>
-                                <span class="text-gray-500">Mail: ${u.email} | Tel: ${u.phone} | Vergi No: ${u.tax}</span>
-                            </div>
-                            <div class="space-x-1">
-                                <button onclick="approveUsta(${u.id})" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded transition font-bold"><i class="fa-solid fa-check"></i> Onayla</button>
-                                <button onclick="rejectUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded transition"><i class="fa-solid fa-xmark"></i> Reddet</button>
-                            </div>
-                        </div>`;
-                });
-            }
-
-            const ustaListDiv = document.getElementById('adminUstaList');
-            ustaListDiv.innerHTML = '';
-            const filteredAppr = approvedUstas.filter(u => u.name.toLowerCase().includes(searchApprVal) || u.branch.toLowerCase().includes(searchApprVal));
-
-            if (filteredAppr.length === 0) {
-                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Onaylı usta yok.</p>';
-            } else {
-                filteredAppr.forEach((u, index) => {
-                    ustaListDiv.innerHTML += `
-                        <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
-                            <div>
-                                <span class="font-bold text-amber-600">${index + 1}. ${u.name}</span> (${u.age} yaşında) - <b>Branş:</b> ${u.branch}<br>
-                                <span class="text-gray-500">Mail: ${u.email} | Tel: ${u.phone} | Vergi No: ${u.tax}</span>
-                            </div>
-                            <button onclick="removeUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded transition"><i class="fa-solid fa-user-minus"></i> Çıkar</button>
-                        </div>`;
-                });
-            }
-
-            const custListDiv = document.getElementById('adminCustList');
-            custListDiv.innerHTML = '';
-            const filteredCust = registeredCustomers.filter(c => c.name.toLowerCase().includes(searchCustVal) || c.email.toLowerCase().includes(searchCustVal));
-
-            if (filteredCust.length === 0) {
-                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Müşteri bulunamadı.</p>';
-            } else {
-                filteredCust.forEach((c, index) => {
-                    custListDiv.innerHTML += `
-                        <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
-                            <div>
-                                <span class="font-bold text-blue-600">${index + 1}. ${c.name}</span> (${c.age} yaşında)<br>
-                                <span class="text-gray-500">Mail: ${c.email} | Tel: ${c.phone}</span>
-                            </div>
-                            <button onclick="removeCustomer(${c.id})" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded transition"><i class="fa-solid fa-user-minus"></i> Çıkar</button>
-                        </div>`;
-                });
-            }
-
-            const adminList = document.getElementById('adminJobList');
-            adminList.innerHTML = '';
-            if (mockJobs.length === 0) {
-                adminList.innerHTML = '<p class="text-xs text-gray-500">Sistemde ilan bulunmuyor.</p>';
-            } else {
-                mockJobs.forEach(job => {
-                    adminList.innerHTML += `
-                        <div class="p-3 border dark:border-gray-700 rounded-lg flex justify-between items-center bg-gray-50 dark:bg-gray-700/40">
-                            <div>
-                                <span class="text-xs font-bold text-purple-600 dark:text-purple-400">[${job.category}]</span>
-                                <h5 class="font-bold text-sm">${job.title}</h5>
-                                <p class="text-xs text-gray-500">${job.country} / ${job.city} - ${job.district}</p>
-                            </div>
-                            <button onclick="deleteJob(${job.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
-                                <i class="fa-solid fa-trash"></i> Kaldır
-                            </button>
-                        </div>
-                    `;
-                });
-            }
-
-            const logContainer = document.getElementById('auditLogList');
-            logContainer.innerHTML = auditLogs.map(log => `<div>${log}</div>`).join('');
-        }
-
-        function approveUsta(id) {
-            const usta = pendingUstas.find(u => u.id === id);
-            if (usta) {
-                pendingUstas = pendingUstas.filter(u => u.id !== id);
-                approvedUstas.push(usta);
-                addLog(`Pro Onay: Usta sisteme eklendi -> ${usta.name} (${usta.branch})`);
-                alert(`${usta.name} adlı usta onaylandı!`);
-                showAdminPanel();
-            }
-        }
-
-        function rejectUsta(id) {
-            const usta = pendingUstas.find(u => u.id === id);
-            if (confirm('Bu usta başvurusunu reddetmek istediğinize emin misiniz?')) {
-                if (usta) addLog(`Pro Red: Usta başvurusu reddedildi -> ${usta.name}`);
-                pendingUstas = pendingUstas.filter(u => u.id !== id);
-                showAdminPanel();
-            }
-        }
-
-        function removeUsta(id) {
-            const usta = approvedUstas.find(u => u.id === id);
-            if (confirm('Bu ustayı sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
-                if (usta) addLog(`Pro İşlem: Usta çıkarıldı -> ${usta.name}`);
-                approvedUstas = approvedUstas.filter(u => u.id !== id);
-                showAdminPanel();
-            }
-        }
-
-        function removeCustomer(id) {
-            const cust = registeredCustomers.find(c => c.id === id);
-            if (confirm('Bu müşteriyi sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
-                if (cust) addLog(`Pro İşlem: Müşteri çıkarıldı -> ${cust.name}`);
-                registeredCustomers = registeredCustomers.filter(c => c.id !== id);
-                showAdminPanel();
-            }
-        }
-
-        function closeAdminPanel() {
-            clearTimeout(idleTimer);
-            document.getElementById('adminDashboard').classList.add('hidden');
-            document.getElementById('authContainer').classList.remove('hidden');
-        }
-
-        function deleteJob(id) {
-            if (confirm('Bu ilanı sistemden kalıcı olarak silmek istiyor musunuz?')) {
-                mockJobs = mockJobs.filter(j => j.id !== id);
-                addLog(`Pro Moderasyon: İlan kaldırıldı ID -> ${id}`);
-                showAdminPanel();
-            }
         }
     </script>
 </body>
