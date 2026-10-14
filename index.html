@@ -298,7 +298,7 @@
             <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Özel Yetkili Hesap: alkangrupticaret@gmail.com</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">Güvenli Mod Aktif - alkangrupticaret@gmail.com</p>
                 </div>
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
@@ -377,7 +377,7 @@
         <p>&copy; 2026 Yakın-İş | Küresel Tamir, Tadilat & Usta Hizmetleri Platformu</p>
     </footer>
 
-    <!-- SCRIPT & DİL SÖZLÜĞÜ -->
+    <!-- SCRIPT & GÜVENLİK SÖZLÜĞÜ -->
     <script>
         const translations = {
             tr: {
@@ -501,7 +501,13 @@
             }
         }
 
-        // Veri Havuzları (Onay bekleyen ve onaylanmışlar ayrı)
+        // XSS Önlemi için Girdi Temizleme (Sanitization)
+        function sanitizeInput(str) {
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
         let pendingUstas = [];
         let approvedUstas = [];
         let registeredCustomers = [];
@@ -516,10 +522,9 @@
 
             if (type === 'usta') {
                 if (action === 'login') {
-                    email = document.getElementById('ustaLoginEmail').value;
-                    phone = document.getElementById('ustaLoginPhone').value;
+                    email = sanitizeInput(document.getElementById('ustaLoginEmail').value);
+                    phone = sanitizeInput(document.getElementById('ustaLoginPhone').value);
                     
-                    // Onaylı mı kontrol et
                     const usta = approvedUstas.find(u => u.email === email);
                     if (!usta) {
                         alert('Hesabınız henüz yönetici tarafından onaylanmamış veya kayıt bulunamadı!');
@@ -532,19 +537,18 @@
                     document.getElementById('ustaLogInfo').innerText = `${usta.name} (${phone})`;
                     loadJobs();
                 } else {
-                    name = document.getElementById('ustaRegName').value;
-                    age = document.getElementById('ustaRegAge').value;
-                    email = document.getElementById('ustaRegEmail').value;
-                    phone = document.getElementById('ustaRegPhone').value;
-                    tax = document.getElementById('ustaRegTax').value;
-                    branch = document.getElementById('ustaRegBranch').value;
+                    name = sanitizeInput(document.getElementById('ustaRegName').value);
+                    age = sanitizeInput(document.getElementById('ustaRegAge').value);
+                    email = sanitizeInput(document.getElementById('ustaRegEmail').value);
+                    phone = sanitizeInput(document.getElementById('ustaRegPhone').value);
+                    tax = sanitizeInput(document.getElementById('ustaRegTax').value);
+                    branch = sanitizeInput(document.getElementById('ustaRegBranch').value);
                     
                     if (!tax || !branch) {
                         alert('Usta kaydı için Vergi Numarası ve Branş zorunludur!');
                         return;
                     }
 
-                    // Onay bekleyenler havuzuna at
                     pendingUstas.push({ id: Date.now(), name, age, email, phone, tax, branch });
                     alert('Kayıt başvurunuz alındı! Yönetici onayından sonra giriş yapabilirsiniz.');
                     document.getElementById('ustaRegForm').reset();
@@ -552,8 +556,8 @@
                 }
             } else {
                 if (action === 'login') {
-                    email = document.getElementById('custLoginEmail').value;
-                    phone = document.getElementById('custLoginPhone').value;
+                    email = sanitizeInput(document.getElementById('custLoginEmail').value);
+                    phone = sanitizeInput(document.getElementById('custLoginPhone').value);
                     
                     const cust = registeredCustomers.find(c => c.email === email);
                     if (!cust) {
@@ -566,10 +570,10 @@
                     document.getElementById('customerDashboard').classList.remove('hidden');
                     document.getElementById('custLogInfo').innerText = `${cust.name} (${phone})`;
                 } else {
-                    name = document.getElementById('custRegName').value;
-                    age = document.getElementById('custRegAge').value;
-                    email = document.getElementById('custRegEmail').value;
-                    phone = document.getElementById('custRegPhone').value;
+                    name = sanitizeInput(document.getElementById('custRegName').value);
+                    age = sanitizeInput(document.getElementById('custRegAge').value);
+                    email = sanitizeInput(document.getElementById('custRegEmail').value);
+                    phone = sanitizeInput(document.getElementById('custRegPhone').value);
                     
                     registeredCustomers.push({ id: Date.now(), name, age, email, phone });
                     alert('Kayıt işlemi başarılı! Şimdi giriş yapabilirsiniz.');
@@ -592,12 +596,12 @@
 
         function submitJob(event) {
             event.preventDefault();
-            const title = document.getElementById('jobTitle').value;
-            const category = document.getElementById('jobCategory').value;
-            const desc = document.getElementById('jobDesc').value;
-            const country = document.getElementById('jobCountry').value;
-            const city = document.getElementById('jobCity').value;
-            const district = document.getElementById('jobDistrict').value;
+            const title = sanitizeInput(document.getElementById('jobTitle').value);
+            const category = sanitizeInput(document.getElementById('jobCategory').value);
+            const desc = sanitizeInput(document.getElementById('jobDesc').value);
+            const country = sanitizeInput(document.getElementById('jobCountry').value);
+            const city = sanitizeInput(document.getElementById('jobCity').value);
+            const district = sanitizeInput(document.getElementById('jobDistrict').value);
 
             mockJobs.unshift({ id: Date.now(), title, category, country, city, district, desc });
             alert('İlanınız başarıyla yayınlandı!');
@@ -632,18 +636,55 @@
             });
         }
 
-        // --- GİZLİ YÖNETİCİ TETİKLEYİCİLERİ ---
+        // --- GELİŞMİŞ GÜVENLİK VE BRUTE-FORCE KORUMASI ---
+        let failedAttempts = 0;
+        let lockUntil = 0;
+
+        // Şifre Güvenliği: SHA-256 Şifreleme Kontrolü ("admin123" kelimesinin hash karşılığı)
+        const ADMIN_HASH_CHECK = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function triggerAdminCheck() {
+            const now = Date.now();
+            if (now < lockUntil) {
+                const kalan Saniye = Math.ceil((lockUntil - now) / 1000);
+                alert(`Çok fazla hatalı deneme! Güvenlik nedeniyle ${kalanSaniye} saniye sonra tekrar deneyin.`);
+                return;
+            }
+
+            const sifre = prompt("Güvenli Yönetici Şifrenizi Girin:");
+            if (sifre === null) return;
+
+            const hashedInput = await sha256(sifre);
+
+            if (hashedInput === ADMIN_HASH_CHECK) {
+                failedAttempts = 0; // Başarılı girişte sıfırla
+                showAdminPanel();
+            } else {
+                failedAttempts++;
+                if (failedAttempts >= 3) {
+                    lockUntil = Date.now() + 30000; // 30 saniye kilitle
+                    failedAttempts = 0;
+                    alert("3 kez hatalı şifre girdiniz! Sistem güvenliği için 30 saniye süreyle engellendiniz.");
+                } else {
+                    alert(`Hatalı şifre! Kalan deneme hakkınız: ${3 - failedAttempts}`);
+                }
+            }
+        }
+
+        // Tetikleyiciler
         let clickCount = 0;
         document.getElementById('secretAdminTrigger').addEventListener('click', function() {
             clickCount++;
             if (clickCount === 5) {
                 clickCount = 0;
-                const sifre = prompt("Yönetici Şifrenizi Girin:");
-                if (sifre === "admin123") {
-                    showAdminPanel();
-                } else if (sifre !== null) {
-                    alert("Hatalı şifre!");
-                }
+                triggerAdminCheck();
             }
             setTimeout(() => { clickCount = 0; }, 2000);
         });
@@ -651,12 +692,7 @@
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'A') {
                 event.preventDefault();
-                const sifre = prompt("Gizli Yönetici Şifrenizi Girin:");
-                if (sifre === "admin123") {
-                    showAdminPanel();
-                } else if (sifre !== null) {
-                    alert("Hatalı şifre!");
-                }
+                triggerAdminCheck();
             }
         });
 
@@ -666,13 +702,11 @@
             document.getElementById('ustaDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
 
-            // Sayaçlar
             document.getElementById('statUstaCount').innerText = approvedUstas.length;
             document.getElementById('statCustCount').innerText = registeredCustomers.length;
             document.getElementById('statPendingCount').innerText = pendingUstas.length;
             document.getElementById('pendingBadge').innerText = `${pendingUstas.length} yeni`;
 
-            // 1. Onay Bekleyen Ustalar Listesi
             const pendingDiv = document.getElementById('adminPendingUstaList');
             pendingDiv.innerHTML = '';
             if (pendingUstas.length === 0) {
@@ -687,13 +721,12 @@
                             </div>
                             <div class="space-x-1">
                                 <button onclick="approveUsta(${u.id})" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded transition font-bold"><i class="fa-solid fa-check"></i> Onayla</button>
-                                <button onclick="rejectUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded transition"><i class="fa-solid xmark"></i> Reddet</button>
+                                <button onclick="rejectUsta(${u.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded transition"><i class="fa-solid fa-xmark"></i> Reddet</button>
                             </div>
                         </div>`;
                 });
             }
 
-            // 2. Onaylı Ustalar Listesi (Çıkarma yetkisi ile)
             const ustaListDiv = document.getElementById('adminUstaList');
             ustaListDiv.innerHTML = '';
             if (approvedUstas.length === 0) {
@@ -711,11 +744,10 @@
                 });
             }
 
-            // 3. Müşteriler Listesi (Çıkarma yetkisi ile)
             const custListDiv = document.getElementById('adminCustList');
             custListDiv.innerHTML = '';
             if (registeredCustomers.length === 0) {
-                classListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>';
+                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>';
             } else {
                 registeredCustomers.forEach((c, index) => {
                     custListDiv.innerHTML += `
@@ -729,7 +761,6 @@
                 });
             }
 
-            // 4. İlanlar Listesi
             const adminList = document.getElementById('adminJobList');
             adminList.innerHTML = '';
             if (mockJobs.length === 0) {
@@ -754,7 +785,6 @@
             });
         }
 
-        // Yönetici Onay ve Silme Fonksiyonları
         function approveUsta(id) {
             const usta = pendingUstas.find(u => u.id === id);
             if (usta) {
