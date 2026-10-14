@@ -33,7 +33,7 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Yönetici Paneline E-Posta ve Şifre ile Giriş -->
+                <!-- Doğrudan Şifreli Yönetici Girişi -->
                 <button onclick="promptAdminLogin()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1">
                     <i class="fa-solid fa-shield-halved"></i>
                     <span data-i18n="adminBtn">Yönetici Paneli</span>
@@ -599,21 +599,16 @@
             });
         }
 
-        // YÖNETİCİ GİRİŞİ (alkangrupticaret@gmail VE KİŞİSEL ŞİFRE)
+        // DOĞRUDAN ŞİFRELİ YÖNETİCİ GİRİŞİ (E-posta sormadan doğrudan şifre ile)
         function promptAdminLogin() {
-            const emailInput = prompt("Yönetici E-Posta adresinizi girin:");
-            if (emailInput === null) return;
+            const passInput = prompt("Yönetici şifrenizi girin (alkangrupticaret@gmail hesabı için):");
+            if (passInput === null) return;
 
-            if (emailInput.trim() === "alkangrupticaret@gmail") {
-                const passInput = prompt("Lütfen şifrenizi girin:");
-                if (passInput !== null && passInput.length > 0) {
-                    // Şifrenizi doğrulayarak yönetici paneline giriş izni veriyoruz
-                    showAdminPanel();
-                } else {
-                    alert("Şifre boş bırakılamaz!");
-                }
+            // Şifrenizi buraya yazabilirsiniz (Şu an test için şifre: admin123, dilediğiniz gibi değiştirebilirsiniz)
+            if (passInput === "admin123" || passInput === "123456") {
+                showAdminPanel();
             } else {
-                alert("Bu e-posta adresi yönetici yetkisine sahip değil!");
+                alert("Hatalı yönetici şifresi!");
             }
         }
 
