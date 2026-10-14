@@ -298,7 +298,7 @@
             <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Güvenli Mod Aktif - alkangrupticaret@gmail.com</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">Güvenli Mod Aktif (5 Dk Hareketsizlik Koruması)</p>
                 </div>
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
@@ -334,28 +334,38 @@
                 </div>
             </div>
 
-            <!-- ONAY BEKLEYEN USTALAR BÖLÜMÜ -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-amber-500/30">
-                <h4 class="font-bold text-lg mb-4 text-amber-600 flex items-center justify-between">
-                    <span><i class="fa-solid fa-user-clock mr-2"></i>Onay Bekleyen Usta Başvuruları</span>
-                    <span id="pendingBadge" class="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0 yeni</span>
-                </h4>
+            <!-- ONAY BEKLEYEN USTALAR BÖLÜMÜ + ARAMA -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-amber-500/30 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+                    <h4 class="font-bold text-lg text-amber-600 flex items-center space-x-2">
+                        <i class="fa-solid fa-user-clock"></i>
+                        <span>Onay Bekleyen Usta Başvuruları</span>
+                        <span id="pendingBadge" class="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0 yeni</span>
+                    </h4>
+                    <input type="text" id="searchPending" oninput="showAdminPanel()" placeholder="Bekleyen usta ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
+                </div>
                 <div id="adminPendingUstaList" class="space-y-2">
                     <p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>
                 </div>
             </div>
 
-            <!-- ONAYLANMIŞ AKTİF USTALAR -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h4 class="font-bold text-lg mb-4 text-amber-600"><i class="fa-solid fa-user-check mr-2"></i>Kayıtlı ve Onaylı Ustalar Listesi</h4>
+            <!-- ONAYLANMIŞ AKTİF USTALAR + ARAMA -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+                    <h4 class="font-bold text-lg text-amber-600"><i class="fa-solid fa-user-check mr-2"></i>Kayıtlı ve Onaylı Ustalar Listesi</h4>
+                    <input type="text" id="searchApproved" oninput="showAdminPanel()" placeholder="Onaylı usta ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
+                </div>
                 <div id="adminUstaList" class="space-y-2">
                     <p class="text-xs text-gray-500">Henüz onaylı usta yok.</p>
                 </div>
             </div>
 
-            <!-- KAYITLI MÜŞTERİLER LİSTESİ -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h4 class="font-bold text-lg mb-4 text-blue-600"><i class="fa-solid fa-users mr-2"></i>Kayıtlı Müşteriler Listesi</h4>
+            <!-- KAYITLI MÜŞTERİLER LİSTESİ + ARAMA -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+                    <h4 class="font-bold text-lg text-blue-600"><i class="fa-solid fa-users mr-2"></i>Kayıtlı Müşteriler Listesi</h4>
+                    <input type="text" id="searchCust" oninput="showAdminPanel()" placeholder="Müşteri ara..." class="text-xs p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white w-full md:w-64">
+                </div>
                 <div id="adminCustList" class="space-y-2">
                     <p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>
                 </div>
@@ -366,6 +376,16 @@
                 <h4 class="font-bold text-lg mb-4 text-purple-600"><i class="fa-solid fa-list mr-2"></i>Tüm Aktif İlanlar Havuzu (Moderasyon)</h4>
                 <div id="adminJobList" class="space-y-3">
                     <!-- İlanlar -->
+                </div>
+            </div>
+
+            <!-- İŞLEM GEÇMİŞİ (AUDIT TRAIL) -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-300 dark:border-gray-700">
+                <h4 class="font-bold text-sm mb-3 text-gray-600 dark:text-gray-400 flex items-center">
+                    <i class="fa-solid fa-clock-rotate-left mr-2"></i>Yönetici İşlem Geçmişi (Audit Log)
+                </h4>
+                <div id="auditLogList" class="space-y-1.5 max-h-40 overflow-y-auto text-xs text-gray-500 font-mono">
+                    <p>Sistem başlatıldı ve güvenli mod aktif.</p>
                 </div>
             </div>
         </div>
@@ -501,7 +521,6 @@
             }
         }
 
-        // XSS Önlemi için Girdi Temizleme (Sanitization)
         function sanitizeInput(str) {
             const temp = document.createElement('div');
             temp.textContent = str;
@@ -511,10 +530,17 @@
         let pendingUstas = [];
         let approvedUstas = [];
         let registeredCustomers = [];
+        let auditLogs = [];
         let mockJobs = [
             { id: 1, title: 'Mutfak Tezgâh Altı Su Sızıntısı', category: 'Tesisat', country: 'Türkiye', city: 'Bursa', district: 'Nilüfer', desc: 'Tezgâh altındaki gider borusu sızdırıyor.' },
             { id: 2, title: 'Salon Duvar Boyası & Badana', category: 'Boya', country: 'Almanya', city: 'Berlin', district: 'Mitte', desc: 'Salon duvarları boyanacaktır.' }
         ];
+
+        function addLog(actionText) {
+            const time = new Date().toLocaleTimeString('tr-TR');
+            auditLogs.unshift(`[${time}] ${actionText}`);
+            if (auditLogs.length > 20) auditLogs.pop(); // Son 20 kayıt
+        }
 
         function handleAuth(event, type, action) {
             event.preventDefault();
@@ -550,6 +576,7 @@
                     }
 
                     pendingUstas.push({ id: Date.now(), name, age, email, phone, tax, branch });
+                    addLog(`Yeni usta kaydı başvurusu: ${name} (${branch})`);
                     alert('Kayıt başvurunuz alındı! Yönetici onayından sonra giriş yapabilirsiniz.');
                     document.getElementById('ustaRegForm').reset();
                     switchMode('usta', 'login');
@@ -576,6 +603,7 @@
                     phone = sanitizeInput(document.getElementById('custRegPhone').value);
                     
                     registeredCustomers.push({ id: Date.now(), name, age, email, phone });
+                    addLog(`Yeni müşteri kaydı: ${name}`);
                     alert('Kayıt işlemi başarılı! Şimdi giriş yapabilirsiniz.');
                     document.getElementById('custRegForm').reset();
                     switchMode('cust', 'login');
@@ -604,6 +632,7 @@
             const district = sanitizeInput(document.getElementById('jobDistrict').value);
 
             mockJobs.unshift({ id: Date.now(), title, category, country, city, district, desc });
+            addLog(`Yeni ilan yayınlandı: ${title} (${city})`);
             alert('İlanınız başarıyla yayınlandı!');
             event.target.reset();
         }
@@ -636,11 +665,10 @@
             });
         }
 
-        // --- GELİŞMİŞ GÜVENLİK VE BRUTE-FORCE KORUMASI ---
+        // --- GÜVENLİK & OTURUM ZAMAN AŞIMI (5 DK) ---
         let failedAttempts = 0;
         let lockUntil = 0;
-
-        // Şifre Güvenliği: SHA-256 Şifreleme Kontrolü ("admin123" kelimesinin hash karşılığı)
+        let idleTimer = null;
         const ADMIN_HASH_CHECK = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
 
         async function sha256(message) {
@@ -653,7 +681,7 @@
         async function triggerAdminCheck() {
             const now = Date.now();
             if (now < lockUntil) {
-                const kalan Saniye = Math.ceil((lockUntil - now) / 1000);
+                const kalanSaniye = Math.ceil((lockUntil - now) / 1000);
                 alert(`Çok fazla hatalı deneme! Güvenlik nedeniyle ${kalanSaniye} saniye sonra tekrar deneyin.`);
                 return;
             }
@@ -664,19 +692,38 @@
             const hashedInput = await sha256(sifre);
 
             if (hashedInput === ADMIN_HASH_CHECK) {
-                failedAttempts = 0; // Başarılı girişte sıfırla
+                failedAttempts = 0;
+                addLog("Yönetici paneline güvenli giriş yapıldı.");
                 showAdminPanel();
+                resetIdleTimer();
             } else {
                 failedAttempts++;
                 if (failedAttempts >= 3) {
-                    lockUntil = Date.now() + 30000; // 30 saniye kilitle
+                    lockUntil = Date.now() + 30000;
                     failedAttempts = 0;
-                    alert("3 kez hatalı şifre girdiniz! Sistem güvenliği için 30 saniye süreyle engellendiniz.");
+                    alert("3 kez hatalı şifre girdiniz! 30 saniye süreyle engellendiniz.");
                 } else {
-                    alert(`Hatalı şifre! Kalan deneme hakkınız: ${3 - failedAttempts}`);
+                    alert(`Hatalı şifre! Kalan hakkınız: ${3 - failedAttempts}`);
                 }
             }
         }
+
+        // Hareketsizlik Takipçisi (5 Dakika / 300000 ms)
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            const adminPanel = document.getElementById('adminDashboard');
+            if (!adminPanel.classList.contains('hidden')) {
+                idleTimer = setTimeout(() => {
+                    closeAdminPanel();
+                    alert("5 dakika boyunca işlem yapılmadığı için güvenlik amacıyla yönetici oturumunuz kapatıldı.");
+                    addLog("Güvenlik Zaman Aşımı: Yönetici paneli otomatik kapatıldı.");
+                }, 300000);
+            }
+        }
+
+        ['mousemove', 'keydown', 'click', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, resetIdleTimer);
+        });
 
         // Tetikleyiciler
         let clickCount = 0;
@@ -707,12 +754,20 @@
             document.getElementById('statPendingCount').innerText = pendingUstas.length;
             document.getElementById('pendingBadge').innerText = `${pendingUstas.length} yeni`;
 
+            // Arama değerleri
+            const searchPendVal = (document.getElementById('searchPending')?.value || "").toLowerCase();
+            const searchApprVal = (document.getElementById('searchApproved')?.value || "").toLowerCase();
+            const searchCustVal = (document.getElementById('searchCust')?.value || "").toLowerCase();
+
+            // 1. Onay Bekleyen Ustalar
             const pendingDiv = document.getElementById('adminPendingUstaList');
             pendingDiv.innerHTML = '';
-            if (pendingUstas.length === 0) {
-                pendingDiv.innerHTML = '<p class="text-xs text-gray-500">Onay bekleyen usta bulunmuyor.</p>';
+            const filteredPending = pendingUstas.filter(u => u.name.toLowerCase().includes(searchPendVal) || u.branch.toLowerCase().includes(searchPendVal));
+            
+            if (filteredPending.length === 0) {
+                pendingDiv.innerHTML = '<p class="text-xs text-gray-500">Aramaya uygun onay bekleyen usta bulunmuyor.</p>';
             } else {
-                pendingUstas.forEach((u) => {
+                filteredPending.forEach((u) => {
                     pendingDiv.innerHTML += `
                         <div class="p-3 border border-amber-300 dark:border-amber-700 rounded-lg bg-amber-50/50 dark:bg-amber-900/20 text-xs flex justify-between items-center">
                             <div>
@@ -727,12 +782,15 @@
                 });
             }
 
+            // 2. Onaylı Ustalar
             const ustaListDiv = document.getElementById('adminUstaList');
             ustaListDiv.innerHTML = '';
-            if (approvedUstas.length === 0) {
-                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz onaylı usta yok.</p>';
+            const filteredAppr = approvedUstas.filter(u => u.name.toLowerCase().includes(searchApprVal) || u.branch.toLowerCase().includes(searchApprVal));
+
+            if (filteredAppr.length === 0) {
+                ustaListDiv.innerHTML = '<p class="text-xs text-gray-500">Aramaya uygun onaylı usta yok.</p>';
             } else {
-                approvedUstas.forEach((u, index) => {
+                filteredAppr.forEach((u, index) => {
                     ustaListDiv.innerHTML += `
                         <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
                             <div>
@@ -744,12 +802,15 @@
                 });
             }
 
+            // 3. Müşteriler
             const custListDiv = document.getElementById('adminCustList');
             custListDiv.innerHTML = '';
-            if (registeredCustomers.length === 0) {
-                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Henüz kayıtlı müşteri yok.</p>';
+            const filteredCust = registeredCustomers.filter(c => c.name.toLowerCase().includes(searchCustVal) || c.email.toLowerCase().includes(searchCustVal));
+
+            if (filteredCust.length === 0) {
+                custListDiv.innerHTML = '<p class="text-xs text-gray-500">Aramaya uygun müşteri yok.</p>';
             } else {
-                registeredCustomers.forEach((c, index) => {
+                filteredCust.forEach((c, index) => {
                     custListDiv.innerHTML += `
                         <div class="p-3 border dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/40 text-xs flex justify-between items-center">
                             <div>
@@ -761,28 +822,31 @@
                 });
             }
 
+            // 4. İlanlar
             const adminList = document.getElementById('adminJobList');
             adminList.innerHTML = '';
             if (mockJobs.length === 0) {
                 adminList.innerHTML = '<p class="text-xs text-gray-500">Henüz sistemde ilan bulunmuyor.</p>';
-                return;
+            } else {
+                mockJobs.forEach(job => {
+                    adminList.innerHTML += `
+                        <div class="p-3 border dark:border-gray-700 rounded-lg flex justify-between items-center bg-gray-50 dark:bg-gray-700/40">
+                            <div>
+                                <span class="text-xs font-bold text-purple-600 dark:text-purple-400">[${job.category}]</span>
+                                <h5 class="font-bold text-sm">${job.title}</h5>
+                                <p class="text-xs text-gray-500">${job.country} / ${job.city} - ${job.district}</p>
+                            </div>
+                            <button onclick="deleteJob(${job.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
+                                <i class="fa-solid fa-trash"></i> İlanı Kaldır
+                            </button>
+                        </div>
+                    `;
+                });
             }
 
-            mockJobs.forEach(job => {
-                const item = `
-                    <div class="p-3 border dark:border-gray-700 rounded-lg flex justify-between items-center bg-gray-50 dark:bg-gray-700/40">
-                        <div>
-                            <span class="text-xs font-bold text-purple-600 dark:text-purple-400">[${job.category}]</span>
-                            <h5 class="font-bold text-sm">${job.title}</h5>
-                            <p class="text-xs text-gray-500">${job.country} / ${job.city} - ${job.district}</p>
-                        </div>
-                        <button onclick="deleteJob(${job.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
-                            <i class="fa-solid fa-trash"></i> İlanı Kaldır
-                        </button>
-                    </div>
-                `;
-                adminList.innerHTML += item;
-            });
+            // 5. Audit Logları Bas
+            const logContainer = document.getElementById('auditLogList');
+            logContainer.innerHTML = auditLogs.map(log => `<div>${log}</div>`).join('');
         }
 
         function approveUsta(id) {
@@ -790,33 +854,41 @@
             if (usta) {
                 pendingUstas = pendingUstas.filter(u => u.id !== id);
                 approvedUstas.push(usta);
+                addLog(`Usta onaylandı: ${usta.name} (${usta.branch})`);
                 alert(`${usta.name} adlı usta onaylandı ve sisteme eklendi!`);
                 showAdminPanel();
             }
         }
 
         function rejectUsta(id) {
+            const usta = pendingUstas.find(u => u.id === id);
             if (confirm('Bu usta başvurusunu reddetmek istediğinize emin misiniz?')) {
+                if (usta) addLog(`Usta başvurusu reddedildi: ${usta.name}`);
                 pendingUstas = pendingUstas.filter(u => u.id !== id);
                 showAdminPanel();
             }
         }
 
         function removeUsta(id) {
+            const usta = approvedUstas.find(u => u.id === id);
             if (confirm('Bu ustayı sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
+                if (usta) addLog(`Usta sistemden çıkarıldı: ${usta.name}`);
                 approvedUstas = approvedUstas.filter(u => u.id !== id);
                 showAdminPanel();
             }
         }
 
         function removeCustomer(id) {
+            const cust = registeredCustomers.find(c => c.id === id);
             if (confirm('Bu müşteriyi sistemden kalıcı olarak çıkarmak istiyor musunuz?')) {
+                if (cust) addLog(`Müşteri sistemden çıkarıldı: ${cust.name}`);
                 registeredCustomers = registeredCustomers.filter(c => c.id !== id);
                 showAdminPanel();
             }
         }
 
         function closeAdminPanel() {
+            clearTimeout(idleTimer);
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
         }
@@ -824,6 +896,7 @@
         function deleteJob(id) {
             if (confirm('Bu ilanı sistemden kalıcı olarak silmek istiyor musunuz?')) {
                 mockJobs = mockJobs.filter(j => j.id !== id);
+                addLog(`Bir ilan sistemden kaldırıldı ID: ${id}`);
                 showAdminPanel();
             }
         }
