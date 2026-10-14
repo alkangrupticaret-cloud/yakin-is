@@ -16,13 +16,13 @@
         <div class="text-center space-y-2">
             <i class="fa-solid fa-user-shield text-4xl text-purple-500 animate-pulse"></i>
             <h2 class="text-2xl font-black text-white">Yakın-İş Yönetici Girişi</h2>
-            <p class="text-xs text-gray-400">Sadece Yetkili Yönetici Erişimi (Harici Panel)</p>
+            <p class="text-xs text-gray-400">Şifreniz: <b class="text-amber-400">1234</b> (İstediğiniz zaman değiştirebilirsiniz)</p>
         </div>
 
         <form onsubmit="adminLogin(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold mb-1 text-gray-300">Yönetici Şifreniz</label>
-                <input type="password" id="adminPassInput" required placeholder="••••••••" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500">
+                <input type="password" id="adminPassInput" required placeholder="Şifrenizi girin..." class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500">
             </div>
             <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition text-sm flex justify-center items-center space-x-2">
                 <i class="fa-solid fa-lock-open"></i>
@@ -99,25 +99,17 @@
     </div>
 
     <script>
-        const ADMIN_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
-
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function adminLogin(event) {
+        function adminLogin(event) {
             event.preventDefault();
             const input = document.getElementById('adminPassInput').value;
-            const hashed = await sha256(input);
 
-            if (hashed === ADMIN_HASH) {
+            // BURADAN ŞİFRENİZİ İSTEDİĞİNİZ ZAMAN DEĞİŞTİREBİLİRSİNİZ (Şu an şifre: 1234)
+            if (input === "1234") {
                 document.getElementById('loginCard').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
                 refreshAdmin();
             } else {
-                alert('Hatalı şifre!');
+                alert('Hatalı şifre! Lütfen 1234 yazın.');
             }
         }
 
@@ -184,7 +176,7 @@
             event.preventDefault();
             const ver = document.getElementById('vCode').value;
             const title = document.getElementById('vTitle').value;
-            const notes = document.getElementById('vNotes').value;
+            const notes = document.getElementById('vNotes5').value || document.getElementById('vNotes').value;
 
             let vers = getData('systemVersions');
             vers.unshift({ ver, title, notes, date: new Date().toISOString().split('T')[0] });
