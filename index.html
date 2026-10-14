@@ -33,8 +33,8 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Doğrudan Şifreli Yönetici Girişi -->
-                <button onclick="promptAdminLogin()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1">
+                <!-- Direkt Şifreli Yönetici Paneli Girişi -->
+                <button onclick="girisYapAdmin()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1">
                     <i class="fa-solid fa-shield-halved"></i>
                     <span data-i18n="adminBtn">Yönetici Paneli</span>
                 </button>
@@ -289,7 +289,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h3 data-i18n="activeJobsHeader" class="text-xl font-bold flex items-center space-x-2 text-amber-600">
                         <i class="fa-solid fa-earth-americas"></i>
-                        <span>Bölgenizdeki ve Dünya Genelindeki İlanlar</span>
+                        <span>Bölgenizdeki dan ve Dünya Genelindeki İlanlar</span>
                     </h3>
                     <button onclick="loadJobs()" data-i18n="btnRefresh" class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg">Yenile</button>
                 </div>
@@ -304,7 +304,7 @@
             <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 p-4 rounded-xl flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-purple-700 dark:text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Yönetici (Admin) Kontrol Paneli</h3>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Hoş geldiniz, alkangrupticaret@gmail</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">Hoş geldiniz, alkangrupticaret@gmail.com</p>
                 </div>
                 <button onclick="closeAdminPanel()" class="text-xs bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">Ana Sayfaya Dön</button>
             </div>
@@ -489,7 +489,6 @@
             }
         }
 
-        // Veri Havuzları
         let registeredUstas = [];
         let registeredCustomers = [];
         let mockJobs = [
@@ -599,16 +598,16 @@
             });
         }
 
-        // DOĞRUDAN ŞİFRELİ YÖNETİCİ GİRİŞİ (E-posta sormadan doğrudan şifre ile)
-        function promptAdminLogin() {
-            const passInput = prompt("Yönetici şifrenizi girin (alkangrupticaret@gmail hesabı için):");
-            if (passInput === null) return;
+        // YÖNETİCİ KONTROLÜ (Doğrudan Şifre İle)
+        function girisYapAdmin() {
+            const sifre = prompt("Yönetici şifrenizi girin:");
+            if (sifre === null) return;
 
-            // Şifrenizi buraya yazabilirsiniz (Şu an test için şifre: admin123, dilediğiniz gibi değiştirebilirsiniz)
-            if (passInput === "admin123" || passInput === "123456") {
+            // Şifrenizi buraya dilediğiniz gibi yazabilirsiniz (Varsayılan: admin123)
+            if (sifre === "admin123") {
                 showAdminPanel();
             } else {
-                alert("Hatalı yönetici şifresi!");
+                alert("Hatalı şifre!");
             }
         }
 
@@ -618,11 +617,9 @@
             document.getElementById('ustaDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
 
-            // Sayaçları güncelle
             document.getElementById('statUstaCount').innerText = registeredUstas.length;
             document.getElementById('statCustCount').innerText = registeredCustomers.length;
 
-            // Ustalar Listesini Doldur
             const ustaListDiv = document.getElementById('adminUstaList');
             ustaListDiv.innerHTML = '';
             if (registeredUstas.length === 0) {
@@ -639,7 +636,6 @@
                 });
             }
 
-            // Müşteriler Listesini Doldur
             const custListDiv = document.getElementById('adminCustList');
             classListDiv.innerHTML = '';
             if (registeredCustomers.length === 0) {
@@ -656,7 +652,6 @@
                 });
             }
 
-            // İlanlar Listesini Doldur
             const adminList = document.getElementById('adminJobList');
             adminList.innerHTML = '';
             if (mockJobs.length === 0) {
