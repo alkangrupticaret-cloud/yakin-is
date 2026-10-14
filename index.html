@@ -23,7 +23,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-200 min-h-screen flex flex-col">
 
-    <!-- HEADER / NAV (Yönetici Butonu Tamamen Kaldırıldı, Sadece Size Özel Kısayol Var) -->
+    <!-- HEADER / NAV -->
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -352,8 +352,8 @@
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto">
+    <!-- FOOTER (TELEFONLAR İÇİN GİZLİ YÖNETİCİ TETİKLEYİCİSİ: Buraya 5 Kez Art Arda Dokunun) -->
+    <footer id="secretAdminTrigger" class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 mt-auto cursor-pointer select-none">
         <p>&copy; 2026 Yakın-İş | Küresel Tamir, Tadilat & Usta Hizmetleri Platformu</p>
     </footer>
 
@@ -590,12 +590,29 @@
             });
         }
 
-        // GİZLİ KLAVYE KISAYOLU İLE YÖNETİCİ GİRİŞİ (Ctrl + Shift + A)
+        // TELEFONLAR İÇİN DOKUNMA TETİKLEYİCİSİ (Footer'a 5 kez hızlıca tıklama)
+        let clickCount = 0;
+        document.getElementById('secretAdminTrigger').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 5) {
+                clickCount = 0;
+                const sifre = prompt("Yönetici Şifrenizi Girin:");
+                if (sifre === "admin123") {
+                    showAdminPanel();
+                } else if (sifre !== null) {
+                    alert("Hatalı şifre!");
+                }
+            }
+            // 2 saniye içinde tıklanmazsa sayacı sıfırla
+            setTimeout(() => { clickCount = 0; }, 2000);
+        });
+
+        // BİLGİSAYARLAR İÇİN KLAVYE KISAYOLU (Ctrl + Shift + A)
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'A') {
                 event.preventDefault();
                 const sifre = prompt("Gizli Yönetici Şifrenizi Girin:");
-                if (sifre === "admin123") { // Şifrenizi buradan değiştirebilirsiniz
+                if (sifre === "admin123") {
                     showAdminPanel();
                 } else if (sifre !== null) {
                     alert("Hatalı şifre!");
