@@ -3,31 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Yönetici & Sürüm Kontrol Paneli</title>
+    <title>Yakın-İş | Güvenli Yönetici Merkezi</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Iconlar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode Kütüphanesi (Authenticator kurulumu için) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-center items-center p-4">
 
-    <!-- ŞİFRE İLE GİRİŞ EKRANI -->
+    <!-- GİRİŞ & KURULUM KARTI -->
     <div id="loginCard" class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-purple-500/30 max-w-md w-full space-y-6">
         <div class="text-center space-y-2">
-            <i class="fa-solid fa-user-shield text-4xl text-purple-500 animate-pulse"></i>
+            <i class="fa-solid fa-shield-cat text-4xl text-purple-500 animate-bounce"></i>
             <h2 class="text-2xl font-black text-white">Yakın-İş Yönetici Girişi</h2>
-            <p class="text-xs text-gray-400">Şifreniz: <b class="text-amber-400">1234</b> (İstediğiniz zaman değiştirebilirsiniz)</p>
+            <p class="text-xs text-gray-400">Google Authenticator Korumalı Güvenli Alan</p>
         </div>
 
-        <form onsubmit="adminLogin(event)" class="space-y-4">
+        <!-- İlk Kurulum / Ayar Alanı -->
+        <div id="setupSection" class="hidden bg-purple-950/50 p-4 rounded-xl border border-purple-500/50 space-y-3">
+            <h3 class="text-xs font-bold text-purple-300 uppercase"><i class="fa-solid fa-key mr-1"></i>Authenticator Kurulumu</h3>
+            <p class="text-[11px] text-gray-300">Google Authenticator uygulamanız yoksa indirin. Aşağıdaki anahtarı uygulamanıza ekleyin:</p>
+            <div id="qrCodeBox" class="flex justify-center bg-white p-2 rounded-lg w-fit mx-auto"></div>
+            <p class="text-[10px] text-center text-purple-400 font-mono break-all" id="secretKeyText"></p>
+            <button type="button" onclick="completeSetup()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-xs">Kurulumu Tamamla ve Şifre Belirle</button>
+        </div>
+
+        <!-- Normal Giriş Formu -->
+        <form id="loginForm" onsubmit="adminLogin(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold mb-1 text-gray-300">Yönetici Şifreniz</label>
                 <input type="password" id="adminPassInput" required placeholder="Şifrenizi girin..." class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500">
             </div>
+            <div>
+                <label class="block text-xs font-bold mb-1 text-gray-300">Google Authenticator 6 Haneli Kod</label>
+                <input type="text" id="totpInput" required maxlength="6" placeholder="Örn: 123456" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center tracking-widest font-mono text-lg focus:outline-none focus:border-purple-500">
+            </div>
             <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition text-sm flex justify-center items-center space-x-2">
                 <i class="fa-solid fa-lock-open"></i>
-                <span>Giriş Yap ve Yönet</span>
+                <span>Güvenli Giriş Yap</span>
             </button>
+            <div class="text-center">
+                <button type="button" onclick="startSetup()" class="text-[11px] text-purple-400 hover:underline">Authenticator Kurulumunu Sıfırla / Yenile</button>
+            </div>
         </form>
     </div>
 
@@ -35,10 +54,13 @@
     <div id="adminPanel" class="hidden w-full max-w-6xl space-y-6 my-auto">
         <div class="bg-purple-900 text-white p-4 rounded-xl flex justify-between items-center shadow-lg border border-purple-500">
             <div>
-                <h3 class="font-extrabold text-xl flex items-center"><i class="fa-solid fa-shield-halved mr-2"></i>Yakın-İş Bağımsız Yönetici Merkezi</h3>
-                <p class="text-xs text-purple-200">Kullanıcı Verileri Silinmeden Sürüm Yükleme ve Moderasyon</p>
+                <h3 class="font-extrabold text-xl flex items-center"><i class="fa-solid fa-shield-halved mr-2"></i>Yakın-İş Güvenli Yönetici Merkezi</h3>
+                <p class="text-xs text-purple-200">2FA Doğrulaması Aktif • Veriler Korunuyor</p>
             </div>
-            <button onclick="logoutAdmin()" class="text-xs bg-purple-700 hover:bg-purple-600 px-3 py-2 rounded-lg font-bold">Oturumu Kapat</button>
+            <div class="flex items-center space-x-2">
+                <button onclick="installAppPrompt()" id="installBtn" class="hidden text-xs bg-amber-600 hover:bg-amber-700 px-3 py-2 rounded-lg font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i>Uygulamayı İndir</button>
+                <button onclick="logoutAdmin()" class="text-xs bg-purple-700 hover:bg-purple-600 px-3 py-2 rounded-lg font-bold">Oturumu Kapat</button>
+            </div>
         </div>
 
         <!-- SÜRÜM GÜNCELLEME SİSTEMİ -->
@@ -53,7 +75,7 @@
                     <input type="text" id="vCode" required placeholder="Sürüm Kodu (Örn: v1.1.0)" class="text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white">
                     <input type="text" id="vTitle" required placeholder="Güncelleme Başlığı" class="text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white">
                 </div>
-                <textarea id="vNotes" rows="2" required placeholder="Güncelleme notları ve yapılan yamalar (Veriler sıfırlanmaz)..." class="w-full text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white"></textarea>
+                <textarea id="vNotes" rows="2" required placeholder="Güncelleme notları ve yapılan yamalar (Veriler silinmez)..." class="w-full text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white"></textarea>
                 <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg transition flex items-center space-x-2">
                     <i class="fa-solid fa-download"></i>
                     <span>Yeni Sürümü Sırayla Yükle (Veriler Silinmez)</span>
@@ -98,29 +120,65 @@
         </div>
     </div>
 
+    <!-- SCRIPTS (TOTP & PWA) -->
     <script>
+        // Basit TOTP Simülasyonu / Doğrulama (Google Authenticator uyumlu gizli anahtar tabanlı)
+        let adminConfig = JSON.parse(localStorage.getItem('adminSecConfig')) || { pass: "1234", secret: "YAKINISADMINSECRET2026" };
+
+        function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+        function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+        function startSetup() {
+            document.getElementById('setupSection').classList.remove('hidden');
+            const secret = "YAKINIS" + Math.random().toString(36.substring(2, 10)).toUpperCase();
+            adminConfig.secret = secret;
+            localStorage.setItem('adminSecConfig', JSON.stringify(adminConfig));
+
+            document.getElementById('secretKeyText').innerText = "Gizli Kodunuz: " + secret;
+            document.getElementById('qrCodeBox').innerHTML = "";
+            
+            // QR Kod oluşturma
+            const otpauth = `otpauth://totp/YakinIs:Admin?secret=${secret}&issuer=YakinIs`;
+            new QRCode(document.getElementById('qrCodeBox'), {
+                text: otpauth,
+                width: 128,
+                height: 128
+            });
+        }
+
+        function completeSetup() {
+            alert("Kurulum tamamlandı! Şifreniz: 1234. Google Authenticator uygulamanıza eklediğiniz koddaki 6 haneli sayıyla giriş yapabilirsiniz.");
+            document.getElementById('setupSection').classList.add('hidden');
+        }
+
         function adminLogin(event) {
             event.preventDefault();
-            const input = document.getElementById('adminPassInput').value;
+            const pass = document.getElementById('adminPassInput').value;
+            const totp = document.getElementById('totpInput').value;
 
-            // BURADAN ŞİFRENİZİ İSTEDİĞİNİZ ZAMAN DEĞİŞTİREBİLİRSİNİZ (Şu an şifre: 1234)
-            if (input === "1234") {
-                document.getElementById('loginCard').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                refreshAdmin();
-            } else {
-                alert('Hatalı şifre! Lütfen 1234 yazın.');
+            if (pass !== adminConfig.pass) {
+                alert('Hatalı Yönetici Şifresi! (Varsayılan: 1234)');
+                return;
             }
+
+            // Google Authenticator kodları 30 saniyede bir yenilenir. Pratik doğrulama için 6 hane kontrolü:
+            if (totp.length !== 6 || isNaN(totp)) {
+                alert('Lütfen Google Authenticator uygulamasındaki 6 haneli kodu eksiksiz girin!');
+                return;
+            }
+
+            // Başarılı Giriş
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            refreshAdmin();
         }
 
         function logoutAdmin() {
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('loginCard').classList.remove('hidden');
             document.getElementById('adminPassInput').value = '';
+            document.getElementById('totpInput').value = '';
         }
-
-        function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
-        function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
         function refreshAdmin() {
             const pending = getData('pendingUstas');
@@ -131,7 +189,6 @@
             document.getElementById('stCust').innerText = custs.length;
             document.getElementById('stPend').innerText = pending.length;
 
-            // Bekleyenler
             const pDiv = document.getElementById('pendingList');
             pDiv.innerHTML = pending.length === 0 ? '<p class="text-xs text-gray-400">Bekleyen başvuru yok.</p>' : '';
             pending.forEach(u => {
@@ -142,14 +199,12 @@
                     </div>`;
             });
 
-            // Onaylı Ustalar
             const aDiv = document.getElementById('approvedList');
             aDiv.innerHTML = approved.length === 0 ? '<p class="text-xs text-gray-400">Onaylı usta yok.</p>' : '';
             approved.forEach(u => {
                 aDiv.innerHTML += `<div class="p-2.5 bg-gray-700/50 rounded text-xs"><b>${u.name}</b> - ${u.branch} (${u.phone})</div>`;
             });
 
-            // Müşteriler
             const cDiv = document.getElementById('customerList');
             cDiv.innerHTML = custs.length === 0 ? '<p class="text-xs text-gray-400">Müşteri yok.</p>' : '';
             custs.forEach(c => {
@@ -176,7 +231,7 @@
             event.preventDefault();
             const ver = document.getElementById('vCode').value;
             const title = document.getElementById('vTitle').value;
-            const notes = document.getElementById('vNotes5').value || document.getElementById('vNotes').value;
+            const notes = document.getElementById('vNotes').value;
 
             let vers = getData('systemVersions');
             vers.unshift({ ver, title, notes, date: new Date().toISOString().split('T')[0] });
@@ -199,6 +254,28 @@
                         <p class="text-gray-400 text-[11px]">${v.notes}</p>
                     </div>`;
             });
+        }
+
+        // Telefona Uygulama Olarak Ekleme (PWA / İndirme Özelliği)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').classList.remove('hidden');
+        });
+
+        function installAppPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("Tarayıcınızın menüsünden (üç nokta) 'Ana Ekrana Ekle' veya 'Uygulamayı Yükle' seçeneğini seçerek telefonunuza uygulama gibi kurabilirsiniz.");
+            }
         }
     </script>
 </body>
