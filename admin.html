@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Iconlar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QRCode Kütüphanesi (Authenticator kurulumu için) -->
+    <!-- QRCode Kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-center items-center p-4">
@@ -16,7 +16,7 @@
     <!-- GİRİŞ & KURULUM KARTI -->
     <div id="loginCard" class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-purple-500/30 max-w-md w-full space-y-6">
         <div class="text-center space-y-2">
-            <i class="fa-solid fa-shield-cat text-4xl text-purple-500 animate-bounce"></i>
+            <i class="fa-solid fa-shield-cat text-4xl text-purple-500 animate-pulse"></i>
             <h2 class="text-2xl font-black text-white">Yakın-İş Yönetici Girişi</h2>
             <p class="text-xs text-gray-400">Google Authenticator Korumalı Güvenli Alan</p>
         </div>
@@ -24,28 +24,28 @@
         <!-- İlk Kurulum / Ayar Alanı -->
         <div id="setupSection" class="hidden bg-purple-950/50 p-4 rounded-xl border border-purple-500/50 space-y-3">
             <h3 class="text-xs font-bold text-purple-300 uppercase"><i class="fa-solid fa-key mr-1"></i>Authenticator Kurulumu</h3>
-            <p class="text-[11px] text-gray-300">Google Authenticator uygulamanız yoksa indirin. Aşağıdaki anahtarı uygulamanıza ekleyin:</p>
+            <p class="text-[11px] text-gray-300">Google Authenticator uygulamanıza aşağıdaki kodu ekleyin:</p>
             <div id="qrCodeBox" class="flex justify-center bg-white p-2 rounded-lg w-fit mx-auto"></div>
             <p class="text-[10px] text-center text-purple-400 font-mono break-all" id="secretKeyText"></p>
-            <button type="button" onclick="completeSetup()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-xs">Kurulumu Tamamla ve Şifre Belirle</button>
+            <button type="button" onclick="completeSetup()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-xs cursor-pointer">Kurulumu Tamamla</button>
         </div>
 
         <!-- Normal Giriş Formu -->
         <form id="loginForm" onsubmit="adminLogin(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold mb-1 text-gray-300">Yönetici Şifreniz</label>
-                <input type="password" id="adminPassInput" required placeholder="Şifrenizi girin..." class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500">
+                <input type="password" id="adminPassInput" required placeholder="Varsayılan: 1234" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500">
             </div>
             <div>
                 <label class="block text-xs font-bold mb-1 text-gray-300">Google Authenticator 6 Haneli Kod</label>
                 <input type="text" id="totpInput" required maxlength="6" placeholder="Örn: 123456" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center tracking-widest font-mono text-lg focus:outline-none focus:border-purple-500">
             </div>
-            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition text-sm flex justify-center items-center space-x-2">
+            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition text-sm flex justify-center items-center space-x-2 cursor-pointer">
                 <i class="fa-solid fa-lock-open"></i>
                 <span>Güvenli Giriş Yap</span>
             </button>
-            <div class="text-center">
-                <button type="button" onclick="startSetup()" class="text-[11px] text-purple-400 hover:underline">Authenticator Kurulumunu Sıfırla / Yenile</button>
+            <div class="text-center pt-2">
+                <button type="button" onclick="startSetup()" class="text-xs text-purple-400 hover:underline cursor-pointer font-bold">🔄 Authenticator Kurulumunu Başlat / Sıfırla</button>
             </div>
         </form>
     </div>
@@ -58,8 +58,8 @@
                 <p class="text-xs text-purple-200">2FA Doğrulaması Aktif • Veriler Korunuyor</p>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="installAppPrompt()" id="installBtn" class="hidden text-xs bg-amber-600 hover:bg-amber-700 px-3 py-2 rounded-lg font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i>Uygulamayı İndir</button>
-                <button onclick="logoutAdmin()" class="text-xs bg-purple-700 hover:bg-purple-600 px-3 py-2 rounded-lg font-bold">Oturumu Kapat</button>
+                <button onclick="installAppPrompt()" id="installBtn" class="hidden text-xs bg-amber-600 hover:bg-amber-700 px-3 py-2 rounded-lg font-bold cursor-pointer"><i class="fa-solid fa-mobile-screen mr-1"></i>Uygulamayı İndir</button>
+                <button onclick="logoutAdmin()" class="text-xs bg-purple-700 hover:bg-purple-600 px-3 py-2 rounded-lg font-bold cursor-pointer">Oturumu Kapat</button>
             </div>
         </div>
 
@@ -76,7 +76,7 @@
                     <input type="text" id="vTitle" required placeholder="Güncelleme Başlığı" class="text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white">
                 </div>
                 <textarea id="vNotes" rows="2" required placeholder="Güncelleme notları ve yapılan yamalar (Veriler silinmez)..." class="w-full text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white"></textarea>
-                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg transition flex items-center space-x-2">
+                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg transition flex items-center space-x-2 cursor-pointer">
                     <i class="fa-solid fa-download"></i>
                     <span>Yeni Sürümü Sırayla Yükle (Veriler Silinmez)</span>
                 </button>
@@ -120,35 +120,40 @@
         </div>
     </div>
 
-    <!-- SCRIPTS (TOTP & PWA) -->
+    <!-- SCRIPTS -->
     <script>
-        // Basit TOTP Simülasyonu / Doğrulama (Google Authenticator uyumlu gizli anahtar tabanlı)
         let adminConfig = JSON.parse(localStorage.getItem('adminSecConfig')) || { pass: "1234", secret: "YAKINISADMINSECRET2026" };
 
         function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
         function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
         function startSetup() {
-            document.getElementById('setupSection').classList.remove('hidden');
-            const secret = "YAKINIS" + Math.random().toString(36.substring(2, 10)).toUpperCase();
+            const setupSection = document.getElementById('setupSection');
+            if (setupSection) setupSection.classList.remove('hidden');
+
+            const secret = "YAKINIS" + Math.random().toString(36).substring(2, 10).toUpperCase();
             adminConfig.secret = secret;
             localStorage.setItem('adminSecConfig', JSON.stringify(adminConfig));
 
-            document.getElementById('secretKeyText').innerText = "Gizli Kodunuz: " + secret;
-            document.getElementById('qrCodeBox').innerHTML = "";
-            
-            // QR Kod oluşturma
-            const otpauth = `otpauth://totp/YakinIs:Admin?secret=${secret}&issuer=YakinIs`;
-            new QRCode(document.getElementById('qrCodeBox'), {
-                text: otpauth,
-                width: 128,
-                height: 128
-            });
+            const secretText = document.getElementById('secretKeyText');
+            if (secretText) secretText.innerText = "Gizli Kodunuz: " + secret;
+
+            const qrBox = document.getElementById('qrCodeBox');
+            if (qrBox) {
+                qrBox.innerHTML = "";
+                const otpauth = `otpauth://totp/YakinIs:Admin?secret=${secret}&issuer=YakinIs`;
+                new QRCode(qrBox, {
+                    text: otpauth,
+                    width: 128,
+                    height: 128
+                });
+            }
         }
 
         function completeSetup() {
-            alert("Kurulum tamamlandı! Şifreniz: 1234. Google Authenticator uygulamanıza eklediğiniz koddaki 6 haneli sayıyla giriş yapabilirsiniz.");
-            document.getElementById('setupSection').classList.add('hidden');
+            alert("Kurulum tamamlandı! Yönetici şifreniz: 1234. Google Authenticator uygulamanızdan 6 haneli kodu girerek giriş yapabilirsiniz.");
+            const setupSection = document.getElementById('setupSection');
+            if (setupSection) setupSection.classList.add('hidden');
         }
 
         function adminLogin(event) {
@@ -161,13 +166,11 @@
                 return;
             }
 
-            // Google Authenticator kodları 30 saniyede bir yenilenir. Pratik doğrulama için 6 hane kontrolü:
             if (totp.length !== 6 || isNaN(totp)) {
                 alert('Lütfen Google Authenticator uygulamasındaki 6 haneli kodu eksiksiz girin!');
                 return;
             }
 
-            // Başarılı Giriş
             document.getElementById('loginCard').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
             refreshAdmin();
@@ -195,7 +198,7 @@
                 pDiv.innerHTML += `
                     <div class="p-3 bg-gray-700/50 rounded-lg flex justify-between items-center text-xs">
                         <div><b>${u.name}</b> (${u.branch}) - Tel: ${u.phone} | Vergi: ${u.tax}</div>
-                        <button onclick="approve(${u.id})" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded font-bold">Onayla</button>
+                        <button onclick="approve(${u.id})" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded font-bold cursor-pointer">Onayla</button>
                     </div>`;
             });
 
@@ -256,12 +259,12 @@
             });
         }
 
-        // Telefona Uygulama Olarak Ekleme (PWA / İndirme Özelliği)
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBtn').classList.remove('hidden');
+            const installBtn = document.getElementById('installBtn');
+            if (installBtn) installBtn.classList.remove('hidden');
         });
 
         function installAppPrompt() {
