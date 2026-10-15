@@ -24,9 +24,9 @@
         <!-- İlk Kurulum / Ayar Alanı -->
         <div id="setupSection" class="hidden bg-purple-950/50 p-4 rounded-xl border border-purple-500/50 space-y-3">
             <h3 class="text-xs font-bold text-purple-300 uppercase"><i class="fa-solid fa-key mr-1"></i>Authenticator Kurulumu</h3>
-            <p class="text-[11px] text-gray-300">Google Authenticator uygulamanıza aşağıdaki kodu ekleyin:</p>
+            <p class="text-[11px] text-gray-300">Google Authenticator uygulamanıza aşağıdaki QR kodu okutun:</p>
             <div id="qrCodeBox" class="flex justify-center bg-white p-2 rounded-lg w-fit mx-auto"></div>
-            <p class="text-[10px] text-center text-purple-400 font-mono break-all" id="secretKeyText"></p>
+            <p class="text-[10px] text-center text-purple-400 font-mono break-all bg-gray-900 p-2 rounded select-all" id="secretKeyText"></p>
             <button type="button" onclick="completeSetup()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-xs cursor-pointer">Kurulumu Tamamla</button>
         </div>
 
@@ -75,13 +75,12 @@
                     <input type="text" id="vCode" required placeholder="Sürüm Kodu (Örn: v1.1.0)" class="text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white">
                     <input type="text" id="vTitle" required placeholder="Güncelleme Başlığı" class="text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white">
                 </div>
-                <textarea id="vNotes" rows="2" required placeholder="Güncelleme notları ve yapılan yamalar (Veriler silinmez)..." class="w-full text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white"></textarea>
+                <textarea id="vNotes" rows="2" required placeholder="Güncelleme notları (Veriler silinmez)..." class="w-full text-xs p-2.5 rounded bg-gray-800 border border-gray-600 text-white"></textarea>
                 <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg transition flex items-center space-x-2 cursor-pointer">
                     <i class="fa-solid fa-download"></i>
                     <span>Yeni Sürümü Sırayla Yükle (Veriler Silinmez)</span>
                 </button>
             </form>
-
             <div id="verList" class="space-y-2 max-h-32 overflow-y-auto"></div>
         </div>
 
@@ -122,21 +121,30 @@
 
     <!-- SCRIPTS -->
     <script>
-        let adminConfig = JSON.parse(localStorage.getItem('adminSecConfig')) || { pass: "1234", secret: "YAKINISADMINSECRET2026" };
+        let adminConfig = JSON.parse(localStorage.getItem('adminSecConfig')) || { pass: "1234", secret: "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP" };
 
         function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
         function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+        function generateSecretKey() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+            let secret = "";
+            for (let i = 0; i < 32; i++) {
+                secret += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return secret;
+        }
 
         function startSetup() {
             const setupSection = document.getElementById('setupSection');
             if (setupSection) setupSection.classList.remove('hidden');
 
-            const secret = "YAKINIS" + Math.random().toString(36).substring(2, 10).toUpperCase();
+            const secret = generateSecretKey();
             adminConfig.secret = secret;
             localStorage.setItem('adminSecConfig', JSON.stringify(adminConfig));
 
             const secretText = document.getElementById('secretKeyText');
-            if (secretText) secretText.innerText = "Gizli Kodunuz: " + secret;
+            if (secretText) secretText.innerText = "Gizli Kod: " + secret;
 
             const qrBox = document.getElementById('qrCodeBox');
             if (qrBox) {
@@ -144,8 +152,8 @@
                 const otpauth = `otpauth://totp/YakinIs:Admin?secret=${secret}&issuer=YakinIs`;
                 new QRCode(qrBox, {
                     text: otpauth,
-                    width: 128,
-                    height: 128
+                    width: 150,
+                    height: 150
                 });
             }
         }
@@ -277,7 +285,7 @@
                     deferredPrompt = null;
                 });
             } else {
-                alert("Tarayıcınızın menüsünden (üç nokta) 'Ana Ekrana Ekle' veya 'Uygulamayı Yükle' seçeneğini seçerek telefonunuza uygulama gibi kurabilirsiniz.");
+                alert("Tarayıcınızın menüsünden (üç nokta) 'Ana Ekrana Ekle' seçeneğini seçerek telefonunuza uygulama gibi kurabilirsiniz.");
             }
         }
     </script>
