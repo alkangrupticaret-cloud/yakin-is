@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Küresel Usta, Tamir & Tadilat Hizmetleri</title>
+    <title>Yakın-İş | Küresel Usta & Hizmet Platformu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,16 +12,14 @@
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid font-bold text-2xl text-amber-600 fa-wrench"></i>
+                <i class="fa-solid fa-wrench text-2xl text-amber-600"></i>
                 <h1 class="text-2xl font-bold text-amber-600">Yakın-İş</h1>
-                <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Secure Pro</span>
             </div>
             <button type="button" onclick="installUserApp()" id="userInstallBtn" class="hidden text-xs bg-amber-600 text-white px-3 py-1.5 rounded-lg font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i>Uygulamayı İndir</button>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-8">
-        <!-- GİRİŞ & KAYIT -->
         <div id="authContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Usta Portalı -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-amber-600">
@@ -30,13 +28,13 @@
                     <button type="button" onclick="switchMode('usta', 'login')" id="btnUstaLoginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white shadow">Giriş Yap</button>
                     <button type="button" onclick="switchMode('usta', 'register')" id="btnUstaRegTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500">Kaydol</button>
                 </div>
-                <!-- Usta Giriş -->
+                
                 <form id="ustaLoginForm" onsubmit="handleAuth(event, 'usta', 'login')" class="space-y-3">
                     <input type="email" id="ustaLoginEmail" required placeholder="E-Posta Adresi" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <input type="tel" id="ustaLoginPhone" required placeholder="Cep Numarası" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <button type="submit" class="w-full bg-amber-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş</button>
+                    <button type="submit" class="w-full bg-amber-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş Yap</button>
                 </form>
-                <!-- Usta Kayıt -->
+
                 <form id="ustaRegForm" onsubmit="handleAuth(event, 'usta', 'register')" class="space-y-3 hidden">
                     <input type="text" id="ustaRegName" required placeholder="Adı Soyadı" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <input type="number" id="ustaRegAge" required placeholder="Yaş" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
@@ -61,16 +59,15 @@
                     <button type="button" onclick="switchMode('cust', 'login')" id="btnCustLoginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white shadow">Giriş Yap</button>
                     <button type="button" onclick="switchMode('cust', 'register')" id="btnCustRegTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500">Kaydol</button>
                 </div>
-                <!-- Müşteri Giriş -->
+
                 <form id="custLoginForm" onsubmit="handleAuth(event, 'customer', 'login')" class="space-y-3">
                     <input type="email" id="custLoginEmail" required placeholder="E-Posta Adresi" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <input type="tel" id="custLoginPhone" required placeholder="Cep Numarası" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş</button>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş Yap</button>
                 </form>
-                <!-- Müşteri Kayıt -->
+
                 <form id="custRegForm" onsubmit="handleAuth(event, 'customer', 'register')" class="space-y-3 hidden">
                     <input type="text" id="custRegName" required placeholder="Adı Soyadı" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="number" id="custRegAge" required placeholder="Yaş" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <input type="email" id="custRegEmail" required placeholder="E-Posta" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <input type="tel" id="custRegPhone" required placeholder="Telefon" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
                     <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg text-sm">Kayıt Ol</button>
@@ -78,61 +75,49 @@
             </div>
         </div>
 
-        <!-- 6 HANELİ DOĞRULAMA MODALI (GİZLİ BAŞLANGIÇTA) -->
+        <!-- 6 Haneli Doğrulama Modalı -->
         <div id="otpModal" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-4">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl max-w-sm w-full space-y-4">
-                <h3 class="text-lg font-bold text-center"><i class="fa-solid fa-shield-halved text-amber-600 mr-2"></i>SMS / E-Posta Doğrulama</h3>
-                <p class="text-xs text-center text-gray-500">Güvenliğiniz için telefonunuza/e-postanıza gönderilen simüle edilmiş 6 haneli kodu girin:</p>
-                <div class="text-center font-mono text-xl bg-amber-100 text-amber-800 dark:bg-amber-900/40 p-2 rounded" id="otpSimBox">Kod: 482910</div>
-                <input type="text" id="otpInputCode" maxlength="6" placeholder="6 haneli kod" class="w-full text-center tracking-widest text-lg p-3 rounded border dark:bg-gray-700 dark:text-white">
-                <button type="button" onclick="verifyOtpCode()" class="w-full bg-green-600 text-white py-2.5 rounded-lg font-bold text-sm">Kodu Onayla ve Giriş Yap</button>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl max-w-sm w-full space-y-4 text-center">
+                <h3 class="text-lg font-bold"><i class="fa-solid fa-shield-halved text-amber-600 mr-2"></i>Doğrulama Kodu</h3>
+                <p class="text-xs text-gray-500">Aşağıdaki 6 haneli kodu kutucuğa girin:</p>
+                <div class="text-xl font-mono font-bold bg-amber-100 text-amber-900 p-2 rounded" id="otpSimBox">Kod: 123456</div>
+                <input type="text" id="otpInputCode" maxlength="6" placeholder="6 haneli kod" class="w-full text-center text-lg p-2.5 rounded border dark:bg-gray-700 dark:text-white">
+                <button type="button" onclick="verifyOtpCode()" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-lg text-sm">Doğrula ve Giriş Yap</button>
             </div>
         </div>
 
-        <!-- MÜŞTERİ PANELİ -->
-        <div id="customerDashboard" class="hidden space-y-6">
-            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex justify-between items-center">
-                <h3 class="font-bold text-blue-700">Müşteri Paneli Aktif</h3>
-                <button type="button" onclick="logout('customer')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg">Çıkış Yap</button>
+        <!-- Paneller -->
+        <div id="customerDashboard" class="hidden space-y-4">
+            <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-xl flex justify-between items-center">
+                <h3 class="font-bold text-blue-800 dark:text-blue-200">Müşteri Paneline Hoş Geldiniz</h3>
+                <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">Çıkış Yap</button>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-xl font-bold mb-4 text-blue-600">Yeni İlan Oluştur</h3>
-                <form onsubmit="submitJob(event)" class="space-y-4">
-                    <input type="text" id="jobTitle" required placeholder="İş Başlığı" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <select id="jobCategory" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                        <option value="Tesisat">Tesisat</option>
-                        <option value="Elektrik">Elektrik</option>
-                        <option value="Boya">Boya</option>
-                        <option value="Marangoz">Marangoz</option>
-                    </select>
-                    <textarea id="jobDesc" rows="3" required placeholder="Açıklama" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white"></textarea>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="jobCity" required value="Bursa" class="text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                        <input type="text" id="jobDistrict" required placeholder="İlçe" class="text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg">İlanı Yayınla</button>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow space-y-4">
+                <h4 class="font-bold text-lg text-blue-600">İlan Ver</h4>
+                <form onsubmit="submitJob(event)" class="space-y-3">
+                    <input type="text" id="jobTitle" required placeholder="İlan Başlığı (Örn: Musluk Tamiri)" class="w-full text-sm p-2.5 rounded border dark:bg-gray-700 dark:text-white">
+                    <textarea id="jobDesc" required placeholder="İlan Açıklaması" class="w-full text-sm p-2.5 rounded border dark:bg-gray-700 dark:text-white"></textarea>
+                    <button type="submit" class="bg-blue-600 text-white font-bold px-4 py-2 rounded text-sm">İlanı Yayınla</button>
                 </form>
             </div>
         </div>
 
-        <!-- USTA PANELİ -->
-        <div id="ustaDashboard" class="hidden space-y-6">
-            <div class="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl flex justify-between items-center">
-                <h3 class="font-bold text-amber-700">Usta Paneli Aktif</h3>
-                <button type="button" onclick="logout('usta')" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg">Çıkış Yap</button>
+        <div id="ustaDashboard" class="hidden space-y-4">
+            <div class="bg-amber-100 dark:bg-amber-900/30 p-4 rounded-xl flex justify-between items-center">
+                <h3 class="font-bold text-amber-800 dark:text-amber-200">Usta Paneline Hoş Geldiniz</h3>
+                <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">Çıkış Yap</button>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
-                <h3 class="text-xl font-bold text-amber-600">Bölgenizdeki İlanlar</h3>
-                <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow space-y-4">
+                <h4 class="font-bold text-lg text-amber-600">Mevcut İlanlar</h4>
+                <div id="jobList" class="space-y-2"></div>
             </div>
         </div>
     </main>
 
     <script>
-        let pendingUstas = JSON.parse(localStorage.getItem('pendingUstas')) || [];
-        let approvedUstas = JSON.parse(localStorage.getItem('approvedUstas')) || [];
-        let registeredCustomers = JSON.parse(localStorage.getItem('registeredCustomers')) || [];
-        let mockJobs = JSON.parse(localStorage.getItem('mockJobs')) || [];
+        function getData(k) { return JSON.parse(localStorage.getItem(k)) || []; }
+        function setData(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
         let tempAuthData = null;
 
         function switchMode(type, mode) {
@@ -145,11 +130,12 @@
             }
         }
 
-        function handleAuth(event, type, action) {
-            event.preventDefault();
+        function handleAuth(e, type, action) {
+            e.preventDefault();
             if(action === 'register') {
                 if(type === 'usta') {
-                    pendingUstas.push({
+                    let pending = getData('pendingUstas');
+                    pending.push({
                         id: Date.now(),
                         name: document.getElementById('ustaRegName').value,
                         age: document.getElementById('ustaRegAge').value,
@@ -158,101 +144,86 @@
                         tax: document.getElementById('ustaRegTax').value,
                         branch: document.getElementById('ustaRegBranch').value
                     });
-                    localStorage.setItem('pendingUstas', JSON.stringify(pendingUstas));
-                    alert('Kayıt başvurunuz alındı. Yönetici onayından sonra giriş yapabilirsiniz.');
+                    setData('pendingUstas', pending);
+                    alert('Kayıt başvurunuz alındı! Yönetici panelinden onaylandıktan sonra giriş yapabilirsiniz.');
                     document.getElementById('ustaRegForm').reset();
                     switchMode('usta', 'login');
                 } else {
-                    registeredCustomers.push({
+                    let custs = getData('registeredCustomers');
+                    custs.push({
                         id: Date.now(),
                         name: document.getElementById('custRegName').value,
                         email: document.getElementById('custRegEmail').value,
-                        phone: document.getElementById('custRegPhone').value,
-                        myJobs: []
+                        phone: document.getElementById('custRegPhone').value
                     });
-                    localStorage.setItem('registeredCustomers', JSON.stringify(registeredCustomers));
-                    alert('Müşteri kaydı başarılı! Giriş yapabilirsiniz.');
+                    setData('registeredCustomers', custs);
+                    alert('Müşteri kaydınız tamamlandı! Şimdi giriş yapabilirsiniz.');
                     document.getElementById('custRegForm').reset();
                     switchMode('cust', 'login');
                 }
             } else {
-                // Giriş için 6 haneli kod üretimi
                 const email = type === 'usta' ? document.getElementById('ustaLoginEmail').value : document.getElementById('custLoginEmail').value;
-                const phone = type === 'usta' ? document.getElementById('ustaLoginPhone').value : document.getElementById('custLoginPhone').value;
-
+                
                 if(type === 'usta') {
-                    const u = approvedUstas.find(x => x.email === email);
-                    if(!u) { alert('Onaylı usta kaydı bulunamadı!'); return; }
+                    const approved = getData('approvedUstas');
+                    const found = approved.find(x => x.email === email);
+                    if(!found) { alert('Onaylanmış usta kaydı bulunamadı! Lütfen önce kaydolup yöneticiden onay bekleyin.'); return; }
                 } else {
-                    const c = registeredCustomers.find(x => x.email === email);
-                    if(!c) { alert('Müşteri kaydı bulunamadı!'); return; }
+                    const custs = getData('registeredCustomers');
+                    const found = custs.find(x => x.email === email);
+                    if(!found) { alert('Kayıtlı müşteri bulunamadı! Lütfen önce kaydolun.'); return; }
                 }
 
-                tempAuthData = { type, email, phone };
+                tempAuthData = type;
                 const randCode = Math.floor(100000 + Math.random() * 900000);
-                localStorage.setItem('simulatedOtp', randCode);
-                document.getElementById('otpSimBox').innerText = "Simüle Edilen Kod: " + randCode;
+                localStorage.setItem('simOtp', randCode);
+                document.getElementById('otpSimBox').innerText = "Kod: " + randCode;
                 document.getElementById('otpModal').classList.remove('hidden');
             }
         }
 
         function verifyOtpCode() {
-            const entered = document.getElementById('otpInputCode').value;
-            const actual = localStorage.getItem('simulatedOtp');
-            if(entered !== actual) { alert('Hatalı 6 haneli kod!'); return; }
+            const input = document.getElementById('otpInputCode').value;
+            const real = localStorage.getItem('simOtp');
+            if(input !== real) { alert('Hatalı 6 haneli kod!'); return; }
 
             document.getElementById('otpModal').classList.add('hidden');
             document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('otpInputCode').value = '';
-
-            if(tempAuthData.type === 'usta') {
+            
+            if(tempAuthData === 'usta') {
                 document.getElementById('ustaDashboard').classList.remove('hidden');
-                loadJobsForUsta();
+                renderJobs();
             } else {
                 document.getElementById('customerDashboard').classList.remove('hidden');
             }
-            alert('Doğrulama başarılı!');
         }
 
-        function logout(type) {
+        function logout() {
             document.getElementById('authContainer').classList.remove('hidden');
             document.getElementById('ustaDashboard').classList.add('hidden');
             document.getElementById('customerDashboard').classList.add('hidden');
         }
 
-        function submitJob(event) {
-            event.preventDefault();
-            const job = {
+        function submitJob(e) {
+            e.preventDefault();
+            let jobs = getData('systemJobs');
+            jobs.unshift({
                 id: Date.now(),
                 title: document.getElementById('jobTitle').value,
-                category: document.getElementById('jobCategory').value,
-                desc: document.getElementById('jobDesc').value,
-                city: document.getElementById('jobCity').value,
-                district: document.getElementById('jobDistrict').value
-            };
-            mockJobs.unshift(job);
-            localStorage.setItem('mockJobs', JSON.stringify(mockJobs));
-            alert('İlan başarıyla yayınlandı!');
-            event.target.reset();
-        }
-
-        function loadJobsForUsta() {
-            const list = document.getElementById('jobList');
-            list.innerHTML = mockJobs.length === 0 ? '<p class="text-xs text-gray-500">Aktif ilan yok.</p>' : '';
-            mockJobs.forEach(j => {
-                list.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700 text-xs"><b>${j.title}</b> (${j.city}/${j.district})<br>${j.desc}</div>`;
+                desc: document.getElementById('jobDesc').value
             });
+            setData('systemJobs', jobs);
+            alert('İlan yayınlandı!');
+            e.target.reset();
         }
 
-        let deferredUserPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredUserPrompt = e;
-            document.getElementById('userInstallBtn').classList.remove('hidden');
-        });
-        function installUserApp() {
-            if(deferredUserPrompt) { deferredUserPrompt.prompt(); deferredUserPrompt = null; }
-            else { alert("Menüden 'Ana Ekrana Ekle' seçeneğiyle yükleyebilirsiniz."); }
+        function renderJobs() {
+            const jobs = getData('systemJobs');
+            const box = document.getElementById('jobList');
+            box.innerHTML = jobs.length === 0 ? '<p class="text-xs text-gray-400">Henüz ilan yok.</p>' : '';
+            jobs.forEach(j => {
+                box.innerHTML += `<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded text-xs"><b>${j.title}</b><p>${j.desc}</p></div>`;
+            });
         }
     </script>
 </body>
