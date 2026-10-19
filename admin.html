@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-sans">
 
@@ -29,7 +31,7 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Müşteriler</p>
-                    <h3 id="stat-customers" class="text-xl font-bold">128</h3>
+                    <h3 id="stat-customers" class="text-xl font-bold">...</h3>
                 </div>
             </div>
 
@@ -39,7 +41,7 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Usta</p>
-                    <h3 id="stat-craftsmen" class="text-xl font-bold">45</h3>
+                    <h3 id="stat-craftsmen" class="text-xl font-bold">...</h3>
                 </div>
             </div>
 
@@ -49,7 +51,7 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Onay Bekleyen Ustalar</p>
-                    <h3 id="stat-pending" class="text-xl font-bold text-orange-500">3</h3>
+                    <h3 id="stat-pending" class="text-xl font-bold text-orange-500">...</h3>
                 </div>
             </div>
 
@@ -59,7 +61,7 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Yorum</p>
-                    <h3 id="stat-reviews" class="text-xl font-bold">92</h3>
+                    <h3 id="stat-reviews" class="text-xl font-bold">...</h3>
                 </div>
             </div>
         </div>
@@ -79,34 +81,13 @@
                         <tr class="border-b dark:border-gray-700 text-xs text-gray-400 uppercase">
                             <th class="p-3">Usta Adı / Meslek</th>
                             <th class="p-3">İletişim</th>
-                            <th class="p-3">Belge Statusü</th>
+                            <th class="p-3">Belge Statüsü</th>
                             <th class="p-3 text-right">İşlem</th>
                         </tr>
                     </thead>
                     <tbody id="pending-craftsmen-list" class="divide-y dark:divide-gray-700">
                         <tr>
-                            <td class="p-3">
-                                <div class="font-bold">Ahmet Yılmaz</div>
-                                <div class="text-xs text-gray-400">Elektrik Tesisatçısı</div>
-                            </td>
-                            <td class="p-3 text-xs">ahmet@gmail.com<br>0532 000 00 00</td>
-                            <td class="p-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Kimlik Doğrulandı</span></td>
-                            <td class="p-3 text-right space-x-1">
-                                <button onclick="alert('Usta onaylandı!')" class="px-3 py-1 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700">Onayla</button>
-                                <button onclick="alert('Usta reddedildi!')" class="px-3 py-1 bg-rose-600 text-white rounded-md text-xs font-semibold hover:bg-rose-700">Reddet</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="p-3">
-                                <div class="font-bold">Mehmet Kaya</div>
-                                <div class="text-xs text-gray-400">Oto Tamircisi</div>
-                            </td>
-                            <td class="p-3 text-xs">mehmet@gmail.com<br>0505 111 22 33</td>
-                            <td class="p-3"><span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Ustalık Belgesi Yüklendi</span></td>
-                            <td class="p-3 text-right space-x-1">
-                                <button onclick="alert('Usta onaylandı!')" class="px-3 py-1 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700">Onayla</button>
-                                <button onclick="alert('Usta reddedildi!')" class="px-3 py-1 bg-rose-600 text-white rounded-md text-xs font-semibold hover:bg-rose-700">Reddet</button>
-                            </td>
+                            <td colspan="4" class="p-4 text-center text-gray-400">Veriler Supabase'den yükleniyor...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -119,36 +100,8 @@
                 <i class="fa-solid fa-star text-amber-400"></i> Son Usta Yorumları & Değerlendirmeler
             </h2>
 
-            <div class="space-y-3">
-                <!-- Yorum Kartı 1 -->
-                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600 flex justify-between items-start">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-sm">Ali K.</span>
-                            <span class="text-xs text-gray-400">➡️ Usta: Ahmet Yılmaz</span>
-                            <div class="text-amber-400 text-xs">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">"Zamanında geldi, tesisat problemini hemen çözdü. Çok teşekkürler."</p>
-                    </div>
-                    <button onclick="alert('Yorum silindi/gizlendi')" class="text-xs text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i> Sil</button>
-                </div>
-
-                <!-- Yorum Kartı 2 -->
-                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600 flex justify-between items-start">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-sm">Selin T.</span>
-                            <span class="text-xs text-gray-400">➡️ Usta: Mehmet Kaya</span>
-                            <div class="text-amber-400 text-xs">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">"İşçilik güzeldi ancak biraz geç geldi."</p>
-                    </div>
-                    <button onclick="alert('Yorum silindi/gizlendi')" class="text-xs text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i> Sil</button>
-                </div>
+            <div id="reviews-list" class="space-y-3">
+                <p class="text-xs text-gray-400">Yorumlar yükleniyor...</p>
             </div>
         </div>
 
@@ -161,6 +114,62 @@
       </button>
     </div>
 
+    <!-- SUPABASE VE CANLI VERİ ENTEGRASYONU -->
+    <script>
+      // 1. SUPABASE BİLGİLERİNİZİ BURAYA EKLENİZ:
+      const SUPABASE_URL = 'BURAYA_SUPABASE_URL_YAZIN';
+      const SUPABASE_ANON_KEY = 'BURAYA_SUPABASE_ANON_KEY_YAZIN';
+
+      const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      async function loadRealData() {
+        try {
+          // Tablo adlarınızı veritabanınıza göre güncelleyin (örn: profiles, craftsmen, reviews)
+          const { count: customerCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'customer');
+          const { count: craftsmanCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'craftsman');
+          const { count: pendingCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('is_approved', false);
+          const { count: reviewCount } = await _supabase.from('reviews').select('*', { count: 'exact', head: true });
+
+          document.getElementById('stat-customers').innerText = customerCount || 0;
+          document.getElementById('stat-craftsmen').innerText = craftsmanCount || 0;
+          document.getElementById('stat-pending').innerText = pendingCount || 0;
+          document.getElementById('stat-reviews').innerText = reviewCount || 0;
+
+          // Onay bekleyen ustaları çekme
+          const { data: pendingCraftsmen } = await _supabase.from('profiles').select('*').eq('role', 'craftsman').eq('is_approved', false);
+          const pendingList = document.getElementById('pending-craftsmen-list');
+
+          if (pendingCraftsmen && pendingCraftsmen.length > 0) {
+            pendingList.innerHTML = '';
+            pendingCraftsmen.forEach(item => {
+              pendingList.innerHTML += `
+                <tr>
+                  <td class="p-3"><div class="font-bold">${item.full_name || 'İsimsiz'}</div><div class="text-xs text-gray-400">${item.category || 'Belirtilmedi'}</div></td>
+                  <td class="p-3 text-xs">${item.email || ''}<br>${item.phone || ''}</td>
+                  <td class="p-3"><span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Onay Bekliyor</span></td>
+                  <td class="p-3 text-right space-x-1">
+                    <button onclick="approveCraftsman('${item.id}', true)" class="px-3 py-1 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700">Onayla</button>
+                    <button onclick="approveCraftsman('${item.id}', false)" class="px-3 py-1 bg-rose-600 text-white rounded-md text-xs font-semibold hover:bg-rose-700">Reddet</button>
+                  </td>
+                </tr>`;
+            });
+          } else {
+            pendingList.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-xs text-gray-400">Onay bekleyen usta yok.</td></tr>';
+          }
+        } catch (err) {
+          console.error('Veriler çekilirken hata oluştu:', err);
+        }
+      }
+
+      async function approveCraftsman(id, status) {
+        await _supabase.from('profiles').update({ is_approved: status }).eq('id', id);
+        loadRealData();
+      }
+
+      loadRealData();
+    </script>
+
+    <!-- PWA KURULUM SCRIPT -->
     <script>
       let deferredPrompt;
       const installContainer = document.getElementById('pwa-install-container');
@@ -179,9 +188,6 @@
           if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-              console.log('Admin Uygulaması indirildi');
-            }
             deferredPrompt = null;
             installContainer.style.display = 'none';
           }
