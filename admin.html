@@ -8,52 +8,153 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-sans">
 
     <!-- ADMIN HEADER -->
-    <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow">
-        <h1 class="text-xl font-bold flex items-center gap-2">
-            <i class="fa-solid fa-user-shield text-amber-500"></i> Yakın-İş Admin Paneli
+    <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg border-b border-slate-800">
+        <h1 class="text-xl font-bold flex items-center gap-2 text-amber-500">
+            <i class="fa-solid fa-user-shield"></i> Yakın-İş Yönetim Paneli
         </h1>
+        <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-medium">Sistem Yöneticisi</span>
     </header>
 
-    <!-- ADMIN İÇERİK -->
-    <main class="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-            <h2 class="text-lg font-bold mb-4">Sistem Durumu & İlan Takibi</h2>
-            <div id="adminJobList" class="space-y-3">
-                <p class="text-sm text-gray-500">Yükleniyor...</p>
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 p-4 max-w-6xl mx-auto w-full space-y-6">
+
+        <!-- 1. İSTATİSTİK KARTLARI -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400">
+                    <i class="fa-solid fa-users text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Müşteriler</p>
+                    <h3 id="stat-customers" class="text-xl font-bold">128</h3>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                <div class="p-3 bg-amber-100 text-amber-600 rounded-lg dark:bg-amber-900/30 dark:text-amber-400">
+                    <i class="fa-solid fa-user-gear text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Usta</p>
+                    <h3 id="stat-craftsmen" class="text-xl font-bold">45</h3>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                <div class="p-3 bg-orange-100 text-orange-600 rounded-lg dark:bg-orange-900/30 dark:text-orange-400">
+                    <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Onay Bekleyen Ustalar</p>
+                    <h3 id="stat-pending" class="text-xl font-bold text-orange-500">3</h3>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg dark:bg-emerald-900/30 dark:text-emerald-400">
+                    <i class="fa-solid fa-comments text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Yorum</p>
+                    <h3 id="stat-reviews" class="text-xl font-bold">92</h3>
+                </div>
             </div>
         </div>
+
+        <!-- 2. USTA ONAYLARI VE GERÇEKLİK DOĞRULAMA -->
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-md font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-user-check text-amber-500"></i> Usta Onay & Doğrulama Talepleri
+                </h2>
+                <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">İnceleme Bekliyor</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b dark:border-gray-700 text-xs text-gray-400 uppercase">
+                            <th class="p-3">Usta Adı / Meslek</th>
+                            <th class="p-3">İletişim</th>
+                            <th class="p-3">Belge Statusü</th>
+                            <th class="p-3 text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-craftsmen-list" class="divide-y dark:divide-gray-700">
+                        <tr>
+                            <td class="p-3">
+                                <div class="font-bold">Ahmet Yılmaz</div>
+                                <div class="text-xs text-gray-400">Elektrik Tesisatçısı</div>
+                            </td>
+                            <td class="p-3 text-xs">ahmet@gmail.com<br>0532 000 00 00</td>
+                            <td class="p-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Kimlik Doğrulandı</span></td>
+                            <td class="p-3 text-right space-x-1">
+                                <button onclick="alert('Usta onaylandı!')" class="px-3 py-1 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700">Onayla</button>
+                                <button onclick="alert('Usta reddedildi!')" class="px-3 py-1 bg-rose-600 text-white rounded-md text-xs font-semibold hover:bg-rose-700">Reddet</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">
+                                <div class="font-bold">Mehmet Kaya</div>
+                                <div class="text-xs text-gray-400">Oto Tamircisi</div>
+                            </td>
+                            <td class="p-3 text-xs">mehmet@gmail.com<br>0505 111 22 33</td>
+                            <td class="p-3"><span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">Ustalık Belgesi Yüklendi</span></td>
+                            <td class="p-3 text-right space-x-1">
+                                <button onclick="alert('Usta onaylandı!')" class="px-3 py-1 bg-emerald-600 text-white rounded-md text-xs font-semibold hover:bg-emerald-700">Onayla</button>
+                                <button onclick="alert('Usta reddedildi!')" class="px-3 py-1 bg-rose-600 text-white rounded-md text-xs font-semibold hover:bg-rose-700">Reddet</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. USTA YORUMLARI VE DEĞERLENDİRMELER -->
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 class="text-md font-bold mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-star text-amber-400"></i> Son Usta Yorumları & Değerlendirmeler
+            </h2>
+
+            <div class="space-y-3">
+                <!-- Yorum Kartı 1 -->
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-bold text-sm">Ali K.</span>
+                            <span class="text-xs text-gray-400">➡️ Usta: Ahmet Yılmaz</span>
+                            <div class="text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">"Zamanında geldi, tesisat problemini hemen çözdü. Çok teşekkürler."</p>
+                    </div>
+                    <button onclick="alert('Yorum silindi/gizlendi')" class="text-xs text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i> Sil</button>
+                </div>
+
+                <!-- Yorum Kartı 2 -->
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-bold text-sm">Selin T.</span>
+                            <span class="text-xs text-gray-400">➡️ Usta: Mehmet Kaya</span>
+                            <div class="text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">"İşçilik güzeldi ancak biraz geç geldi."</p>
+                    </div>
+                    <button onclick="alert('Yorum silindi/gizlendi')" class="text-xs text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i> Sil</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- MEVCUT KODLARINIZ / SCRIPT -->
-    <script>
-        function getData(key) {
-            return JSON.parse(localStorage.getItem(key) || '[]');
-        }
-
-        function renderAdminJobs() {
-            const jobs = getData('systemJobs');
-            const box = document.getElementById('adminJobList');
-            if (box) {
-                box.innerHTML = jobs.length === 0 ? '<p class="text-xs text-gray-400">Henüz sistemde ilan yok.</p>' : '';
-                jobs.forEach((j, index) => {
-                    box.innerHTML += `
-                        <div class="p-4 border rounded-lg flex justify-between items-center bg-gray-50 dark:bg-gray-700">
-                            <div>
-                                <b class="text-sm">${j.title}</b>
-                                <p class="text-xs text-gray-500 dark:text-gray-300">${j.desc}</p>
-                            </div>
-                            <span class="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded">Aktif</span>
-                        </div>`;
-                });
-            }
-        }
-        renderAdminJobs();
-    </script>
-
-    <!-- UYGULAMAYI İNDİR BUTONU (ADMIN) -->
+    <!-- UYGULAMAYI İNDİR BUTONU (PWA) -->
     <div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
       <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
         📲 Yakın İş Admin Uygulamasını İndir
