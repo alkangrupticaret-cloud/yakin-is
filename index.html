@@ -6,215 +6,57 @@
     <title>Yakın-İş | Küresel Usta & Hizmet Platformu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
-    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-wrench text-2xl text-amber-600"></i>
-                <h1 class="text-2xl font-bold text-amber-600">Yakın-İş</h1>
-            </div>
-            <button type="button" onclick="installUserApp()" id="userInstallBtn" class="hidden text-xs bg-amber-600 text-white px-3 py-1.5 rounded-lg font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i>Uygulamayı İndir</button>
-        </div>
+    <!-- HEADER / BAŞLIK -->
+    <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold flex items-center gap-2 text-amber-600 dark:text-amber-500">
+            <i class="fa-solid font-wrench"></i> Yakın-İş
+        </h1>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-8">
-        <div id="authContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Usta Portalı -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-amber-600">
-                <h3 class="text-lg font-bold mb-2">Usta Portalı</h3>
-                <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1 mb-4">
-                    <button type="button" onclick="switchMode('usta', 'login')" id="btnUstaLoginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white shadow">Giriş Yap</button>
-                    <button type="button" onclick="switchMode('usta', 'register')" id="btnUstaRegTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500">Kaydol</button>
-                </div>
-                
-                <form id="ustaLoginForm" onsubmit="handleAuth(event, 'usta', 'login')" class="space-y-3">
-                    <input type="email" id="ustaLoginEmail" required placeholder="E-Posta Adresi" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="tel" id="ustaLoginPhone" required placeholder="Cep Numarası" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <button type="submit" class="w-full bg-amber-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş Yap</button>
-                </form>
+    <!-- ANA İÇERİK -->
+    <main class="flex-1 p-4 max-w-xl mx-auto w-full space-y-6">
 
-                <form id="ustaRegForm" onsubmit="handleAuth(event, 'usta', 'register')" class="space-y-3 hidden">
-                    <input type="text" id="ustaRegName" required placeholder="Adı Soyadı" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="number" id="ustaRegAge" required placeholder="Yaş" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="email" id="ustaRegEmail" required placeholder="E-Posta" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="tel" id="ustaRegPhone" required placeholder="Telefon" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="text" id="ustaRegTax" required placeholder="Vergi No" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <select id="ustaRegBranch" required class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                        <option value="">Branş Seçiniz</option>
-                        <option value="Tesisat">Tesisat</option>
-                        <option value="Elektrik">Elektrik</option>
-                        <option value="Boya">Boya</option>
-                        <option value="Marangoz">Marangoz</option>
-                    </select>
-                    <button type="submit" class="w-full bg-amber-600 text-white font-medium py-2.5 rounded-lg text-sm">Kayıt Ol ve Onaya Gönder</button>
-                </form>
+        <!-- USTA PORTALI -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
+            <h2 class="text-lg font-bold mb-4">Usta Portalı</h2>
+            <div class="flex gap-2 mb-4 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                <button class="flex-1 py-2 font-semibold bg-white dark:bg-gray-800 rounded-md shadow-sm">Giriş Yap</button>
+                <button class="flex-1 py-2 font-semibold text-gray-500 dark:text-gray-400">Kaydol</button>
             </div>
-
-            <!-- Müşteri Portalı -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-t-4 border-blue-600">
-                <h3 class="text-lg font-bold mb-2">Müşteri Portalı</h3>
-                <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1 mb-4">
-                    <button type="button" onclick="switchMode('cust', 'login')" id="btnCustLoginTab" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white shadow">Giriş Yap</button>
-                    <button type="button" onclick="switchMode('cust', 'register')" id="btnCustRegTab" class="flex-1 py-1.5 text-xs font-semibold text-gray-500">Kaydol</button>
-                </div>
-
-                <form id="custLoginForm" onsubmit="handleAuth(event, 'customer', 'login')" class="space-y-3">
-                    <input type="email" id="custLoginEmail" required placeholder="E-Posta Adresi" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="tel" id="custLoginPhone" required placeholder="Cep Numarası" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg text-sm">6 Haneli Kod ile Giriş Yap</button>
-                </form>
-
-                <form id="custRegForm" onsubmit="handleAuth(event, 'customer', 'register')" class="space-y-3 hidden">
-                    <input type="text" id="custRegName" required placeholder="Adı Soyadı" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="email" id="custRegEmail" required placeholder="E-Posta" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <input type="tel" id="custRegPhone" required placeholder="Telefon" class="w-full text-sm p-2.5 rounded-lg border dark:bg-gray-700 dark:text-white">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg text-sm">Kayıt Ol</button>
-                </form>
+            <div class="space-y-3">
+                <input type="email" placeholder="E-Posta Adresi" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="tel" placeholder="Cep Numarası" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <button class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition shadow">6 Haneli Kod ile Giriş Yap</button>
             </div>
         </div>
 
-        <!-- 6 Haneli Doğrulama Modalı -->
-        <div id="otpModal" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-50 p-4">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl max-w-sm w-full space-y-4 text-center">
-                <h3 class="text-lg font-bold"><i class="fa-solid fa-shield-halved text-amber-600 mr-2"></i>Doğrulama Kodu</h3>
-                <p class="text-xs text-gray-500">Aşağıdaki 6 haneli kodu kutucuğa girin:</p>
-                <div class="text-xl font-mono font-bold bg-amber-100 text-amber-900 p-2 rounded" id="otpSimBox">Kod: 123456</div>
-                <input type="text" id="otpInputCode" maxlength="6" placeholder="6 haneli kod" class="w-full text-center text-lg p-2.5 rounded border dark:bg-gray-700 dark:text-white">
-                <button type="button" onclick="verifyOtpCode()" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-lg text-sm">Doğrula ve Giriş Yap</button>
+        <!-- MÜŞTERİ PORTALI -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-blue-600">
+            <h2 class="text-lg font-bold mb-4">Müşteri Portalı</h2>
+            <div class="flex gap-2 mb-4 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                <button class="flex-1 py-2 font-semibold bg-white dark:bg-gray-800 rounded-md shadow-sm">Giriş Yap</button>
+                <button class="flex-1 py-2 font-semibold text-gray-500 dark:text-gray-400">Kaydol</button>
+            </div>
+            <div class="space-y-3">
+                <input type="email" placeholder="E-Posta Adresi" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="tel" placeholder="Cep Numarası" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow">6 Haneli Kod ile Giriş Yap</button>
             </div>
         </div>
 
-        <!-- Paneller -->
-        <div id="customerDashboard" class="hidden space-y-4">
-            <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-xl flex justify-between items-center">
-                <h3 class="font-bold text-blue-800 dark:text-blue-200">Müşteri Paneline Hoş Geldiniz</h3>
-                <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">Çıkış Yap</button>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow space-y-4">
-                <h4 class="font-bold text-lg text-blue-600">İlan Ver</h4>
-                <form onsubmit="submitJob(event)" class="space-y-3">
-                    <input type="text" id="jobTitle" required placeholder="İlan Başlığı (Örn: Musluk Tamiri)" class="w-full text-sm p-2.5 rounded border dark:bg-gray-700 dark:text-white">
-                    <textarea id="jobDesc" required placeholder="İlan Açıklaması" class="w-full text-sm p-2.5 rounded border dark:bg-gray-700 dark:text-white"></textarea>
-                    <button type="submit" class="bg-blue-600 text-white font-bold px-4 py-2 rounded text-sm">İlanı Yayınla</button>
-                </form>
-            </div>
-        </div>
+        <!-- İLAN LİSTESİ ALANI -->
+        <div id="jobList" class="space-y-2"></div>
 
-        <div id="ustaDashboard" class="hidden space-y-4">
-            <div class="bg-amber-100 dark:bg-amber-900/30 p-4 rounded-xl flex justify-between items-center">
-                <h3 class="font-bold text-amber-800 dark:text-amber-200">Usta Paneline Hoş Geldiniz</h3>
-                <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">Çıkış Yap</button>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow space-y-4">
-                <h4 class="font-bold text-lg text-amber-600">Mevcut İlanlar</h4>
-                <div id="jobList" class="space-y-2"></div>
-            </div>
-        </div>
     </main>
 
+    <!-- MEVCUT KODLARINIZ / SCRIPT -->
     <script>
-        function getData(k) { return JSON.parse(localStorage.getItem(k)) || []; }
-        function setData(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-
-        let tempAuthData = null;
-
-        function switchMode(type, mode) {
-            if(type === 'usta') {
-                document.getElementById('ustaLoginForm').classList.toggle('hidden', mode === 'register');
-                document.getElementById('ustaRegForm').classList.toggle('hidden', mode === 'login');
-            } else {
-                document.getElementById('custLoginForm').classList.toggle('hidden', mode === 'register');
-                document.getElementById('custRegForm').classList.toggle('hidden', mode === 'login');
-            }
-        }
-
-        function handleAuth(e, type, action) {
-            e.preventDefault();
-            if(action === 'register') {
-                if(type === 'usta') {
-                    let pending = getData('pendingUstas');
-                    pending.push({
-                        id: Date.now(),
-                        name: document.getElementById('ustaRegName').value,
-                        age: document.getElementById('ustaRegAge').value,
-                        email: document.getElementById('ustaRegEmail').value,
-                        phone: document.getElementById('ustaRegPhone').value,
-                        tax: document.getElementById('ustaRegTax').value,
-                        branch: document.getElementById('ustaRegBranch').value
-                    });
-                    setData('pendingUstas', pending);
-                    alert('Kayıt başvurunuz alındı! Yönetici panelinden onaylandıktan sonra giriş yapabilirsiniz.');
-                    document.getElementById('ustaRegForm').reset();
-                    switchMode('usta', 'login');
-                } else {
-                    let custs = getData('registeredCustomers');
-                    custs.push({
-                        id: Date.now(),
-                        name: document.getElementById('custRegName').value,
-                        email: document.getElementById('custRegEmail').value,
-                        phone: document.getElementById('custRegPhone').value
-                    });
-                    setData('registeredCustomers', custs);
-                    alert('Müşteri kaydınız tamamlandı! Şimdi giriş yapabilirsiniz.');
-                    document.getElementById('custRegForm').reset();
-                    switchMode('cust', 'login');
-                }
-            } else {
-                const email = type === 'usta' ? document.getElementById('ustaLoginEmail').value : document.getElementById('custLoginEmail').value;
-                
-                if(type === 'usta') {
-                    const approved = getData('approvedUstas');
-                    const found = approved.find(x => x.email === email);
-                    if(!found) { alert('Onaylanmış usta kaydı bulunamadı! Lütfen önce kaydolup yöneticiden onay bekleyin.'); return; }
-                } else {
-                    const custs = getData('registeredCustomers');
-                    const found = custs.find(x => x.email === email);
-                    if(!found) { alert('Kayıtlı müşteri bulunamadı! Lütfen önce kaydolun.'); return; }
-                }
-
-                tempAuthData = type;
-                const randCode = Math.floor(100000 + Math.random() * 900000);
-                localStorage.setItem('simOtp', randCode);
-                document.getElementById('otpSimBox').innerText = "Kod: " + randCode;
-                document.getElementById('otpModal').classList.remove('hidden');
-            }
-        }
-
-        function verifyOtpCode() {
-            const input = document.getElementById('otpInputCode').value;
-            const real = localStorage.getItem('simOtp');
-            if(input !== real) { alert('Hatalı 6 haneli kod!'); return; }
-
-            document.getElementById('otpModal').classList.add('hidden');
-            document.getElementById('authContainer').classList.add('hidden');
-            
-            if(tempAuthData === 'usta') {
-                document.getElementById('ustaDashboard').classList.remove('hidden');
-                renderJobs();
-            } else {
-                document.getElementById('customerDashboard').classList.remove('hidden');
-            }
-        }
-
-        function logout() {
-            document.getElementById('authContainer').classList.remove('hidden');
-            document.getElementById('ustaDashboard').classList.add('hidden');
-            document.getElementById('customerDashboard').classList.add('hidden');
-        }
-
-        function submitJob(e) {
-            e.preventDefault();
-            let jobs = getData('systemJobs');
-            jobs.unshift({
-                id: Date.now(),
-                title: document.getElementById('jobTitle').value,
-                desc: document.getElementById('jobDesc').value
-            });
-            setData('systemJobs', jobs);
-            alert('İlan yayınlandı!');
-            e.target.reset();
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
         function renderJobs() {
@@ -225,46 +67,49 @@
                 box.innerHTML += `<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded text-xs"><b>${j.title}</b><p>${j.desc}</p></div>`;
             });
         }
+        renderJobs();
     </script>
-<!-- UYGULAMAYI İNDİR BUTONU -->
-<div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
-  <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
-    📲 Yakın İş Uygulamasını İndir
-  </button>
-</div>
 
-<script>
-  let deferredPrompt;
-  const installContainer = document.getElementById('pwa-install-container');
-  const installBtn = document.getElementById('pwa-install-btn');
+    <!-- UYGULAMAYI İNDİR BUTONU -->
+    <div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
+      <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        📲 Yakın İş Uygulamasını İndir
+      </button>
+    </div>
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (installContainer) {
-      installContainer.style.display = 'block';
-    }
-  });
+    <script>
+      let deferredPrompt;
+      const installContainer = document.getElementById('pwa-install-container');
+      const installBtn = document.getElementById('pwa-install-btn');
 
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          console.log('Uygulama indirildi');
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installContainer) {
+          installContainer.style.display = 'block';
         }
-        deferredPrompt = null;
-        installContainer.style.display = 'none';
-      }
-    });
-  }
+      });
 
-  window.addEventListener('appinstalled', () => {
-    if (installContainer) {
-      installContainer.style.display = 'none';
-    }
-  });
-</script>
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              console.log('Uygulama indirildi');
+            }
+            deferredPrompt = null;
+            installContainer.style.display = 'none';
+          }
+        });
+      }
+
+      window.addEventListener('appinstalled', () => {
+        if (installContainer) {
+          installContainer.style.display = 'none';
+        }
+      });
+    </script>
+
 </body>
 </html>
