@@ -7,124 +7,202 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
-    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-sans">
 
-    <!-- ADMIN HEADER -->
-    <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg border-b border-slate-800">
-        <h1 class="text-xl font-bold flex items-center gap-2 text-amber-500">
-            <i class="fa-solid fa-user-shield"></i> Yakın-İş Yönetim Paneli
-        </h1>
-        <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-medium">Sistem Yöneticisi</span>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <main class="flex-1 p-4 max-w-6xl mx-auto w-full space-y-6">
-
-        <!-- 1. İSTATİSTİK KARTLARI -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400">
-                    <i class="fa-solid fa-users text-2xl"></i>
+    <!-- 1. GÜVENLİ GİRİŞ EKRANI (LOGIN SCREEN) -->
+    <div id="login-overlay" class="fixed inset-0 bg-slate-900 z-[10000] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                    <i class="fa-solid fa-lock"></i>
                 </div>
-                <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Müşteriler</p>
-                    <h3 id="stat-customers" class="text-xl font-bold">...</h3>
-                </div>
+                <h2 class="text-2xl font-bold">Admin Girişi</h2>
+                <p class="text-xs text-gray-400 mt-1">Sadece yetkili yöneticiler erişebilir</p>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                <div class="p-3 bg-amber-100 text-amber-600 rounded-lg dark:bg-amber-900/30 dark:text-amber-400">
-                    <i class="fa-solid fa-user-gear text-2xl"></i>
+            <form id="admin-login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold mb-1 text-gray-300">Yönetici E-Posta</label>
+                    <input type="email" id="admin-email" required placeholder="alkangrupticaret@gmail.com" class="w-full p-3 border rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-amber-500 outline-none text-sm">
                 </div>
                 <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Usta</p>
-                    <h3 id="stat-craftsmen" class="text-xl font-bold">...</h3>
+                    <label class="block text-xs font-semibold mb-1 text-gray-300">Admin Şifresi</label>
+                    <input type="password" id="admin-password" required placeholder="••••••••" class="w-full p-3 border rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-amber-500 outline-none text-sm">
                 </div>
-            </div>
 
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                <div class="p-3 bg-orange-100 text-orange-600 rounded-lg dark:bg-orange-900/30 dark:text-orange-400">
-                    <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+                <div id="login-error" class="text-xs text-rose-500 font-semibold text-center hidden">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Hatalı e-posta veya şifre!
                 </div>
-                <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Onay Bekleyen Ustalar</p>
-                    <h3 id="stat-pending" class="text-xl font-bold text-orange-500">...</h3>
-                </div>
-            </div>
 
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg dark:bg-emerald-900/30 dark:text-emerald-400">
-                    <i class="fa-solid fa-comments text-2xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Yorum</p>
-                    <h3 id="stat-reviews" class="text-xl font-bold">...</h3>
-                </div>
-            </div>
+                <button type="submit" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition shadow-lg">
+                    Güvenli Giriş Yap
+                </button>
+            </form>
         </div>
+    </div>
 
-        <!-- 2. USTA ONAYLARI VE GERÇEKLİK DOĞRULAMA -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-md font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-user-check text-amber-500"></i> Usta Onay & Doğrulama Talepleri
+    <!-- 2. GİZLİ ADMİN PANELİ İÇERİĞİ -->
+    <div id="admin-dashboard" class="hidden flex-col min-h-screen">
+        <!-- ADMIN HEADER -->
+        <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg border-b border-slate-800">
+            <h1 class="text-xl font-bold flex items-center gap-2 text-amber-500">
+                <i class="fa-solid fa-user-shield"></i> Yakın-İş Yönetim Paneli
+            </h1>
+            <div class="flex items-center gap-3">
+                <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-medium">Sistem Yöneticisi</span>
+                <button onclick="handleLogout()" class="text-xs bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg font-semibold transition">
+                    <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="flex-1 p-4 max-w-6xl mx-auto w-full space-y-6">
+
+            <!-- İSTATİSTİK KARTLARI -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400">
+                        <i class="fa-solid fa-users text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Müşteriler</p>
+                        <h3 id="stat-customers" class="text-xl font-bold">...</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                    <div class="p-3 bg-amber-100 text-amber-600 rounded-lg dark:bg-amber-900/30 dark:text-amber-400">
+                        <i class="fa-solid fa-user-gear text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Usta</p>
+                        <h3 id="stat-craftsmen" class="text-xl font-bold">...</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                    <div class="p-3 bg-orange-100 text-orange-600 rounded-lg dark:bg-orange-900/30 dark:text-orange-400">
+                        <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Onay Bekleyen Ustalar</p>
+                        <h3 id="stat-pending" class="text-xl font-bold text-orange-500">...</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg dark:bg-emerald-900/30 dark:text-emerald-400">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Toplam Yorum</p>
+                        <h3 id="stat-reviews" class="text-xl font-bold">...</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USTA ONAYLARI VE GERÇEKLİK DOĞRULAMA -->
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-md font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-user-check text-amber-500"></i> Usta Onay & Doğrulama Talepleri
+                    </h2>
+                    <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">İnceleme Bekliyor</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700 text-xs text-gray-400 uppercase">
+                                <th class="p-3">Usta Adı / Meslek</th>
+                                <th class="p-3">İletişim</th>
+                                <th class="p-3">Belge Statüsü</th>
+                                <th class="p-3 text-right">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-craftsmen-list" class="divide-y dark:divide-gray-700">
+                            <tr>
+                                <td colspan="4" class="p-4 text-center text-gray-400">Veriler yükleniyor...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USTA YORUMLARI VE DEĞERLENDİRMELER -->
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-md font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-star text-amber-400"></i> Son Usta Yorumları & Değerlendirmeler
                 </h2>
-                <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">İnceleme Bekliyor</span>
+                <div id="reviews-list" class="space-y-3">
+                    <p class="text-xs text-gray-400">Yorumlar yükleniyor...</p>
+                </div>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="border-b dark:border-gray-700 text-xs text-gray-400 uppercase">
-                            <th class="p-3">Usta Adı / Meslek</th>
-                            <th class="p-3">İletişim</th>
-                            <th class="p-3">Belge Statüsü</th>
-                            <th class="p-3 text-right">İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pending-craftsmen-list" class="divide-y dark:divide-gray-700">
-                        <tr>
-                            <td colspan="4" class="p-4 text-center text-gray-400">Veriler Supabase'den yükleniyor...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- 3. USTA YORUMLARI VE DEĞERLENDİRMELER -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-md font-bold mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-star text-amber-400"></i> Son Usta Yorumları & Değerlendirmeler
-            </h2>
-
-            <div id="reviews-list" class="space-y-3">
-                <p class="text-xs text-gray-400">Yorumlar yükleniyor...</p>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- UYGULAMAYI İNDİR BUTONU (PWA) -->
+    <!-- PWA İNDİR BUTONU -->
     <div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
       <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
         📲 Yakın İş Admin Uygulamasını İndir
       </button>
     </div>
 
-    <!-- SUPABASE VE CANLI VERİ ENTEGRASYONU -->
+    <!-- SUPABASE VE OTURUM SCRIPT -->
     <script>
-      // 1. SUPABASE BİLGİLERİNİZİ BURAYA EKLENİZ:
-      const SUPABASE_URL = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+      // SUPABASE BİLGİLERİNİZİ BURAYA GİRİN:
+      const SUPABASE_URL = "sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc";
 
       const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+      // YÖNETİCİ BİLGİLERİ (Giriş şifrenizi buradan değiştirebilirsiniz)
+      const ADMIN_EMAIL = "alkangrupticaret@gmail.com";
+      const ADMIN_PASS = "akmet.muhsin.umay.ebru";
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const session = localStorage.getItem('yakinis_admin_session');
+        if (session === 'true') {
+          showDashboard();
+          loadRealData();
+        }
+      });
+
+      function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('admin-email').value.trim();
+        const pass = document.getElementById('admin-password').value.trim();
+        const errorEl = document.getElementById('login-error');
+
+        if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+          localStorage.setItem('yakinis_admin_session', 'true');
+          errorEl.classList.add('hidden');
+          showDashboard();
+          loadRealData();
+        } else {
+          errorEl.classList.remove('hidden');
+        }
+      }
+
+      function handleLogout() {
+        localStorage.removeItem('yakinis_admin_session');
+        document.getElementById('admin-dashboard').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('flex');
+        document.getElementById('login-overlay').classList.remove('hidden');
+      }
+
+      function showDashboard() {
+        document.getElementById('login-overlay').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        document.getElementById('admin-dashboard').classList.add('flex');
+      }
+
       async function loadRealData() {
         try {
-          // Tablo adlarınızı veritabanınıza göre güncelleyin (örn: profiles, craftsmen, reviews)
           const { count: customerCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'customer');
           const { count: craftsmanCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'craftsman');
           const { count: pendingCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('is_approved', false);
@@ -135,7 +213,6 @@
           document.getElementById('stat-pending').innerText = pendingCount || 0;
           document.getElementById('stat-reviews').innerText = reviewCount || 0;
 
-          // Onay bekleyen ustaları çekme
           const { data: pendingCraftsmen } = await _supabase.from('profiles').select('*').eq('role', 'craftsman').eq('is_approved', false);
           const pendingList = document.getElementById('pending-craftsmen-list');
 
@@ -157,7 +234,7 @@
             pendingList.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-xs text-gray-400">Onay bekleyen usta yok.</td></tr>';
           }
         } catch (err) {
-          console.error('Veriler çekilirken hata oluştu:', err);
+          console.error('Veri çekme hatası:', err);
         }
       }
 
@@ -165,8 +242,6 @@
         await _supabase.from('profiles').update({ is_approved: status }).eq('id', id);
         loadRealData();
       }
-
-      loadRealData();
     </script>
 
     <!-- PWA KURULUM SCRIPT -->
