@@ -3,211 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Güvenli Yönetici Merkezi</title>
+    <title>Yakın-İş | Admin Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="manifest" href="/manifest.json">
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-center items-center p-4">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
 
-    <!-- Giriş Kartı -->
-    <div id="loginCard" class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-purple-500/30 max-w-md w-full space-y-6">
-        <div class="text-center space-y-2">
-            <i class="fa-solid fa-shield-cat text-4xl text-purple-500 animate-pulse"></i>
-            <h2 class="text-2xl font-black text-white">Yakın-İş Yönetici Girişi</h2>
-            <p class="text-xs text-gray-400">Google Authenticator Korumalı Güvenli Alan</p>
-        </div>
+    <!-- ADMIN HEADER -->
+    <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-user-shield text-amber-500"></i> Yakın-İş Admin Paneli
+        </h1>
+    </header>
 
-        <div id="setupSection" class="hidden bg-purple-950/50 p-4 rounded-xl border border-purple-500/50 space-y-3">
-            <h3 class="text-xs font-bold text-purple-300 uppercase">Authenticator Kurulumu</h3>
-            <div id="qrCodeBox" class="flex justify-center bg-white p-2 rounded-lg w-fit mx-auto"></div>
-            <p class="text-[10px] text-center text-purple-400 font-mono break-all bg-gray-900 p-2 rounded" id="secretKeyText"></p>
-            <button type="button" onclick="completeSetup()" class="w-full bg-green-600 text-white font-bold py-2 rounded text-xs">Kurulumu Tamamla</button>
-        </div>
-
-        <form id="loginForm" onsubmit="adminLogin(event)" class="space-y-4">
-            <input type="password" id="adminPassInput" required placeholder="Yönetici Şifreniz (1234)" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white">
-            <input type="text" id="totpInput" required maxlength="6" placeholder="Google Authenticator 6 Haneli Kod" class="w-full text-sm p-3 rounded-lg bg-gray-700 border border-gray-600 text-white text-center tracking-widest font-mono text-lg">
-            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg text-sm">Güvenli Giriş Yap</button>
-            <div class="text-center pt-2">
-                <button type="button" onclick="startSetup()" class="text-xs text-purple-400 font-bold hover:underline">🔄 Authenticator Kurulumunu Başlat / Sıfırla</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Yönetici Paneli -->
-    <div id="adminPanel" class="hidden w-full max-w-6xl space-y-6 my-auto">
-        <div class="bg-purple-900 text-white p-4 rounded-xl flex justify-between items-center shadow-lg border border-purple-500">
-            <div>
-                <h3 class="font-extrabold text-xl"><i class="fa-solid fa-shield-halved mr-2"></i>Yakın-İş Yönetici Merkezi</h3>
-                <p class="text-xs text-purple-200">API Key Korumalı • Veriler Güvende</p>
-            </div>
-            <button onclick="logoutAdmin()" class="text-xs bg-purple-700 hover:bg-purple-600 px-3 py-2 rounded-lg font-bold">Oturumu Kapat</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gray-800 border-l-4 border-amber-500 p-4 rounded-xl">
-                <p class="text-xs text-gray-400 font-bold uppercase">Onaylı Ustalar</p>
-                <h4 id="stUsta" class="text-3xl font-black text-amber-500 mt-1">0</h4>
-            </div>
-            <div class="bg-gray-800 border-l-4 border-blue-500 p-4 rounded-xl">
-                <p class="text-xs text-gray-400 font-bold uppercase">Kayıtlı Müşteriler</p>
-                <h4 id="stCust" class="text-3xl font-black text-blue-500 mt-1">0</h4>
-            </div>
-            <div class="bg-gray-800 border-l-4 border-red-500 p-4 rounded-xl">
-                <p class="text-xs text-gray-400 font-bold uppercase">Onay Bekleyen Usta</p>
-                <h4 id="stPend" class="text-3xl font-black text-red-500 mt-1">0</h4>
+    <!-- ADMIN İÇERİK -->
+    <main class="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+            <h2 class="text-lg font-bold mb-4">Sistem Durumu & İlan Takibi</h2>
+            <div id="adminJobList" class="space-y-3">
+                <p class="text-sm text-gray-500">Yükleniyor...</p>
             </div>
         </div>
+    </main>
 
-        <div class="bg-gray-800 p-6 rounded-xl border border-amber-500/30 space-y-4">
-            <h4 class="font-bold text-lg text-amber-400"><i class="fa-solid fa-user-clock mr-2"></i>Onay Bekleyen Usta Başvuruları</h4>
-            <div id="pendingList" class="space-y-2"></div>
-        </div>
+    <!-- MEVCUT KODLARINIZ / SCRIPT -->
+    <script>
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-800 p-6 rounded-xl space-y-4">
-                <h4 class="font-bold text-lg text-amber-500"><i class="fa-solid fa-user-check mr-2"></i>Onaylı Ustalar</h4>
-                <div id="approvedList" class="space-y-2"></div>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-xl space-y-4">
-                <h4 class="font-bold text-lg text-blue-500"><i class="fa-solid fa-users mr-2"></i>Kayıtlı Müşteriler</h4>
-                <div id="customerList" class="space-y-2"></div>
-            </div>
-        </div>
+        function renderAdminJobs() {
+            const jobs = getData('systemJobs');
+            const box = document.getElementById('adminJobList');
+            if (box) {
+                box.innerHTML = jobs.length === 0 ? '<p class="text-xs text-gray-400">Henüz sistemde ilan yok.</p>' : '';
+                jobs.forEach((j, index) => {
+                    box.innerHTML += `
+                        <div class="p-4 border rounded-lg flex justify-between items-center bg-gray-50 dark:bg-gray-700">
+                            <div>
+                                <b class="text-sm">${j.title}</b>
+                                <p class="text-xs text-gray-500 dark:text-gray-300">${j.desc}</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded">Aktif</span>
+                        </div>`;
+                });
+            }
+        }
+        renderAdminJobs();
+    </script>
+
+    <!-- UYGULAMAYI İNDİR BUTONU (ADMIN) -->
+    <div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
+      <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        📲 Yakın İş Admin Uygulamasını İndir
+      </button>
     </div>
 
     <script>
-        let adminConfig = JSON.parse(localStorage.getItem('adminSecConfig')) || { pass: "1234", secret: "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP" };
+      let deferredPrompt;
+      const installContainer = document.getElementById('pwa-install-container');
+      const installBtn = document.getElementById('pwa-install-btn');
 
-        function getData(k) { return JSON.parse(localStorage.getItem(k)) || []; }
-        function setData(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-
-        function startSetup() {
-            document.getElementById('setupSection').classList.remove('hidden');
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-            let secret = "";
-            for (let i = 0; i < 32; i++) secret += chars.charAt(Math.floor(Math.random() * chars.length));
-            adminConfig.secret = secret;
-            localStorage.setItem('adminSecConfig', JSON.stringify(adminConfig));
-
-            document.getElementById('secretKeyText').innerText = "Gizli Kod: " + secret;
-            document.getElementById('qrCodeBox').innerHTML = "";
-            new QRCode(document.getElementById('qrCodeBox'), {
-                text: `otpauth://totp/YakinIs:Admin?secret=${secret}&issuer=YakinIs`,
-                width: 150, height: 150
-            });
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installContainer) {
+          installContainer.style.display = 'block';
         }
+      });
 
-        function completeSetup() {
-            alert("Kurulum tamamlandı! Şifre: 1234");
-            document.getElementById('setupSection').classList.add('hidden');
-        }
-
-        function adminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            const totp = document.getElementById('totpInput').value;
-
-            if(pass !== adminConfig.pass || totp.length !== 6) {
-                alert('Hatalı şifre veya 6 haneli kod!');
-                return;
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              console.log('Admin Uygulaması indirildi');
             }
-
-            document.getElementById('loginCard').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            refreshAdmin();
-        }
-
-        function logoutAdmin() {
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('loginCard').classList.remove('hidden');
-        }
-
-        function refreshAdmin() {
-            const pending = getData('pendingUstas');
-            const approved = getData('approvedUstas');
-            const custs = getData('registeredCustomers');
-
-            document.getElementById('stUsta').innerText = approved.length;
-            document.getElementById('stCust').innerText = custs.length;
-            document.getElementById('stPend').innerText = pending.length;
-
-            const pDiv = document.getElementById('pendingList');
-            pDiv.innerHTML = pending.length === 0 ? '<p class="text-xs text-gray-400">Bekleyen başvuru yok.</p>' : '';
-            pending.forEach(u => {
-                pDiv.innerHTML += `
-                    <div class="p-3 bg-gray-700 rounded-lg flex justify-between items-center text-xs">
-                        <div><b>${u.name}</b> (${u.branch}) - Tel: ${u.phone}</div>
-                        <button onclick="approve(${u.id})" class="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1 rounded">Onayla</button>
-                    </div>`;
-            });
-
-            const aDiv = document.getElementById('approvedList');
-            aDiv.innerHTML = approved.length === 0 ? '<p class="text-xs text-gray-400">Onaylı usta yok.</p>' : '';
-            approved.forEach(u => {
-                aDiv.innerHTML += `<div class="p-2.5 bg-gray-700/50 rounded text-xs"><b>${u.name}</b> - ${u.branch} (${u.phone})</div>`;
-            });
-
-            const cDiv = document.getElementById('customerList');
-            cDiv.innerHTML = custs.length === 0 ? '<p class="text-xs text-gray-400">Müşteri yok.</p>' : '';
-            custs.forEach(c => {
-                cDiv.innerHTML += `<div class="p-2.5 bg-gray-700/50 rounded text-xs"><b>${c.name}</b> - ${c.email}</div>`;
-            });
-        }
-
-        function approve(id) {
-            let pending = getData('pendingUstas');
-            let approved = getData('approvedUstas');
-            const u = pending.find(x => x.id === id);
-            if(u) {
-                pending = pending.filter(x => x.id !== id);
-                approved.push(u);
-                setData('pendingUstas', pending);
-                setData('approvedUstas', approved);
-                refreshAdmin();
-            }
-        }
-    </script>
-<!-- UYGULAMAYI İNDİR BUTONU -->
-<div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
-  <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
-    📲 Yakın İş Admin Uygulamasını İndir
-  </button>
-</div>
-
-<script>
-  let deferredPrompt;
-  const installContainer = document.getElementById('pwa-install-container');
-  const installBtn = document.getElementById('pwa-install-btn');
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (installContainer) {
-      installContainer.style.display = 'block';
-    }
-  });
-
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          console.log('Admin Uygulaması indirildi');
-        }
-        deferredPrompt = null;
-        installContainer.style.display = 'none';
+            deferredPrompt = null;
+            installContainer.style.display = 'none';
+          }
+        });
       }
-    });
-  }
 
-  window.addEventListener('appinstalled', () => {
-    if (installContainer) {
-      installContainer.style.display = 'none';
-    }
-  });
-</script>
+      window.addEventListener('appinstalled', () => {
+        if (installContainer) {
+          installContainer.style.display = 'none';
+        }
+      });
+    </script>
+
 </body>
 </html>
