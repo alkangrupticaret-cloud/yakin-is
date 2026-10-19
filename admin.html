@@ -58,27 +58,67 @@
         </header>
 
         <main class="flex-1 p-4 max-w-6xl mx-auto w-full space-y-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            
+            <!-- İSTATİSTİK KARTLARI (ÜCRET VE GELİR EKLENDİ) -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400"><i class="fa-solid fa-users text-2xl"></i></div>
-                    <div><p class="text-xs text-gray-500">Müşteriler</p><h3 id="stat-customers" class="text-xl font-bold">...</h3></div>
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400"><i class="fa-solid fa-users text-xl"></i></div>
+                    <div><p class="text-[11px] text-gray-500">Müşteriler</p><h3 id="stat-customers" class="text-lg font-bold">...</h3></div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                    <div class="p-3 bg-amber-100 text-amber-600 rounded-lg dark:bg-amber-900/30 dark:text-amber-400"><i class="fa-solid fa-user-gear text-2xl"></i></div>
-                    <div><p class="text-xs text-gray-500">Toplam Usta</p><h3 id="stat-craftsmen" class="text-xl font-bold">...</h3></div>
+                    <div class="p-3 bg-amber-100 text-amber-600 rounded-lg dark:bg-amber-900/30 dark:text-amber-400"><i class="fa-solid fa-user-gear text-xl"></i></div>
+                    <div><p class="text-[11px] text-gray-500">Toplam Usta</p><h3 id="stat-craftsmen" class="text-lg font-bold">...</h3></div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                    <div class="p-3 bg-orange-100 text-orange-600 rounded-lg dark:bg-orange-900/30 dark:text-orange-400"><i class="fa-solid fa-clock-rotate-left text-2xl"></i></div>
-                    <div><p class="text-xs text-gray-500">Onay Bekleyen</p><h3 id="stat-pending" class="text-xl font-bold text-orange-500">...</h3></div>
+                    <div class="p-3 bg-orange-100 text-orange-600 rounded-lg dark:bg-orange-900/30 dark:text-orange-400"><i class="fa-solid fa-clock-rotate-left text-xl"></i></div>
+                    <div><p class="text-[11px] text-gray-500">Onay Bekleyen</p><h3 id="stat-pending" class="text-lg font-bold text-orange-500">...</h3></div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg dark:bg-emerald-900/30 dark:text-emerald-400"><i class="fa-solid fa-comments text-2xl"></i></div>
-                    <div><p class="text-xs text-gray-500">Toplam Yorum</p><h3 id="stat-reviews" class="text-xl font-bold">...</h3></div>
+                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg dark:bg-emerald-900/30 dark:text-emerald-400"><i class="fa-solid fa-comments text-xl"></i></div>
+                    <div><p class="text-[11px] text-gray-500">Toplam Yorum</p><h3 id="stat-reviews" class="text-lg font-bold">...</h3></div>
+                </div>
+                <!-- YENİ GELİR KARTI -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4 col-span-2 md:col-span-1">
+                    <div class="p-3 bg-purple-100 text-purple-600 rounded-lg dark:bg-purple-900/30 dark:text-purple-400"><i class="fa-solid fa-wallet text-xl"></i></div>
+                    <div><p class="text-[11px] text-gray-500">Toplam Kazanç</p><h3 id="stat-revenue" class="text-lg font-bold text-purple-600">₺0</h3></div>
                 </div>
             </div>
 
+            <!-- YENİ: USTA ÜCRET & ABONELİK YÖNETİMİ -->
             <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 class="text-md font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-user-check text-amber-500"></i> Usta Onay & Doğrulama Talepleri</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-md font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-purple-500"></i> Usta Paket & Ücret Takibi
+                    </h2>
+                    <span class="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full font-semibold">Abonelik Durumları</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700 text-xs text-gray-400 uppercase">
+                                <th class="p-3">Usta Adı / Branş</th>
+                                <th class="p-3">Seçilen Paket</th>
+                                <th class="p-3">Ücret</th>
+                                <th class="p-3">Ödeme Durumu</th>
+                                <th class="p-3 text-right">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptions-list" class="divide-y dark:divide-gray-700">
+                            <tr>
+                                <td colspan="5" class="p-4 text-center text-gray-400 text-xs">Usta abonelik bilgileri yükleniyor...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USTA ONAYLARI VE DOĞRULAMA -->
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-md font-bold flex items-center gap-2"><i class="fa-solid fa-user-check text-amber-500"></i> Usta Onay & Doğrulama Talepleri</h2>
+                    <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">İnceleme Bekliyor</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
@@ -87,11 +127,12 @@
                             </tr>
                         </thead>
                         <tbody id="pending-craftsmen-list" class="divide-y dark:divide-gray-700">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-400">Veriler yükleniyor...</td></tr>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-400 text-xs">Veriler yükleniyor...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </main>
     </div>
 
@@ -123,7 +164,6 @@
         const pass = document.getElementById('admin-password').value.trim();
         const errorEl = document.getElementById('login-error');
 
-        // Şifre kutucuklarına doğrudan sizin belirlediğiniz değerler otomatik yazılıdır
         if (email === "alkangrupticaret@gmail.com" && pass === "ahmet.muhsin.umay.ebru") {
           localStorage.setItem('yakinis_admin_session', 'true');
           errorEl.classList.add('hidden');
@@ -159,9 +199,45 @@
           document.getElementById('stat-craftsmen').innerText = craftsmanCount || 0;
           document.getElementById('stat-pending').innerText = pendingCount || 0;
           document.getElementById('stat-reviews').innerText = reviewCount || 0;
+
+          // Abonelikler ve Ücret Verileri
+          const { data: craftsmenList } = await _supabase.from('profiles').select('*').eq('role', 'craftsman');
+          const subList = document.getElementById('subscriptions-list');
+          let totalRevenue = 0;
+
+          if (craftsmenList && craftsmenList.length > 0) {
+            subList.innerHTML = '';
+            craftsmenList.forEach(item => {
+              const isPaid = item.is_paid || false;
+              const pkg = item.package_name || 'Standart Usta';
+              const price = item.package_price || '₺500';
+              if (isPaid) totalRevenue += 500; // Örnek hesaplama
+
+              subList.innerHTML += `
+                <tr>
+                  <td class="p-3"><div class="font-bold">${item.full_name || 'İsimsiz'}</div><div class="text-xs text-gray-400">${item.category || 'Belirtilmedi'}</div></td>
+                  <td class="p-3 text-xs">${pkg}</td>
+                  <td class="p-3 text-xs font-semibold">${price}</td>
+                  <td class="p-3"><span class="text-xs px-2 py-0.5 rounded ${isPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${isPaid ? 'Ödendi' : 'Ödeme Bekliyor'}</span></td>
+                  <td class="p-3 text-right">
+                    <button onclick="togglePayment('${item.id}', ${!isPaid})" class="px-3 py-1 ${isPaid ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'} text-white rounded-md text-xs font-semibold">
+                      ${isPaid ? 'Beklet' : 'Ödendi İşaretle'}
+                    </button>
+                  </td>
+                </tr>`;
+            });
+            document.getElementById('stat-revenue').innerText = `₺${totalRevenue}`;
+          } else {
+            subList.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-xs text-gray-400">Kayıtlı usta bulunamadı.</td></tr>';
+          }
         } catch (err) {
           console.error('Veri çekme hatası:', err);
         }
+      }
+
+      async function togglePayment(id, status) {
+        await _supabase.from('profiles').update({ is_paid: status }).eq('id', id);
+        loadRealData();
       }
     </script>
 
