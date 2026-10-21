@@ -28,7 +28,10 @@
     .input-field { width: 100%; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.2s; }
     .input-field:focus { border-color: #3b82f6; }
     
-    .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; }
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; margin-top: 5px; }
     .btn-provider { background: #d97706; }
     .btn-customer { background: #2563eb; }
     .btn:hover { opacity: 0.9; }
@@ -40,7 +43,6 @@
 
   <header>
     <a href="#" class="logo" data-i18n="appName">Yakın-İş</a>
-    <!-- Dil Seçici Buton -->
     <select id="languageSelect" class="lang-select" onchange="setLanguage(this.value)">
       <option value="tr">🇹🇷 TR</option>
       <option value="en">🇺🇸 EN</option>
@@ -55,18 +57,27 @@
       <h2 class="card-title" data-i18n="providerPortal">Usta Portalı</h2>
       
       <div class="tab-group">
-        <button class="tab-btn active" data-i18n="login" onclick="switchTab(this)">Giriş Yap</button>
-        <button class="tab-btn" data-i18n="register" onclick="switchTab(this)">Kaydol</button>
+        <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
+        <button class="tab-btn" onclick="switchTab(this, 'provider', 'register')">Kaydol</button>
       </div>
 
-      <div class="form-group">
-        <input type="email" class="input-field" data-i18n="emailPlaceholder" placeholder="E-Posta Adresi">
-      </div>
-      <div class="form-group">
-        <input type="tel" class="input-field" data-i18n="phonePlaceholder" placeholder="Cep Numarası">
+      <!-- Usta Giriş Formu -->
+      <div id="provider-login" class="form-section active">
+        <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
+        <div class="form-group"><input type="tel" class="input-field" placeholder="Cep Numarası"></div>
+        <button class="btn btn-provider" onclick="handleAuth('provider', 'login')">Giriş Yap</button>
       </div>
 
-      <button class="btn btn-provider" data-i18n="loginWithCode">6 Haneli Kod ile Giriş Yap</button>
+      <!-- Usta Kayıt Formu (İstediğin Ekstra Alanlar) -->
+      <div id="provider-register" class="form-section">
+        <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
+        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
+        <div class="form-group"><input type="email" class="input-field" id="p-email" placeholder="Gmail (E-Posta Adresi)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme Adı"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
+        <button class="btn btn-provider" onclick="handleAuth('provider', 'register')">Usta Olarak Kaydol</button>
+      </div>
     </div>
 
     <!-- Müşteri Portalı -->
@@ -74,21 +85,26 @@
       <h2 class="card-title" data-i18n="customerPortal">Müşteri Portalı</h2>
       
       <div class="tab-group">
-        <button class="tab-btn active" data-i18n="login" onclick="switchTab(this)">Giriş Yap</button>
-        <button class="tab-btn" data-i18n="register" onclick="switchTab(this)">Kaydol</button>
+        <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
+        <button class="tab-btn" onclick="switchTab(this, 'customer', 'register')">Kaydol</button>
       </div>
 
-      <div class="form-group">
-        <input type="email" class="input-field" data-i18n="emailPlaceholder" placeholder="E-Posta Adresi">
-      </div>
-      <div class="form-group">
-        <input type="tel" class="input-field" data-i18n="phonePlaceholder" placeholder="Cep Numarası">
+      <!-- Müşteri Giriş Formu -->
+      <div id="customer-login" class="form-section active">
+        <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
+        <div class="form-group"><input type="tel" class="input-field" placeholder="Cep Numarası"></div>
+        <button class="btn btn-customer" onclick="handleAuth('customer', 'login')">Giriş Yap</button>
       </div>
 
-      <button class="btn btn-customer" data-i18n="loginWithCode">6 Haneli Kod ile Giriş Yap</button>
+      <!-- Müşteri Kayıt Formu (İstediğin Alanlar) -->
+      <div id="customer-register" class="form-section">
+        <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
+        <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
+        <div class="form-group"><input type="email" class="input-field" id="c-email" placeholder="Gmail (E-Posta Adresi)"></div>
+        <button class="btn btn-customer" onclick="handleAuth('customer', 'register')">Müşteri Olarak Kaydol</button>
+      </div>
     </div>
 
-    <!-- PWA Kurulum Alanı -->
     <div id="installContainer" class="pwa-install">
       <button id="installBtn" class="btn btn-customer">Uygulamayı Yükle</button>
     </div>
@@ -96,13 +112,20 @@
   </div>
 
   <script>
-    function switchTab(btn) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    function switchTab(btn, portal, mode) {
+      const card = btn.closest('.card');
+      card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+
+      card.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(`${portal}-${mode}`).classList.add('active');
     }
 
-    // PWA Kurulum Kodları
+    function handleAuth(portal, type) {
+      alert(portal.toUpperCase() + ' - ' + type.toUpperCase() + ' işlemi tetiklendi! Altyapı veritabanına bağlanıyor...');
+    }
+
+    // PWA Kurulum Mantığı
     let deferredPrompt;
     const installContainer = document.getElementById('installContainer');
     const installBtn = document.getElementById('installBtn');
@@ -118,21 +141,13 @@
         if (deferredPrompt) {
           deferredPrompt.prompt();
           const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') {
-            console.log('Uygulama indirildi');
-          }
           deferredPrompt = null;
           installContainer.style.display = 'none';
         }
       });
     }
-
-    window.addEventListener('appinstalled', () => {
-      if (installContainer) installContainer.style.display = 'none';
-    });
   </script>
 
-  <!-- Dil Sistemi Dosyası Bağlantısı -->
   <script src="js/translations.js"></script>
 </body>
 </html>
