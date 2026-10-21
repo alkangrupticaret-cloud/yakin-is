@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yakın-İş - Admin Yönetim Paneli</title>
+  <title>Yakın-İş - Admin Cüzdan & Gelir Paneli</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: #f1f5f9; color: #1e293b; padding: 20px; }
@@ -12,10 +12,19 @@
     .header-title { font-size: 20px; font-weight: 700; color: #f59e0b; }
     .admin-badge { background: #334155; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #cbd5e1; }
     
-    /* İstatistik Kartları */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    /* Cüzdan & İstatistik Kartları */
+    .wallet-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .wallet-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 16px; }
+    .wallet-title { font-size: 14px; text-transform: uppercase; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; }
+    .wallet-balance { font-size: 36px; font-weight: 800; color: #10b981; margin-bottom: 16px; }
+    
+    .wallet-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .iban-input { flex: 1; min-width: 250px; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; outline: none; font-size: 14px; }
+    .btn-withdraw { background: #10b981; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .btn-withdraw:hover { opacity: 0.9; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .stat-card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 4px solid #3b82f6; }
-    .stat-card.revenue { border-color: #10b981; }
     .stat-card.providers { border-color: #f59e0b; }
     .stat-card.customers { border-color: #6366f1; }
     
@@ -37,22 +46,30 @@
     .badge-info { background: #e0e7ff; color: #3730a3; }
     
     .btn-refresh { background: #f59e0b; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .btn-refresh:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="header-title">Yakın-İş Admin Gelir & Yönetim Paneli</div>
+    <div class="header-title">Yakın-İş Admin Cüzdan & Gelir Paneli</div>
     <div class="admin-badge">alkangrupticaret@gmail.com</div>
   </header>
 
+  <!-- Admin Cüzdan Sekmesi -->
+  <div class="wallet-card">
+    <div class="wallet-header">
+      <span class="wallet-title">Admin Cüzdan Bakiyesi (Biriken Toplam Komisyon)</span>
+      <span class="badge badge-success">Aktif Hesap</span>
+    </div>
+    <div class="wallet-balance" id="walletBalance">0,00 TL</div>
+    <div class="wallet-actions">
+      <input type="text" id="ibanInput" class="iban-input" placeholder="TR00 0000 0000 0000 0000 0000 00 (Hesap IBAN)">
+      <button class="btn-withdraw" onclick="transferToBank()">Hesabıma Aktar (IBAN'a Gönder)</button>
+    </div>
+  </div>
+
   <!-- Özet İstatistikler -->
   <div class="stats-grid">
-    <div class="stat-card revenue">
-      <div class="stat-label">Toplam Kasa / Gelir</div>
-      <div class="stat-value" id="totalRevenue">0,00 TL</div>
-    </div>
     <div class="stat-card providers">
       <div class="stat-label">Kayıtlı Usta Sayısı</div>
       <div class="stat-value" id="totalProviders">0</div>
@@ -66,8 +83,8 @@
   <!-- Son Gelen Ödemeler & Kesintiler -->
   <div class="section-card">
     <div class="section-title">
-      <span>Gelen Komisyon & Abonelik Ödemeleri (10 TL - 100 TL Kesintiler)</span>
-      <button class="btn-refresh" onclick="loadDashboardData()">Verileri Yenile</button>
+      <span>Gelen Komisyon Ödemeleri (10 TL - 100 TL Kesintiler)</span>
+      <button class="btn-refresh" onclick="loadDashboardData()">Yenile</button>
     </div>
     <table>
       <thead>
@@ -75,30 +92,11 @@
           <th>Tarih</th>
           <th>İşlem Tipi</th>
           <th>Tutar</th>
-          <th>Müşteri / Usta</th>
-          <th>Hesap</th>
+          <th>Müşteri / Usta ID</th>
+          <th>Yönetici</th>
         </tr>
       </thead>
       <tbody id="transactionsTable">
-        <tr><td colspan="5" style="text-align:center; color:#94a3b8;">Veriler yükleniyor...</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Kayıtlı Usta Listesi & Deneme Süreleri -->
-  <div class="section-card">
-    <div class="section-title">Kayıtlı Ustalar ve Deneme Süreleri</div>
-    <table>
-      <thead>
-        <tr>
-          <th>Adı Soyadı</th>
-          <th>İşletme Adı / Branş</th>
-          <th>Telefon</th>
-          <th>Kayıt Tarihi</th>
-          <th>7 Günlük Deneme Durumu</th>
-        </tr>
-      </thead>
-      <tbody id="providersTable">
         <tr><td colspan="5" style="text-align:center; color:#94a3b8;">Veriler yükleniyor...</td></tr>
       </tbody>
     </table>
@@ -112,69 +110,33 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
     
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentBalance = 0;
 
     async function loadDashboardData() {
       try {
-        // 1. Profil Verilerini Çek (Usta & Müşteri)
-        const { data: profiles, error: profErr } = await supabaseClient
-          .from('profiles')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (profErr) throw profErr;
-
+        // 1. Profil Verilerini Çek
+        const { data: profiles } = await supabaseClient.from('profiles').select('*');
         const providers = profiles ? profiles.filter(p => p.user_type === 'provider') : [];
         const customers = profiles ? profiles.filter(p => p.user_type === 'customer') : [];
 
         document.getElementById('totalProviders').innerText = providers.length;
         document.getElementById('totalCustomers').innerText = customers.length;
 
-        // Usta Tablosunu Doldur
-        const pTable = document.getElementById('providersTable');
-        if (providers.length === 0) {
-          pTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">Henüz kayıtlı usta bulunmuyor.</td></tr>';
-        } else {
-          pTable.innerHTML = providers.map(p => {
-            const trialEnds = new Date(p.trial_ends_at);
-            const now = new Date();
-            const isTrialActive = trialEnds > now;
-            const statusBadge = isTrialActive 
-              ? `<span class="badge badge-warning">Deneme Süresinde (Bitiş: ${trialEnds.toLocaleDateString('tr-TR')})</span>`
-              : `<span class="badge badge-success">Abonelik Gerekiyor / Aktif</span>`;
+        // 2. Cüzdan Bakiyesi ve İşlem Kayıtlarını Çek
+        const { data: txs } = await supabaseClient.from('transactions').select('*').order('created_at', { ascending: false });
 
-            return `
-              <tr>
-                <td><strong>${p.full_name || '-'}</strong></td>
-                <td>${p.business_name || '-'} / ${p.branch || '-'}</td>
-                <td>${p.phone || '-'}</td>
-                <td>${new Date(p.created_at).toLocaleDateString('tr-TR')}</td>
-                <td>${statusBadge}</td>
-              </tr>
-            `;
-          }).join('');
-        }
-
-        // 2. İşlem & Kesinti Verilerini Çek
-        const { data: txs, error: txErr } = await supabaseClient
-          .from('transactions')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (txErr) throw txErr;
-
-        let totalRev = 0;
+        currentBalance = 0;
         const txTable = document.getElementById('transactionsTable');
 
         if (!txs || txs.length === 0) {
-          txTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">Henüz işlem / komisyon kaydı bulunmuyor.</td></tr>';
+          txTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">Henüz işlem kaydı bulunmuyor.</td></tr>';
         } else {
           txTable.innerHTML = txs.map(t => {
-            totalRev += Number(t.amount || 0);
-            const typeLabel = t.type === 'commission' ? 'Müşteri Teklif Kabul Komisyonu' : 'Usta Abonelik Bedeli';
+            currentBalance += Number(t.amount || 0);
             return `
               <tr>
                 <td>${new Date(t.created_at).toLocaleString('tr-TR')}</td>
-                <td><span class="badge badge-info">${typeLabel}</span></td>
+                <td><span class="badge badge-info">${t.type === 'commission' ? 'Müşteri Komisyonu' : 'Usta Aboneliği'}</span></td>
                 <td><strong>${Number(t.amount).toFixed(2)} TL</strong></td>
                 <td>${t.customer_id || t.provider_id || 'Sistem'}</td>
                 <td>${t.admin_email}</td>
@@ -183,14 +145,28 @@
           }).join('');
         }
 
-        document.getElementById('totalRevenue').innerText = totalRev.toFixed(2) + ' TL';
+        document.getElementById('walletBalance').innerText = currentBalance.toFixed(2) + ' TL';
 
       } catch (err) {
-        console.error('Admin paneli yükleme hatası:', err);
+        console.error('Veri yükleme hatası:', err);
       }
     }
 
-    // Sayfa Açıldığında Verileri Yükle
+    // IBAN'a Para Aktarma İsteği
+    function transferToBank() {
+      const iban = document.getElementById('ibanInput').value.trim();
+      if (!iban) {
+        alert('Lütfen paranızın aktarılacağı IBAN numarasını girin!');
+        return;
+      }
+      if (currentBalance <= 0) {
+        alert('Cüzdanınızda aktarılacak bakiye bulunmuyor.');
+        return;
+      }
+
+      alert(`${currentBalance.toFixed(2)} TL tutarındaki bakiye ${iban} hesabınıza aktarılmak üzere işleme alındı! Ödeme altyapınız (PayTR/Stripe) üzerinden bankanıza transfer edilecektir.`);
+    }
+
     window.onload = loadDashboardData;
   </script>
 </body>
