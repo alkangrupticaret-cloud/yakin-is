@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yakın-İş - Yerel Hizmet ve İş Bulma Platformu</title>
+  <title>Yakın-İş - Ücretsiz Yerel Hizmet ve İş Bulma Platformu</title>
   <link rel="manifest" href="manifest.json">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -14,6 +14,10 @@
     
     .container { max-width: 500px; margin: 20px auto; padding: 0 16px; }
     
+    .hero-banner { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .hero-banner h1 { font-size: 20px; margin-bottom: 8px; color: #f59e0b; }
+    .hero-banner p { font-size: 13px; color: #cbd5e1; line-height: 1.4; }
+
     .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .card-provider { border-top: 4px solid #d97706; }
     .card-customer { border-top: 4px solid #2563eb; }
@@ -34,7 +38,6 @@
     .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; margin-top: 5px; }
     .btn-provider { background: #d97706; }
     .btn-customer { background: #2563eb; }
-    .btn-pay { background: #10b981; }
     .btn:hover { opacity: 0.9; }
     
     .pwa-install { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 20px; display: none; }
@@ -53,9 +56,15 @@
 
   <div class="container">
 
+    <!-- Hoş Geldin Rozeti -->
+    <div class="hero-banner">
+      <h1>%100 Ücretsiz Hizmet Pazarı</h1>
+      <p>Müşteriler aradığı ustayı buluyor, ustalar komisyonsuz iş alıyor!</p>
+    </div>
+
     <!-- Usta Portalı -->
     <div class="card card-provider">
-      <h2 class="card-title">Usta Portalı (7 Gün Ücretsiz Deneme)</h2>
+      <h2 class="card-title">Usta Portalı (Ücretsiz Profil)</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
@@ -65,24 +74,23 @@
       <!-- Usta Giriş Formu -->
       <div id="provider-login" class="form-section active">
         <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
-        <button class="btn btn-provider" onclick="directLogin('provider')">Sisteme Giriş Yap</button>
-        <button class="btn btn-pay" onclick="startLivePayment('subscription', 150.00)" style="margin-top:10px;">Canlı Abonelik Ödemesi Yap (150 TL)</button>
+        <button class="btn btn-provider" onclick="directLogin('provider')">Usta Paneline Giriş Yap</button>
       </div>
 
       <!-- Usta Kayıt Formu -->
       <div id="provider-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme Adı"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme / Dükkan Adı"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı, Boyacı, Oto Elektrik)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
-        <button class="btn btn-provider" onclick="registerDirect('provider')">Hemen Usta Olarak Kaydol</button>
+        <button class="btn btn-provider" onclick="registerDirect('provider')">Ücretsiz Usta Profilini Oluştur</button>
       </div>
     </div>
 
     <!-- Müşteri Portalı -->
     <div class="card card-customer">
-      <h2 class="card-title">Müşteri Portalı</h2>
+      <h2 class="card-title">Müşteri Portalı (Ücretsiz İlan)</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
@@ -92,20 +100,19 @@
       <!-- Müşteri Giriş Formu -->
       <div id="customer-login" class="form-section active">
         <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
-        <button class="btn btn-customer" onclick="directLogin('customer')">Sisteme Giriş Yap</button>
-        <button class="btn btn-pay" onclick="startLivePayment('commission', 50.00)" style="margin-top:10px;">Canlı Teklif Komisyonu Öde (50 TL)</button>
+        <button class="btn btn-customer" onclick="directLogin('customer')">Müşteri Paneline Giriş Yap</button>
       </div>
 
       <!-- Müşteri Kayıt Formu -->
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <button class="btn btn-customer" onclick="registerDirect('customer')">Hemen Müşteri Olarak Kaydol</button>
+        <button class="btn btn-customer" onclick="registerDirect('customer')">Ücretsiz Kaydol ve İlan Ver</button>
       </div>
     </div>
 
     <div id="installContainer" class="pwa-install">
-      <button id="installBtn" class="btn btn-customer">Uygulamayı Yükle</button>
+      <button id="installBtn" class="btn btn-customer">Uygulamayı Telefonuna Yükle</button>
     </div>
 
   </div>
@@ -128,14 +135,14 @@
       document.getElementById(`${portal}-${mode}`).classList.add('active');
     }
 
-    // Kodsuz Direkt Kayıt Olma Fonksiyonu
+    // Doğrudan Ücretsiz Kayıt Fonksiyonu
     async function registerDirect(portal) {
       if (portal === 'customer') {
         const fullName = document.getElementById('c-name').value.trim();
         const phone = document.getElementById('c-phone').value.trim();
 
         if (!fullName || !phone) {
-          alert('Lütfen tüm alanları doldurun!');
+          alert('Lütfen ad soyad ve telefon numaranızı girin!');
           return;
         }
 
@@ -148,7 +155,7 @@
         if (error) {
           alert('Kayıt Hatası: ' + error.message);
         } else {
-          alert('Tebrikler! Müşteri kaydınız başarıyla tamamlandı.');
+          alert('Tebrikler! Ücretsiz müşteri kaydınız başarıyla oluşturuldu.');
         }
 
       } else if (portal === 'provider') {
@@ -159,7 +166,7 @@
         const specialties = document.getElementById('p-spec').value.trim();
 
         if (!fullName || !phone || !businessName) {
-          alert('Lütfen zorunlu alanları doldurun!');
+          alert('Lütfen zorunlu alanları (Ad Soyad, Telefon, İşletme Adı) doldurun!');
           return;
         }
 
@@ -175,18 +182,18 @@
         if (error) {
           alert('Kayıt Hatası: ' + error.message);
         } else {
-          alert('Tebrikler! Usta kaydınız alındı ve 7 günlük ücretsiz deneme süreniz başladı.');
+          alert('Tebrikler! Ücretsiz usta profiliniz oluşturuldu.');
         }
       }
     }
 
-    // Kodsuz Direkt Giriş Yapma Fonksiyonu
+    // Doğrudan Giriş Fonksiyonu
     async function directLogin(portal) {
       const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
       const phone = document.getElementById(phoneId).value.trim();
 
       if (!phone) {
-        alert('Lütfen telefon numaranızı girin!');
+        alert('Lütfen kayıtlı telefon numaranızı girin!');
         return;
       }
 
@@ -197,36 +204,9 @@
         .single();
 
       if (error || !data) {
-        alert('Bu telefon numarasına ait kayıt bulunamadı. Lütfen önce kaydolun.');
+        alert('Bu telefon numarasıyla kayıtlı profil bulunamadı. Lütfen önce kaydolun.');
       } else {
-        alert(`Hoş geldiniz, ${data.full_name}! Giriş başarılı.`);
-      }
-    }
-
-    // Canlı Ödeme Altyapısı
-    async function startLivePayment(type, amount) {
-      const confirmPay = confirm(`Güvenli Ödeme Ekranı (PayTR / Stripe)\n\nTutar: ${amount.toFixed(2)} TL\nİşlem: ${type === 'commission' ? 'Teklif Kabul Komisyonu' : 'Usta Aylık Aboneliği'}\n\nÖdemeyi onaylıyor musunuz?`);
-      
-      if (!confirmPay) return;
-
-      try {
-        const { error } = await supabaseClient
-          .from('transactions')
-          .insert([{ 
-            amount: amount, 
-            type: type, 
-            admin_email: 'alkangrupticaret@gmail.com' 
-          }]);
-
-        if (error) throw error;
-
-        alert(`Ödeme başarıyla tamamlandı! ${amount.toFixed(2)} TL admin cüzdanına işlendi.`);
-        
-        if (confirm('Admin cüzdanını kontrol etmek ister misiniz?')) {
-          window.location.href = 'admin.html';
-        }
-      } catch (err) {
-        alert('Ödeme hatası: ' + err.message);
+        alert(`Hoş geldiniz Sayın ${data.full_name}! Giriş başarılı.`);
       }
     }
 
