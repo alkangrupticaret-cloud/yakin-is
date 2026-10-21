@@ -106,6 +106,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
+    // Şifre Koruma Mekanizması
+    const ADMIN_PASSWORD = "Selam.091024"; // Buradan şifreni dilediğin gibi değiştirebilirsin
+    
+    function checkAdminAuth() {
+      let password = prompt("Admin Paneli Şifresini Giriniz:");
+      if (password !== ADMIN_PASSWORD) {
+        alert("Hatalı şifre! Erişim reddedildi.");
+        window.location.href = "index.html"; // Hatalı şifrede ana sayfaya yönlendirir
+      }
+    }
+
+    // Sayfa açılır açılmaz şifre sor
+    checkAdminAuth();
+
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
     
@@ -114,7 +128,6 @@
 
     async function loadDashboardData() {
       try {
-        // 1. Profil Verilerini Çek
         const { data: profiles } = await supabaseClient.from('profiles').select('*');
         const providers = profiles ? profiles.filter(p => p.user_type === 'provider') : [];
         const customers = profiles ? profiles.filter(p => p.user_type === 'customer') : [];
@@ -122,7 +135,6 @@
         document.getElementById('totalProviders').innerText = providers.length;
         document.getElementById('totalCustomers').innerText = customers.length;
 
-        // 2. Cüzdan Bakiyesi ve İşlem Kayıtlarını Çek
         const { data: txs } = await supabaseClient.from('transactions').select('*').order('created_at', { ascending: false });
 
         currentBalance = 0;
@@ -152,7 +164,6 @@
       }
     }
 
-    // IBAN'a Para Aktarma İsteği
     function transferToBank() {
       const iban = document.getElementById('ibanInput').value.trim();
       if (!iban) {
@@ -164,7 +175,7 @@
         return;
       }
 
-      alert(`${currentBalance.toFixed(2)} TL tutarındaki bakiye ${iban} hesabınıza aktarılmak üzere işleme alındı! Ödeme altyapınız (PayTR/Stripe) üzerinden bankanıza transfer edilecektir.`);
+      alert(`${currentBalance.toFixed(2)} TL tutarındaki bakiye ${iban} hesabınıza aktarılmak üzere işleme alındı!`);
     }
 
     window.onload = loadDashboardData;
