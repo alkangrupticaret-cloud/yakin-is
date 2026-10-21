@@ -1,115 +1,138 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yakın-İş | Küresel Usta & Hizmet Platformu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yakın-İş - Yerel Hizmet ve İş Bulma Platformu</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; padding-bottom: 30px; }
+    header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+    .logo { font-size: 20px; font-weight: bold; color: #d97706; text-decoration: none; }
+    .lang-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; outline: none; }
+    
+    .container { max-width: 500px; margin: 20px auto; padding: 0 16px; }
+    
+    .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .card-provider { border-top: 4px solid #d97706; }
+    .card-customer { border-top: 4px solid #2563eb; }
+    
+    .card-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
+    
+    .tab-group { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 16px; }
+    .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; font-weight: 600; font-size: 14px; color: #64748b; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: #fff; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    
+    .form-group { margin-bottom: 12px; }
+    .input-field { width: 100%; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .input-field:focus { border-color: #3b82f6; }
+    
+    .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; }
+    .btn-provider { background: #d97706; }
+    .btn-customer { background: #2563eb; }
+    .btn:hover { opacity: 0.9; }
+    
+    .pwa-install { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 20px; display: none; }
+  </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
 
-    <!-- HEADER / BAŞLIK -->
-    <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold flex items-center gap-2 text-amber-600 dark:text-amber-500">
-            <i class="fa-solid font-wrench"></i> Yakın-İş
-        </h1>
-    </header>
+  <header>
+    <a href="#" class="logo" data-i18n="appName">Yakın-İş</a>
+    <!-- Dil Seçici Buton -->
+    <select id="languageSelect" class="lang-select" onchange="setLanguage(this.value)">
+      <option value="tr">🇹🇷 TR</option>
+      <option value="en">🇺🇸 EN</option>
+      <option value="de">🇩🇪 DE</option>
+    </select>
+  </header>
 
-    <!-- ANA İÇERİK -->
-    <main class="flex-1 p-4 max-w-xl mx-auto w-full space-y-6">
+  <div class="container">
 
-        <!-- USTA PORTALI -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-amber-500">
-            <h2 class="text-lg font-bold mb-4">Usta Portalı</h2>
-            <div class="flex gap-2 mb-4 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
-                <button class="flex-1 py-2 font-semibold bg-white dark:bg-gray-800 rounded-md shadow-sm">Giriş Yap</button>
-                <button class="flex-1 py-2 font-semibold text-gray-500 dark:text-gray-400">Kaydol</button>
-            </div>
-            <div class="space-y-3">
-                <input type="email" placeholder="E-Posta Adresi" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                <input type="tel" placeholder="Cep Numarası" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                <button class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition shadow">6 Haneli Kod ile Giriş Yap</button>
-            </div>
-        </div>
+    <!-- Usta Portalı -->
+    <div class="card card-provider">
+      <h2 class="card-title" data-i18n="providerPortal">Usta Portalı</h2>
+      
+      <div class="tab-group">
+        <button class="tab-btn active" data-i18n="login" onclick="switchTab(this)">Giriş Yap</button>
+        <button class="tab-btn" data-i18n="register" onclick="switchTab(this)">Kaydol</button>
+      </div>
 
-        <!-- MÜŞTERİ PORTALI -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-blue-600">
-            <h2 class="text-lg font-bold mb-4">Müşteri Portalı</h2>
-            <div class="flex gap-2 mb-4 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
-                <button class="flex-1 py-2 font-semibold bg-white dark:bg-gray-800 rounded-md shadow-sm">Giriş Yap</button>
-                <button class="flex-1 py-2 font-semibold text-gray-500 dark:text-gray-400">Kaydol</button>
-            </div>
-            <div class="space-y-3">
-                <input type="email" placeholder="E-Posta Adresi" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                <input type="tel" placeholder="Cep Numarası" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow">6 Haneli Kod ile Giriş Yap</button>
-            </div>
-        </div>
+      <div class="form-group">
+        <input type="email" class="input-field" data-i18n="emailPlaceholder" placeholder="E-Posta Adresi">
+      </div>
+      <div class="form-group">
+        <input type="tel" class="input-field" data-i18n="phonePlaceholder" placeholder="Cep Numarası">
+      </div>
 
-        <!-- İLAN LİSTESİ ALANI -->
-        <div id="jobList" class="space-y-2"></div>
-
-    </main>
-
-    <!-- MEVCUT KODLARINIZ / SCRIPT -->
-    <script>
-        function getData(key) {
-            return JSON.parse(localStorage.getItem(key) || '[]');
-        }
-
-        function renderJobs() {
-            const jobs = getData('systemJobs');
-            const box = document.getElementById('jobList');
-            box.innerHTML = jobs.length === 0 ? '<p class="text-xs text-gray-400">Henüz ilan yok.</p>' : '';
-            jobs.forEach(j => {
-                box.innerHTML += `<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded text-xs"><b>${j.title}</b><p>${j.desc}</p></div>`;
-            });
-        }
-        renderJobs();
-    </script>
-
-    <!-- UYGULAMAYI İNDİR BUTONU -->
-    <div id="pwa-install-container" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
-      <button id="pwa-install-btn" style="background-color: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; gap: 8px;">
-        📲 Yakın İş Uygulamasını İndir
-      </button>
+      <button class="btn btn-provider" data-i18n="loginWithCode">6 Haneli Kod ile Giriş Yap</button>
     </div>
 
-    <script>
-      let deferredPrompt;
-      const installContainer = document.getElementById('pwa-install-container');
-      const installBtn = document.getElementById('pwa-install-btn');
+    <!-- Müşteri Portalı -->
+    <div class="card card-customer">
+      <h2 class="card-title" data-i18n="customerPortal">Müşteri Portalı</h2>
+      
+      <div class="tab-group">
+        <button class="tab-btn active" data-i18n="login" onclick="switchTab(this)">Giriş Yap</button>
+        <button class="tab-btn" data-i18n="register" onclick="switchTab(this)">Kaydol</button>
+      </div>
 
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (installContainer) {
-          installContainer.style.display = 'block';
-        }
-      });
+      <div class="form-group">
+        <input type="email" class="input-field" data-i18n="emailPlaceholder" placeholder="E-Posta Adresi">
+      </div>
+      <div class="form-group">
+        <input type="tel" class="input-field" data-i18n="phonePlaceholder" placeholder="Cep Numarası">
+      </div>
 
-      if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-              console.log('Uygulama indirildi');
-            }
-            deferredPrompt = null;
-            installContainer.style.display = 'none';
+      <button class="btn btn-customer" data-i18n="loginWithCode">6 Haneli Kod ile Giriş Yap</button>
+    </div>
+
+    <!-- PWA Kurulum Alanı -->
+    <div id="installContainer" class="pwa-install">
+      <button id="installBtn" class="btn btn-customer">Uygulamayı Yükle</button>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // PWA Kurulum Kodları
+    let deferredPrompt;
+    const installContainer = document.getElementById('installContainer');
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (installContainer) installContainer.style.display = 'block';
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            console.log('Uygulama indirildi');
           }
-        });
-      }
-
-      window.addEventListener('appinstalled', () => {
-        if (installContainer) {
+          deferredPrompt = null;
           installContainer.style.display = 'none';
         }
       });
-    </script>
-<script src="js/translations.js"></script>
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (installContainer) installContainer.style.display = 'none';
+    });
+  </script>
+
+  <!-- Dil Sistemi Dosyası Bağlantısı -->
+  <script src="js/translations.js"></script>
 </body>
 </html>
