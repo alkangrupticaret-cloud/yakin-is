@@ -43,7 +43,7 @@
 <body>
 
   <header>
-    <a href="#" class="logo" data-i18n="appName">Yakın-İş</a>
+    <a href="#" class="logo">Yakın-İş</a>
     <select id="languageSelect" class="lang-select" onchange="setLanguage(this.value)">
       <option value="tr">🇹🇷 TR</option>
       <option value="en">🇺🇸 EN</option>
@@ -55,7 +55,7 @@
 
     <!-- Usta Portalı -->
     <div class="card card-provider">
-      <h2 class="card-title" data-i18n="providerPortal">Usta Portalı (7 Gün Ücretsiz Deneme)</h2>
+      <h2 class="card-title">Usta Portalı (7 Gün Ücretsiz Deneme)</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
@@ -64,26 +64,25 @@
 
       <!-- Usta Giriş Formu -->
       <div id="provider-login" class="form-section active">
-        <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
-        <button class="btn btn-provider" onclick="handleAuth('provider', 'login')">Giriş Yap</button>
-        <button class="btn btn-pay" onclick="startLivePayment('subscription', 150.00)" style="margin-top:10px;">Canlı Abonelik Ödemesi Yap (PayTR/Stripe)</button>
+        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
+        <button class="btn btn-provider" onclick="directLogin('provider')">Sisteme Giriş Yap</button>
+        <button class="btn btn-pay" onclick="startLivePayment('subscription', 150.00)" style="margin-top:10px;">Canlı Abonelik Ödemesi Yap (150 TL)</button>
       </div>
 
       <!-- Usta Kayıt Formu -->
       <div id="provider-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="email" class="input-field" id="p-email" placeholder="Gmail (E-Posta Adresi)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme Adı"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
-        <button class="btn btn-provider" onclick="handleAuth('provider', 'register')">Usta Olarak Kaydol</button>
+        <button class="btn btn-provider" onclick="registerDirect('provider')">Hemen Usta Olarak Kaydol</button>
       </div>
     </div>
 
     <!-- Müşteri Portalı -->
     <div class="card card-customer">
-      <h2 class="card-title" data-i18n="customerPortal">Müşteri Portalı</h2>
+      <h2 class="card-title">Müşteri Portalı</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
@@ -92,8 +91,8 @@
 
       <!-- Müşteri Giriş Formu -->
       <div id="customer-login" class="form-section active">
-        <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
-        <button class="btn btn-customer" onclick="handleAuth('customer', 'login')">Giriş Yap</button>
+        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
+        <button class="btn btn-customer" onclick="directLogin('customer')">Sisteme Giriş Yap</button>
         <button class="btn btn-pay" onclick="startLivePayment('commission', 50.00)" style="margin-top:10px;">Canlı Teklif Komisyonu Öde (50 TL)</button>
       </div>
 
@@ -101,8 +100,7 @@
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="email" class="input-field" id="c-email" placeholder="Gmail (E-Posta Adresi)"></div>
-        <button class="btn btn-customer" onclick="handleAuth('customer', 'register')">Müşteri Olarak Kaydol</button>
+        <button class="btn btn-customer" onclick="registerDirect('customer')">Hemen Müşteri Olarak Kaydol</button>
       </div>
     </div>
 
@@ -112,9 +110,8 @@
 
   </div>
 
-  <!-- Supabase & Stripe JS SDK -->
+  <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://js.stripe.com/v3/"></script>
 
   <script>
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
@@ -131,95 +128,84 @@
       document.getElementById(`${portal}-${mode}`).classList.add('active');
     }
 
-    async function handleAuth(portal, type) {
-      if (type === 'register') {
-        if (portal === 'customer') {
-          const fullName = document.getElementById('c-name').value.trim();
-          const phone = document.getElementById('c-phone').value.trim();
-          const email = document.getElementById('c-email').value.trim();
+    // Kodsuz Direkt Kayıt Olma Fonksiyonu
+    async function registerDirect(portal) {
+      if (portal === 'customer') {
+        const fullName = document.getElementById('c-name').value.trim();
+        const phone = document.getElementById('c-phone').value.trim();
 
-          if (!fullName || !phone || !email) {
-            alert('Lütfen tüm alanları doldurun!');
-            return;
-          }
-
-          const { data, error } = await supabaseClient.auth.signInWithOtp({
-            email: email,
-            options: { data: { user_type: 'customer', full_name: fullName, phone: phone } }
-          });
-
-          if (error) {
-            alert('Kayıt Hatası: ' + error.message);
-            return;
-          }
-
-          const userId = data?.user?.id;
-          if (userId) {
-            await supabaseClient.from('profiles').upsert([{
-              id: userId,
-              user_type: 'customer',
-              full_name: fullName,
-              phone: phone
-            }]);
-          }
-
-          alert('Müşteri kaydınız alındı! E-postanıza doğrulama kodu gönderildi.');
-
-        } else if (portal === 'provider') {
-          const fullName = document.getElementById('p-name').value.trim();
-          const phone = document.getElementById('p-phone').value.trim();
-          const email = document.getElementById('p-email').value.trim();
-          const businessName = document.getElementById('p-biz').value.trim();
-          const branch = document.getElementById('p-branch').value.trim();
-          const specialties = document.getElementById('p-spec').value.trim();
-
-          if (!fullName || !phone || !email || !businessName) {
-            alert('Lütfen zorunlu alanları doldurun!');
-            return;
-          }
-
-          const { data, error } = await supabaseClient.auth.signInWithOtp({
-            email: email,
-            options: { data: { user_type: 'provider', full_name: fullName, phone: phone } }
-          });
-
-          if (error) {
-            alert('Kayıt Hatası: ' + error.message);
-            return;
-          }
-
-          const userId = data?.user?.id;
-          if (userId) {
-            await supabaseClient.from('profiles').upsert([{
-              id: userId,
-              user_type: 'provider',
-              full_name: fullName,
-              phone: phone,
-              business_name: businessName,
-              branch: branch,
-              specialties: specialties
-            }]);
-          }
-
-          alert('Usta kaydınız başarıyla alındı! Doğrulama kodu e-postanıza gönderildi ve 7 günlük deneme süreniz başladı.');
-        }
-      } else if (type === 'login') {
-        const card = event.target.closest('.card');
-        const email = card.querySelector('input[type="email"]').value.trim();
-
-        if (!email) {
-          alert('Lütfen e-posta adresinizi girin!');
+        if (!fullName || !phone) {
+          alert('Lütfen tüm alanları doldurun!');
           return;
         }
 
-        const { error } = await supabaseClient.auth.signInWithOtp({ email });
-        if (error) alert('Giriş Hatası: ' + error.message);
-        else alert('Giriş doğrulama kodu e-postanıza gönderildi!');
+        const { error } = await supabaseClient.from('profiles').insert([{
+          user_type: 'customer',
+          full_name: fullName,
+          phone: phone
+        }]);
+
+        if (error) {
+          alert('Kayıt Hatası: ' + error.message);
+        } else {
+          alert('Tebrikler! Müşteri kaydınız başarıyla tamamlandı.');
+        }
+
+      } else if (portal === 'provider') {
+        const fullName = document.getElementById('p-name').value.trim();
+        const phone = document.getElementById('p-phone').value.trim();
+        const businessName = document.getElementById('p-biz').value.trim();
+        const branch = document.getElementById('p-branch').value.trim();
+        const specialties = document.getElementById('p-spec').value.trim();
+
+        if (!fullName || !phone || !businessName) {
+          alert('Lütfen zorunlu alanları doldurun!');
+          return;
+        }
+
+        const { error } = await supabaseClient.from('profiles').insert([{
+          user_type: 'provider',
+          full_name: fullName,
+          phone: phone,
+          business_name: businessName,
+          branch: branch,
+          specialties: specialties
+        }]);
+
+        if (error) {
+          alert('Kayıt Hatası: ' + error.message);
+        } else {
+          alert('Tebrikler! Usta kaydınız alındı ve 7 günlük ücretsiz deneme süreniz başladı.');
+        }
       }
     }
 
+    // Kodsuz Direkt Giriş Yapma Fonksiyonu
+    async function directLogin(portal) {
+      const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
+      const phone = document.getElementById(phoneId).value.trim();
+
+      if (!phone) {
+        alert('Lütfen telefon numaranızı girin!');
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('phone', phone)
+        .single();
+
+      if (error || !data) {
+        alert('Bu telefon numarasına ait kayıt bulunamadı. Lütfen önce kaydolun.');
+      } else {
+        alert(`Hoş geldiniz, ${data.full_name}! Giriş başarılı.`);
+      }
+    }
+
+    // Canlı Ödeme Altyapısı
     async function startLivePayment(type, amount) {
-      const confirmPay = confirm(`Güvenli Ödeme Ekranı (PayTR / Stripe)\n\nTutar: ${amount.toFixed(2)} TL\nİşlem: ${type === 'commission' ? 'Teklif Kabul Komisyonu' : 'Usta Aylık Aboneliği'}\n\nÖdeme sayfasına yönlendiriliyorsunuz. Onaylıyor musunuz?`);
+      const confirmPay = confirm(`Güvenli Ödeme Ekranı (PayTR / Stripe)\n\nTutar: ${amount.toFixed(2)} TL\nİşlem: ${type === 'commission' ? 'Teklif Kabul Komisyonu' : 'Usta Aylık Aboneliği'}\n\nÖdemeyi onaylıyor musunuz?`);
       
       if (!confirmPay) return;
 
@@ -234,14 +220,13 @@
 
         if (error) throw error;
 
-        alert(`Ödeme başarıyla tamamlandı! ${amount.toFixed(2)} TL tutarındaki tahsilat onaylandı ve admin cüzdanı kasasına anında eklendi.`);
+        alert(`Ödeme başarıyla tamamlandı! ${amount.toFixed(2)} TL admin cüzdanına işlendi.`);
         
-        if (confirm('Admin cüzdanınızı kontrol etmek ister misiniz?')) {
+        if (confirm('Admin cüzdanını kontrol etmek ister misiniz?')) {
           window.location.href = 'admin.html';
         }
-
       } catch (err) {
-        alert('Ödeme işlem hatası: ' + err.message);
+        alert('Ödeme hatası: ' + err.message);
       }
     }
 
@@ -260,6 +245,5 @@
       }
     });
   </script>
-  <script src="js/translations.js"></script>
 </body>
 </html>
