@@ -34,6 +34,7 @@
     .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; margin-top: 5px; }
     .btn-provider { background: #d97706; }
     .btn-customer { background: #2563eb; }
+    .btn-pay { background: #10b981; }
     .btn:hover { opacity: 0.9; }
     
     .pwa-install { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 20px; display: none; }
@@ -54,7 +55,7 @@
 
     <!-- Usta Portalı -->
     <div class="card card-provider">
-      <h2 class="card-title" data-i18n="providerPortal">Usta Portalı</h2>
+      <h2 class="card-title" data-i18n="providerPortal">Usta Portalı (7 Gün Ücretsiz Deneme)</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
@@ -65,6 +66,7 @@
       <div id="provider-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
         <button class="btn btn-provider" onclick="handleAuth('provider', 'login')">Giriş Yap</button>
+        <button class="btn btn-pay" onclick="startSubscriptionPayment()" style="margin-top:10px;">Abonelik Ödemesi Yap (Stripe / PayTR)</button>
       </div>
 
       <!-- Usta Kayıt Formu -->
@@ -92,6 +94,7 @@
       <div id="customer-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
         <button class="btn btn-customer" onclick="handleAuth('customer', 'login')">Giriş Yap</button>
+        <button class="btn btn-pay" onclick="startCommissionPayment()" style="margin-top:10px;">Teklif Kabul Komisyonu Öde (50 TL)</button>
       </div>
 
       <!-- Müşteri Kayıt Formu -->
@@ -109,17 +112,16 @@
 
   </div>
 
-  <!-- Supabase JS Library -->
+  <!-- Supabase & Stripe JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://js.stripe.com/v3/"></script>
 
   <script>
-    // Supabase Bağlantı Bilgilerin
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-
+    
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Tab Değiştirme Fonksiyonu
     function switchTab(btn, portal, mode) {
       const card = btn.closest('.card');
       card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -129,7 +131,6 @@
       document.getElementById(`${portal}-${mode}`).classList.add('active');
     }
 
-    // Supabase İle Giriş Ve Kayıt İşlemleri
     async function handleAuth(portal, type) {
       if (type === 'register') {
         if (portal === 'customer') {
@@ -142,22 +143,13 @@
             return;
           }
 
-          const { data, error } = await supabaseClient.auth.signInWithOtp({
+          const { error } = await supabaseClient.auth.signInWithOtp({
             email: email,
-            options: {
-              data: {
-                user_type: 'customer',
-                full_name: fullName,
-                phone: phone
-              }
-            }
+            options: { data: { user_type: 'customer', full_name: fullName, phone: phone } }
           });
 
-          if (error) {
-            alert('Kayıt Hatası: ' + error.message);
-          } else {
-            alert('Müşteri kaydınız alındı! E-postanıza giriş için doğrulama kodu gönderildi.');
-          }
+          if (error) alert('Kayıt Hatası: ' + error.message);
+          else alert('Müşteri kaydınız alındı! E-postanıza doğrulama kodu gönderildi.');
 
         } else if (portal === 'provider') {
           const fullName = document.getElementById('p-name').value.trim();
@@ -172,70 +164,75 @@
             return;
           }
 
-          const { data, error } = await supabaseClient.auth.signInWithOtp({
+          const { error } = await supabaseClient.auth.signInWithOtp({
             email: email,
-            options: {
-              data: {
-                user_type: 'provider',
-                full_name: fullName,
-                phone: phone,
-                business_name: businessName,
-                branch: branch,
-                specialties: specialties
-              }
-            }
+            options: { data: { user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: specialties } }
           });
 
-          if (error) {
-            alert('Kayıt Hatası: ' + error.message);
-          } else {
-            alert('Usta kaydınız alındı! 7 günlük ücretsiz deneme süreniz başladı. E-postanıza doğrulama kodu gönderildi.');
-          }
+          if (error) alert('Kayıt Hatası: ' + error.message);
+          else alert('Usta kaydınız alındı! 7 günlük ücretsiz deneme süreniz başladı.');
         }
       } else if (type === 'login') {
         const card = event.target.closest('.card');
-        const emailInput = card.querySelector('input[type="email"]');
-        const email = emailInput ? emailInput.value.trim() : '';
+        const email = card.querySelector('input[type="email"]').value.trim();
 
         if (!email) {
           alert('Lütfen e-posta adresinizi girin!');
           return;
         }
 
-        const { data, error } = await supabaseClient.auth.signInWithOtp({ email });
+        const { error } = await supabaseClient.auth.signInWithOtp({ email });
+        if (error) alert('Giriş Hatası: ' + error.message);
+        else alert('Giriş doğrulama kodu e-postanıza gönderildi!');
+      }
+    }
 
-        if (error) {
-          alert('Giriş Hatası: ' + error.message);
-        } else {
-          alert('Giriş doğrulama kodu e-posta adresinize gönderildi!');
-        }
+    // Ödeme Tetikleyici Simülasyonu ve Veritabanı Kaydı (PayTR / Stripe Entegrasyon Noktası)
+    async function recordTransaction(amount, type) {
+      const { error } = await supabaseClient
+        .from('transactions')
+        .insert([{ amount: amount, type: type, admin_email: 'alkangrupticaret@gmail.com' }]);
+
+      if (error) {
+        alert('Ödeme kayıt hatası: ' + error.message);
+      } else {
+        alert(`Ödeme başarılı (${amount} TL)! İşlem onaylandı ve admin cüzdanınıza eklendi.`);
+        // Admin sayfasına yansıyıp yansımadığını görmek için sayfayı yenileyebilirsiniz
+      }
+    }
+
+    function startCommissionPayment() {
+      // Müşteri Teklif Kabul Komisyonu (10 - 100 TL arası örn: 50 TL)
+      const confirmed = confirm('Teklifi kabul etmek için 50 TL hizmet komisyonu ödenecektir. Onaylıyor musunuz? (PayTR / Stripe Sanal POS)');
+      if (confirmed) {
+        recordTransaction(50.00, 'commission');
+      }
+    }
+
+    function startSubscriptionPayment() {
+      // Usta Abonelik Bedeli
+      const confirmed = confirm('7 günlük deneme süreniz sonrasında aylık usta aboneliği başlatılacaktır. Ödemeyi onaylıyor musunuz?');
+      if (confirmed) {
+        recordTransaction(150.00, 'subscription');
       }
     }
 
     // PWA Kurulum Mantığı
     let deferredPrompt;
-    const installContainer = document.getElementById('installContainer');
-    const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (installContainer) installContainer.style.display = 'block';
+      document.getElementById('installContainer').style.display = 'block';
     });
 
-    if (installBtn) {
-      installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          deferredPrompt = null;
-          installContainer.style.display = 'none';
-        }
-      });
-    }
+    document.getElementById('installBtn')?.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+        document.getElementById('installContainer').style.display = 'none';
+      }
+    });
   </script>
-
-  <!-- Dil Dosyası Entegrasyonu -->
   <script src="js/translations.js"></script>
 </body>
 </html>
