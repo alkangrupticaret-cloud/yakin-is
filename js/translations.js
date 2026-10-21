@@ -1,82 +1,64 @@
-// js/translations.js - Yakın-İş Küresel Dil Sözlüğü
-
 const translations = {
   tr: {
     appName: "Yakın-İş",
-    findService: "Hizmet Bul",
-    becomeProvider: "Hizmet Veren Ol",
-    searchPlaceholder: "Hizmet veya usta ara (ör. Tesisatçı, Elektrikçi)...",
-    categories: "Kategoriler",
+    providerPortal: "Usta Portalı",
+    customerPortal: "Müşteri Portalı",
     login: "Giriş Yap",
-    register: "Kayıt Ol",
-    profile: "Profilim",
-    logout: "Çıkış Yap",
-    nearbyServices: "Yakındaki Hizmetler",
-    selectLanguage: "Dil",
-    currency: "₺ (TRY)"
+    register: "Kaydol",
+    emailPlaceholder: "E-Posta Adresi",
+    phonePlaceholder: "Cep Numarası",
+    loginWithCode: "6 Haneli Kod ile Giriş Yap",
+    findService: "Hizmet Bul",
+    becomeProvider: "Hizmet Veren Ol"
   },
   en: {
     appName: "Yakın-İş Global",
-    findService: "Find Services",
-    becomeProvider: "Become a Provider",
-    searchPlaceholder: "Search for services or pros (e.g. Plumber, Electrician)...",
-    categories: "Categories",
+    providerPortal: "Provider Portal",
+    customerPortal: "Customer Portal",
     login: "Log In",
     register: "Sign Up",
-    profile: "My Profile",
-    logout: "Log Out",
-    nearbyServices: "Nearby Services",
-    selectLanguage: "Language",
-    currency: "$ (USD)"
+    emailPlaceholder: "Email Address",
+    phonePlaceholder: "Phone Number",
+    loginWithCode: "Log In with 6-Digit Code",
+    findService: "Find Services",
+    becomeProvider: "Become a Provider"
   },
   de: {
     appName: "Yakın-İş Global",
-    findService: "Dienste finden",
-    becomeProvider: "Anbieter werden",
-    searchPlaceholder: "Dienstleistungen suchen (z.B. Klempner, Elektriker)...",
-    categories: "Kategorien",
+    providerPortal: "Anbieterportal",
+    customerPortal: "Kundenportal",
     login: "Anmelden",
     register: "Registrieren",
-    profile: "Mein Profil",
-    logout: "Abmelden",
-    nearbyServices: "Dienste in der Nähe",
-    selectLanguage: "Sprache",
-    currency: "€ (EUR)"
+    emailPlaceholder: "E-Mail-Adresse",
+    phonePlaceholder: "Handynummer",
+    loginWithCode: "Mit 6-stelligen Code anmelden",
+    findService: "Dienste finden",
+    becomeProvider: "Anbieter werden"
   }
 };
 
-// Tarayıcı hafızasındaki dili al veya varsayılan Türkçe yap
 let currentLang = localStorage.getItem('yakinis_lang') || 'tr';
 
-// Dili değiştiren ve sayfadaki metinleri güncelleyen fonksiyon
 function setLanguage(lang) {
   if (!translations[lang]) return;
-  
   currentLang = lang;
   localStorage.setItem('yakinis_lang', lang);
 
-  // HTML üzerindeki data-i18n etiketine sahip tüm elemanları güncelle
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
     if (translations[lang][key]) {
       if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-        if (element.placeholder) {
-          element.placeholder = translations[lang][key];
-        }
+        element.placeholder = translations[lang][key];
       } else {
         element.innerText = translations[lang][key];
       }
     }
   });
 
-  // Seçici (Select) elemanı varsa durumunu güncelle
   const langSelect = document.getElementById('languageSelect');
-  if (langSelect) {
-    langSelect.value = lang;
-  }
+  if (langSelect) langSelect.value = lang;
 }
 
-// Sayfa yüklendiğinde seçili dili otomatik uygula
 document.addEventListener('DOMContentLoaded', () => {
   setLanguage(currentLang);
 });
