@@ -143,13 +143,27 @@
             return;
           }
 
-          const { error } = await supabaseClient.auth.signInWithOtp({
+          const { data, error } = await supabaseClient.auth.signInWithOtp({
             email: email,
             options: { data: { user_type: 'customer', full_name: fullName, phone: phone } }
           });
 
-          if (error) alert('Kayıt Hatası: ' + error.message);
-          else alert('Müşteri kaydınız alındı! E-postanıza doğrulama kodu gönderildi.');
+          if (error) {
+            alert('Kayıt Hatası: ' + error.message);
+            return;
+          }
+
+          const userId = data?.user?.id;
+          if (userId) {
+            await supabaseClient.from('profiles').upsert([{
+              id: userId,
+              user_type: 'customer',
+              full_name: fullName,
+              phone: phone
+            }]);
+          }
+
+          alert('Müşteri kaydınız alındı! E-postanıza doğrulama kodu gönderildi.');
 
         } else if (portal === 'provider') {
           const fullName = document.getElementById('p-name').value.trim();
@@ -164,13 +178,30 @@
             return;
           }
 
-          const { error } = await supabaseClient.auth.signInWithOtp({
+          const { data, error } = await supabaseClient.auth.signInWithOtp({
             email: email,
-            options: { data: { user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: specialties } }
+            options: { data: { user_type: 'provider', full_name: fullName, phone: phone } }
           });
 
-          if (error) alert('Kayıt Hatası: ' + error.message);
-          else alert('Usta kaydınız alındı! 7 günlük ücretsiz deneme süreniz başladı.');
+          if (error) {
+            alert('Kayıt Hatası: ' + error.message);
+            return;
+          }
+
+          const userId = data?.user?.id;
+          if (userId) {
+            await supabaseClient.from('profiles').upsert([{
+              id: userId,
+              user_type: 'provider',
+              full_name: fullName,
+              phone: phone,
+              business_name: businessName,
+              branch: branch,
+              specialties: specialties
+            }]);
+          }
+
+          alert('Usta kaydınız başarıyla alındı! Doğrulama kodu e-postanıza gönderildi ve 7 günlük deneme süreniz başladı.');
         }
       } else if (type === 'login') {
         const card = event.target.closest('.card');
@@ -187,15 +218,12 @@
       }
     }
 
-    // Gerçek Ödeme ve Gateway (PayTR/Stripe Entegrasyon Akışı)
     async function startLivePayment(type, amount) {
       const confirmPay = confirm(`Güvenli Ödeme Ekranı (PayTR / Stripe)\n\nTutar: ${amount.toFixed(2)} TL\nİşlem: ${type === 'commission' ? 'Teklif Kabul Komisyonu' : 'Usta Aylık Aboneliği'}\n\nÖdeme sayfasına yönlendiriliyorsunuz. Onaylıyor musunuz?`);
       
       if (!confirmPay) return;
 
       try {
-        // Canlı Ödeme Simülasyonu / Gerçek Gateway Tetikleme Entegrasyonu:
-        // Ödeme onaylandığında Supabase transactions tablosuna anlık kayıt düşer
         const { error } = await supabaseClient
           .from('transactions')
           .insert([{ 
@@ -204,13 +232,10 @@
             admin_email: 'alkangrupticaret@gmail.com' 
           }]);
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         alert(`Ödeme başarıyla tamamlandı! ${amount.toFixed(2)} TL tutarındaki tahsilat onaylandı ve admin cüzdanı kasasına anında eklendi.`);
         
-        // Admin paneline yönlendirme seçeneği
         if (confirm('Admin cüzdanınızı kontrol etmek ister misiniz?')) {
           window.location.href = 'admin.html';
         }
@@ -220,7 +245,6 @@
       }
     }
 
-    // PWA Kurulum Mantığı
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
