@@ -1,19 +1,20 @@
 {
-  "name": "Yakınİş — İhtiyacın, yakında.",
-  "short_name": "Yakınİş",
-  "start_url": "./index.html",
+  "name": "Yakın-İş Global Services",
+  "short_name": "Yakın-İş",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f8fc",
-  "theme_color": "#1d4ed8",
-  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0066ff",
+  "description": "Find local services and book trusted professionals globally.",
+  "lang": "en-US",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3082/3082383.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3082/3082383.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
