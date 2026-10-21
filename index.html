@@ -64,11 +64,10 @@
       <!-- Usta Giriş Formu -->
       <div id="provider-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
-        <div class="form-group"><input type="tel" class="input-field" placeholder="Cep Numarası"></div>
         <button class="btn btn-provider" onclick="handleAuth('provider', 'login')">Giriş Yap</button>
       </div>
 
-      <!-- Usta Kayıt Formu (İstediğin Ekstra Alanlar) -->
+      <!-- Usta Kayıt Formu -->
       <div id="provider-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
@@ -92,11 +91,10 @@
       <!-- Müşteri Giriş Formu -->
       <div id="customer-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
-        <div class="form-group"><input type="tel" class="input-field" placeholder="Cep Numarası"></div>
         <button class="btn btn-customer" onclick="handleAuth('customer', 'login')">Giriş Yap</button>
       </div>
 
-      <!-- Müşteri Kayıt Formu (İstediğin Alanlar) -->
+      <!-- Müşteri Kayıt Formu -->
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
@@ -111,7 +109,17 @@
 
   </div>
 
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
+    // Supabase Bağlantı Bilgilerin
+    const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Tab Değiştirme Fonksiyonu
     function switchTab(btn, portal, mode) {
       const card = btn.closest('.card');
       card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -121,8 +129,87 @@
       document.getElementById(`${portal}-${mode}`).classList.add('active');
     }
 
-    function handleAuth(portal, type) {
-      alert(portal.toUpperCase() + ' - ' + type.toUpperCase() + ' işlemi tetiklendi! Altyapı veritabanına bağlanıyor...');
+    // Supabase İle Giriş Ve Kayıt İşlemleri
+    async function handleAuth(portal, type) {
+      if (type === 'register') {
+        if (portal === 'customer') {
+          const fullName = document.getElementById('c-name').value.trim();
+          const phone = document.getElementById('c-phone').value.trim();
+          const email = document.getElementById('c-email').value.trim();
+
+          if (!fullName || !phone || !email) {
+            alert('Lütfen tüm alanları doldurun!');
+            return;
+          }
+
+          const { data, error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: {
+              data: {
+                user_type: 'customer',
+                full_name: fullName,
+                phone: phone
+              }
+            }
+          });
+
+          if (error) {
+            alert('Kayıt Hatası: ' + error.message);
+          } else {
+            alert('Müşteri kaydınız alındı! E-postanıza giriş için doğrulama kodu gönderildi.');
+          }
+
+        } else if (portal === 'provider') {
+          const fullName = document.getElementById('p-name').value.trim();
+          const phone = document.getElementById('p-phone').value.trim();
+          const email = document.getElementById('p-email').value.trim();
+          const businessName = document.getElementById('p-biz').value.trim();
+          const branch = document.getElementById('p-branch').value.trim();
+          const specialties = document.getElementById('p-spec').value.trim();
+
+          if (!fullName || !phone || !email || !businessName) {
+            alert('Lütfen zorunlu alanları doldurun!');
+            return;
+          }
+
+          const { data, error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: {
+              data: {
+                user_type: 'provider',
+                full_name: fullName,
+                phone: phone,
+                business_name: businessName,
+                branch: branch,
+                specialties: specialties
+              }
+            }
+          });
+
+          if (error) {
+            alert('Kayıt Hatası: ' + error.message);
+          } else {
+            alert('Usta kaydınız alındı! 7 günlük ücretsiz deneme süreniz başladı. E-postanıza doğrulama kodu gönderildi.');
+          }
+        }
+      } else if (type === 'login') {
+        const card = event.target.closest('.card');
+        const emailInput = card.querySelector('input[type="email"]');
+        const email = emailInput ? emailInput.value.trim() : '';
+
+        if (!email) {
+          alert('Lütfen e-posta adresinizi girin!');
+          return;
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithOtp({ email });
+
+        if (error) {
+          alert('Giriş Hatası: ' + error.message);
+        } else {
+          alert('Giriş doğrulama kodu e-posta adresinize gönderildi!');
+        }
+      }
     }
 
     // PWA Kurulum Mantığı
@@ -148,6 +235,7 @@
     }
   </script>
 
+  <!-- Dil Dosyası Entegrasyonu -->
   <script src="js/translations.js"></script>
 </body>
 </html>
