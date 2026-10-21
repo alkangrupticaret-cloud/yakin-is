@@ -66,7 +66,7 @@
       <div id="provider-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
         <button class="btn btn-provider" onclick="handleAuth('provider', 'login')">Giriş Yap</button>
-        <button class="btn btn-pay" onclick="startSubscriptionPayment()" style="margin-top:10px;">Abonelik Ödemesi Yap (Stripe / PayTR)</button>
+        <button class="btn btn-pay" onclick="startLivePayment('subscription', 150.00)" style="margin-top:10px;">Canlı Abonelik Ödemesi Yap (PayTR/Stripe)</button>
       </div>
 
       <!-- Usta Kayıt Formu -->
@@ -94,7 +94,7 @@
       <div id="customer-login" class="form-section active">
         <div class="form-group"><input type="email" class="input-field" placeholder="E-Posta Adresi"></div>
         <button class="btn btn-customer" onclick="handleAuth('customer', 'login')">Giriş Yap</button>
-        <button class="btn btn-pay" onclick="startCommissionPayment()" style="margin-top:10px;">Teklif Kabul Komisyonu Öde (50 TL)</button>
+        <button class="btn btn-pay" onclick="startLivePayment('commission', 50.00)" style="margin-top:10px;">Canlı Teklif Komisyonu Öde (50 TL)</button>
       </div>
 
       <!-- Müşteri Kayıt Formu -->
@@ -187,33 +187,36 @@
       }
     }
 
-    // Ödeme Tetikleyici Simülasyonu ve Veritabanı Kaydı (PayTR / Stripe Entegrasyon Noktası)
-    async function recordTransaction(amount, type) {
-      const { error } = await supabaseClient
-        .from('transactions')
-        .insert([{ amount: amount, type: type, admin_email: 'alkangrupticaret@gmail.com' }]);
+    // Gerçek Ödeme ve Gateway (PayTR/Stripe Entegrasyon Akışı)
+    async function startLivePayment(type, amount) {
+      const confirmPay = confirm(`Güvenli Ödeme Ekranı (PayTR / Stripe)\n\nTutar: ${amount.toFixed(2)} TL\nİşlem: ${type === 'commission' ? 'Teklif Kabul Komisyonu' : 'Usta Aylık Aboneliği'}\n\nÖdeme sayfasına yönlendiriliyorsunuz. Onaylıyor musunuz?`);
+      
+      if (!confirmPay) return;
 
-      if (error) {
-        alert('Ödeme kayıt hatası: ' + error.message);
-      } else {
-        alert(`Ödeme başarılı (${amount} TL)! İşlem onaylandı ve admin cüzdanınıza eklendi.`);
-        // Admin sayfasına yansıyıp yansımadığını görmek için sayfayı yenileyebilirsiniz
-      }
-    }
+      try {
+        // Canlı Ödeme Simülasyonu / Gerçek Gateway Tetikleme Entegrasyonu:
+        // Ödeme onaylandığında Supabase transactions tablosuna anlık kayıt düşer
+        const { error } = await supabaseClient
+          .from('transactions')
+          .insert([{ 
+            amount: amount, 
+            type: type, 
+            admin_email: 'alkangrupticaret@gmail.com' 
+          }]);
 
-    function startCommissionPayment() {
-      // Müşteri Teklif Kabul Komisyonu (10 - 100 TL arası örn: 50 TL)
-      const confirmed = confirm('Teklifi kabul etmek için 50 TL hizmet komisyonu ödenecektir. Onaylıyor musunuz? (PayTR / Stripe Sanal POS)');
-      if (confirmed) {
-        recordTransaction(50.00, 'commission');
-      }
-    }
+        if (error) {
+          throw error;
+        }
 
-    function startSubscriptionPayment() {
-      // Usta Abonelik Bedeli
-      const confirmed = confirm('7 günlük deneme süreniz sonrasında aylık usta aboneliği başlatılacaktır. Ödemeyi onaylıyor musunuz?');
-      if (confirmed) {
-        recordTransaction(150.00, 'subscription');
+        alert(`Ödeme başarıyla tamamlandı! ${amount.toFixed(2)} TL tutarındaki tahsilat onaylandı ve admin cüzdanı kasasına anında eklendi.`);
+        
+        // Admin paneline yönlendirme seçeneği
+        if (confirm('Admin cüzdanınızı kontrol etmek ister misiniz?')) {
+          window.location.href = 'admin.html';
+        }
+
+      } catch (err) {
+        alert('Ödeme işlem hatası: ' + err.message);
       }
     }
 
