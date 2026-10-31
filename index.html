@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yakın-İş - Ücretsiz Yerel Hizmet ve İş Bulma Platformu</title>
+  <title>Yakın-İş - Küresel Hizmet ve İş Bulma Platformu</title>
   <link rel="manifest" href="manifest.json">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -54,7 +54,7 @@
 <body>
 
   <header>
-    <a href="#" class="logo">Yakın-İş</a>
+    <a href="#" class="logo">Yakın-İş (Global)</a>
     <select id="languageSelect" class="lang-select" onchange="setLanguage(this.value)">
       <option value="tr">🇹🇷 TR</option>
       <option value="en">🇺🇸 EN</option>
@@ -65,70 +65,52 @@
   <div class="container">
 
     <div class="hero-banner">
-      <h1>%100 Ücretsiz Hizmet Pazarı</h1>
-      <p>Müşteriler aradığı ustayı buluyor, ustalar komisyonsuz iş alıyor!</p>
+      <h1>Dünya Çapında %100 Ücretsiz Hizmet Pazarı</h1>
+      <p>Dünyanın neresinde olursanız olun; müşteriler aradığı ustayı buluyor, ustalar komisyonsuz iş alıyor!</p>
     </div>
 
     <!-- Usta Portalı -->
     <div class="card card-provider">
-      <h2 class="card-title">Usta Portalı (Ücretsiz Profil)</h2>
+      <h2 class="card-title">Usta Portalı (Küresel Profil)</h2>
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
         <button class="tab-btn" onclick="switchTab(this, 'provider', 'register')">Kaydol</button>
       </div>
 
       <div id="provider-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
+        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: +90..., +49...)"></div>
         <button class="btn btn-provider" onclick="directLogin('provider')">Usta Paneline Giriş Yap</button>
       </div>
 
       <div id="provider-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
-        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
+        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası (Ülke kodu ile)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme / Dükkan Adı"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı, Boyacı)"></div>
-        <div class="form-group">
-          <select id="p-district" class="input-field">
-            <option value="Osmangazi">Osmangazi (Bursa)</option>
-            <option value="Nilüfer">Nilüfer (Bursa)</option>
-            <option value="Yıldırım">Yıldırım (Bursa)</option>
-            <option value="Mudanya">Mudanya (Bursa)</option>
-            <option value="Gürsu">Gürsu (Bursa)</option>
-            <option value="Kestel">Kestel (Bursa)</option>
-          </select>
-        </div>
+        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı, Elektrikçi)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-location" placeholder="Konum (Örn: Türkiye / Bursa veya Almanya / Berlin)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
-        <button class="btn btn-provider" onclick="registerDirect('provider')">Ücretsiz Usta Profilini Oluştur</button>
+        <button class="btn btn-provider" onclick="registerDirect('provider')">Küresel Usta Profilini Oluştur</button>
       </div>
     </div>
 
     <!-- Müşteri Portalı -->
     <div class="card card-customer">
-      <h2 class="card-title">Müşteri Portalı (Ücretsiz İlan & Talep)</h2>
+      <h2 class="card-title">Müşteri Portalı (Küresel İlan & Talep)</h2>
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
         <button class="tab-btn" onclick="switchTab(this, 'customer', 'register')">Kaydol</button>
       </div>
 
       <div id="customer-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: 0555...)"></div>
+        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: +90...)"></div>
         <button class="btn btn-customer" onclick="directLogin('customer')">Müşteri Paneline Giriş Yap</button>
       </div>
 
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group">
-          <select id="c-district" class="input-field">
-            <option value="Osmangazi">Osmangazi (Bursa)</option>
-            <option value="Nilüfer">Nilüfer (Bursa)</option>
-            <option value="Yıldırım">Yıldırım (Bursa)</option>
-            <option value="Mudanya">Mudanya (Bursa)</option>
-            <option value="Gürsu">Gürsu (Bursa)</option>
-            <option value="Kestel">Kestel (Bursa)</option>
-          </select>
-        </div>
-        <button class="btn btn-customer" onclick="registerDirect('customer')">Ücretsiz Müşteri Kaydı Oluştur</button>
+        <div class="form-group"><input type="text" class="input-field" id="c-location" placeholder="Konum (Örn: Türkiye / Bursa veya ABD / New York)"></div>
+        <button class="btn btn-customer" onclick="registerDirect('customer')">Küresel Müşteri Kaydı Oluştur</button>
       </div>
     </div>
 
@@ -173,27 +155,27 @@
       if (portal === 'customer') {
         const fullName = document.getElementById('c-name').value.trim();
         const phone = document.getElementById('c-phone').value.trim();
-        const district = document.getElementById('c-district').value;
+        const location = document.getElementById('c-location').value.trim() || 'Global';
 
         if (!fullName || !phone) { alert('Lütfen ad soyad ve telefon numaranızı girin!'); return; }
 
-        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'customer', full_name: fullName, phone: phone, specialties: district }]);
+        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'customer', full_name: fullName, phone: phone, specialties: location }]);
         if (error) alert('Kayıt Hatası: ' + error.message);
-        else alert('Müşteri kaydınız başarıyla oluşturuldu!');
+        else alert('Küresel müşteri kaydınız başarıyla oluşturuldu!');
 
       } else if (portal === 'provider') {
         const fullName = document.getElementById('p-name').value.trim();
         const phone = document.getElementById('p-phone').value.trim();
         const businessName = document.getElementById('p-biz').value.trim();
         const branch = document.getElementById('p-branch').value.trim();
-        const district = document.getElementById('p-district').value;
+        const location = document.getElementById('p-location').value.trim() || 'Global';
         const specialties = document.getElementById('p-spec').value.trim();
 
         if (!fullName || !phone || !businessName) { alert('Zorunlu alanları doldurun!'); return; }
 
-        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: `${district} - ${specialties}` }]);
+        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: `${location} - ${specialties}` }]);
         if (error) alert('Kayıt Hatası: ' + error.message);
-        else alert('Usta profiliniz başarıyla oluşturuldu!');
+        else alert('Küresel usta profiliniz başarıyla oluşturuldu!');
       }
     }
 
@@ -210,31 +192,30 @@
         if (portal === 'customer') {
           const { data: providers } = await supabaseClient.from('profiles').select('*').eq('user_type', 'provider');
           const sorted = providers ? providers.sort((a,b) => (a.full_name||'').localeCompare(b.full_name||'')) : [];
-          let pText = sorted.map(p => `• ${p.full_name} (${p.branch || 'Genel'}) - ${p.phone}`).join('\n');
+          let pText = sorted.map(p => `• ${p.full_name} (${p.branch || 'Genel'}) [${p.specialties}] - ${p.phone}`).join('\n');
 
-          let action = confirm(`Hoş geldiniz ${data.full_name}!\n\nKayıtlı Ustalar (Alfabetik):\n` + (pText || 'Usta yok') + `\n\n[Tamam] - Fotoğraf/Video Destekli Sorun Bildir`);
+          let action = confirm(`Hoş geldiniz ${data.full_name}!\n\nKayıtlı Dünya Çapındaki Ustalar (Alfabetik):\n` + (pText || 'Usta yok') + `\n\n[Tamam] - Fotoğraf/Video Destekli Sorun Bildir`);
           if (action) {
             let prob = prompt("Yaşadığınız sorunu detaylı yazın:");
             let media = prompt("Fotoğraf veya Video Linki (İsteğe bağlı):");
             if (prob) {
               await supabaseClient.from('jobs').insert([{ customer_name: data.full_name, phone: data.phone, problem: prob, media_url: media || 'Medya yok', status: 'Bekliyor' }]);
-              alert('Sorununuz başarıyla yayınlandı, ustalar teklif verebilecek!');
+              alert('Sorununuz dünyaya yayıldı, ustalar teklif verebilecek!');
             }
           }
         } else {
-          // Usta Paneli: İlanları gör, teklif ver ve durum güncelle
           const { data: jobs } = await supabaseClient.from('jobs').select('*').order('created_at', { ascending: false });
           let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name} (${j.phone})\nSorun: ${j.problem}\nDurum: ${j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
 
-          let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nGüncel İlanlar:\n${jText}\n\nTeklif vermek veya iş durumunu güncellemek istediğiniz ilanın sırasını (1, 2...) yazın (İptal için boş bırakın):`);
+          let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nDünya Çapındaki Güncel İlanlar:\n${jText}\n\nTeklif vermek veya iş durumunu güncellemek istediğiniz ilanın sırasını (1, 2...) yazın:`);
           
           if (choice && jobs[choice - 1]) {
             let selectedJob = jobs[choice - 1];
-            let price = prompt("Fiyat teklifiniz (Örn: 750 TL):", selectedJob.offer_price || '');
+            let price = prompt("Fiyat teklifiniz (Örn: 50 USD / 1500 TL):", selectedJob.offer_price || '');
             let status = prompt("İş Durumu Güncelle (Bekliyor / Devam Ediyor / Tamamlandı):", selectedJob.status || 'Bekliyor');
             
             await supabaseClient.from('jobs').update({ offer_price: price, offer_provider: data.full_name, status: status }).eq('id', selectedJob.id);
-            alert('Teklifiniz ve iş durumunuz başarıyla kaydedildi!');
+            alert('Teklifiniz başarıyla kaydedildi!');
           }
         }
       }
@@ -249,17 +230,15 @@
     }
 
     async function loadAdminData() {
-      // Ustaları Çek
       const { data: provs } = await supabaseClient.from('profiles').select('*').eq('user_type', 'provider');
-      let pTable = `<tr><th>Ad</th><th>Branş</th><th>İşlem</th></tr>`;
+      let pTable = `<tr><th>Ad</th><th>Konum/Branş</th><th>İşlem</th></tr>`;
       provs?.forEach(p => {
-        pTable += `<tr><td>${p.full_name}</td><td>${p.branch || '-'}</td><td><button class="btn btn-danger" onclick="deleteUser('${p.id}')">Sil</button></td></tr>`;
+        pTable += `<tr><td>${p.full_name}</td><td>${p.specialties || '-'}</td><td><button class="btn btn-danger" onclick="deleteUser('${p.id}')">Sil</button></td></tr>`;
       });
       document.getElementById('admin-providers-table').innerHTML = pTable;
 
-      // Müşterileri Çek
       const { data: custs } = await supabaseClient.from('profiles').select('*').eq('user_type', 'customer');
-      let cTable = `<tr><th>Ad</th><th>Telefon</th><th>İşlem</th></tr>`;
+      let cTable = `<tr><th>Ad</th><th>Konum</th><th>İşlem</th></tr>`;
       custs?.forEach(c => {
         cTable += `<tr><td>${c.full_name}</td><td>${c.phone}</td><td><button class="btn btn-danger" onclick="deleteUser('${c.id}')">Sil</button></td></tr>`;
       });
