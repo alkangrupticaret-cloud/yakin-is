@@ -115,7 +115,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdWBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function switchTab(btn, portal, mode) {
@@ -173,7 +173,7 @@
           }
         } else {
           const { data: jobs } = await supabaseClient.from('jobs').select('*').order('created_at', { ascending: false });
-          let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name}\nSorun: ${j.problem}\nDurum: ${j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
+          let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name}\nSorun: ${j.problem}\nDurum: {j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
           let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nGüncel İlanlar:\n${jText}\n\nTeklif vermek istediğiniz ilanın sırasını (1, 2...) yazın:`);
           if (choice && jobs[choice - 1]) {
             let sel = jobs[choice - 1];
