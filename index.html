@@ -187,7 +187,7 @@
       }
     }
 
-    // Doğrudan Giriş Fonksiyonu
+    // Doğrudan Giriş Fonksiyonu (Hatasız ve Alfabetik Usta Listeli)
     async function directLogin(portal) {
       const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
       const phone = document.getElementById(phoneId).value.trim();
@@ -201,12 +201,27 @@
         .from('profiles')
         .select('*')
         .eq('phone', phone)
-        .single();
+        .eq('user_type', portal)
+        .maybeSingle();
 
       if (error || !data) {
-        alert('Bu telefon numarasıyla kayıtlı profil bulunamadı. Lütfen önce kaydolun.');
+        const rolAdi = portal === 'customer' ? 'müşteri' : 'usta';
+        alert(`Bu telefon numarasıyla kayıtlı ${rolAdi} profili bulunamadı. Lütfen önce ilgili portaldan kaydolun.`);
       } else {
-        alert(`Hoş geldiniz Sayın ${data.full_name}! Giriş başarılı.`);
+        if (portal === 'customer') {
+          const { data: providers } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('user_type', 'provider');
+
+          const sortedProviders = providers ? providers.sort((a, b) => (a.full_name || '').localeCompare(b.full_name || '')) : [];
+
+          let providerListText = sortedProviders.map(p => `• ${p.full_name} (${p.branch || 'Branş yok'}) - Tel: ${p.phone}`).join('\n');
+          
+          alert(`Hoş geldiniz Sayın ${data.full_name}! Giriş başarılı.\n\nKayıtlı Ustalar (Alfabetik Sıralı):\n\n` + (providerListText || 'Henüz kayıtlı usta yok.'));
+        } else {
+          alert(`Hoş geldiniz Sayın ${data.full_name}! Usta Paneline Giriş Başarılı.`);
+        }
       }
     }
 
