@@ -80,10 +80,45 @@
     </div>
   </div>
 
+  <!-- Kayıtlı Ustalar Listesi -->
+  <div class="section-card">
+    <div class="section-title"><span>Kayıtlı Ustalar ve Branşları</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Ad Soyad</th>
+          <th>İşletme Adı</th>
+          <th>Branş</th>
+          <th>Telefon</th>
+        </tr>
+      </thead>
+      <tbody id="providersTable">
+        <tr><td colspan="4" style="text-align:center; color:#94a3b8;">Ustalar yükleniyor...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Kayıtlı Müşteriler ve Talepler Listesi -->
+  <div class="section-card">
+    <div class="section-title"><span>Kayıtlı Müşteriler ve Talepleri</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Ad Soyad</th>
+          <th>Telefon</th>
+          <th>Talep / Detay</th>
+        </tr>
+      </thead>
+      <tbody id="customersTable">
+        <tr><td colspan="3" style="text-align:center; color:#94a3b8;">Müşteriler yükleniyor...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- Son Gelen Ödemeler & Kesintiler -->
   <div class="section-card">
     <div class="section-title">
-      <span>Gelen Komisyon Ödemeleri (10 TL - 100 TL Kesintiler)</span>
+      <span>Gelen Komisyon Ödemeleri ve İşlemler</span>
       <button class="btn-refresh" onclick="loadDashboardData()">Yenile</button>
     </div>
     <table>
@@ -107,17 +142,16 @@
 
   <script>
     // Şifre Koruma Mekanizması
-    const ADMIN_PASSWORD = "Selam.091024"; // Buradan şifreni dilediğin gibi değiştirebilirsin
+    const ADMIN_PASSWORD = "Selam.091024";
     
     function checkAdminAuth() {
       let password = prompt("Admin Paneli Şifresini Giriniz:");
       if (password !== ADMIN_PASSWORD) {
         alert("Hatalı şifre! Erişim reddedildi.");
-        window.location.href = "index.html"; // Hatalı şifrede ana sayfaya yönlendirir
+        window.location.href = "index.html";
       }
     }
 
-    // Sayfa açılır açılmaz şifre sor
     checkAdminAuth();
 
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
@@ -135,6 +169,36 @@
         document.getElementById('totalProviders').innerText = providers.length;
         document.getElementById('totalCustomers').innerText = customers.length;
 
+        // Ustalar Tablosunu Doldur
+        const provTable = document.getElementById('providersTable');
+        if (providers.length === 0) {
+          provTable.innerHTML = '<tr><td colspan="4" style="text-align:center;">Kayıtlı usta bulunmuyor.</td></tr>';
+        } else {
+          provTable.innerHTML = providers.map(p => `
+            <tr>
+              <td><strong>${p.full_name || '-'}</strong></td>
+              <td>${p.business_name || '-'}</td>
+              <td><span class="badge badge-warning">${p.branch || 'Belirtilmemiş'}</span></td>
+              <td>${p.phone || '-'}</td>
+            </tr>
+          `).join('');
+        }
+
+        // Müşteriler ve Talepler Tablosunu Doldur
+        const custTable = document.getElementById('customersTable');
+        if (customers.length === 0) {
+          custTable.innerHTML = '<tr><td colspan="3" style="text-align:center;">Kayıtlı müşteri bulunmuyor.</td></tr>';
+        } else {
+          custTable.innerHTML = customers.map(c => `
+            <tr>
+              <td><strong>${c.full_name || '-'}</strong></td>
+              <td>${c.phone || '-'}</td>
+              <td>${c.specialties || c.branch || 'Genel Hizmet Talebi'}</td>
+            </tr>
+          `).join('');
+        }
+
+        // İşlemler ve Cüzdan
         const { data: txs } = await supabaseClient.from('transactions').select('*').order('created_at', { ascending: false });
 
         currentBalance = 0;
