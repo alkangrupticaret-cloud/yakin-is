@@ -90,7 +90,7 @@
 
     <!-- Müşteri Portalı -->
     <div class="card card-customer">
-      <h2 class="card-title">Müşteri Portalı (Ücretsiz İlan)</h2>
+      <h2 class="card-title">Müşteri Portalı (Ücretsiz İlan & Talep)</h2>
       
       <div class="tab-group">
         <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
@@ -107,7 +107,7 @@
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <button class="btn btn-customer" onclick="registerDirect('customer')">Ücretsiz Kaydol ve İlan Ver</button>
+        <button class="btn btn-customer" onclick="registerDirect('customer')">Ücretsiz Müşteri Kaydı Oluştur</button>
       </div>
     </div>
 
@@ -155,7 +155,7 @@
         if (error) {
           alert('Kayıt Hatası: ' + error.message);
         } else {
-          alert('Tebrikler! Ücretsiz müşteri kaydınız başarıyla oluşturuldu.');
+          alert('Tebrikler! Müşteri kaydınız başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.');
         }
 
       } else if (portal === 'provider') {
@@ -187,7 +187,7 @@
       }
     }
 
-    // Doğrudan Giriş Fonksiyonu (Hatasız ve Alfabetik Usta Listeli)
+    // Doğrudan Giriş ve Panel Yönetimi (Müşteri "Sorun Bildir" & Usta "Teklif Ver" Sistemi)
     async function directLogin(portal) {
       const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
       const phone = document.getElementById(phoneId).value.trim();
@@ -209,18 +209,46 @@
         alert(`Bu telefon numarasıyla kayıtlı ${rolAdi} profili bulunamadı. Lütfen önce ilgili portaldan kaydolun.`);
       } else {
         if (portal === 'customer') {
+          // Müşteri Girişi: Alfabetik Ustaları Listele ve Sorun Bildirme Seçeneği Sun
           const { data: providers } = await supabaseClient
             .from('profiles')
             .select('*')
             .eq('user_type', 'provider');
 
           const sortedProviders = providers ? providers.sort((a, b) => (a.full_name || '').localeCompare(b.full_name || '')) : [];
-
           let providerListText = sortedProviders.map(p => `• ${p.full_name} (${p.branch || 'Branş yok'}) - Tel: ${p.phone}`).join('\n');
-          
-          alert(`Hoş geldiniz Sayın ${data.full_name}! Giriş başarılı.\n\nKayıtlı Ustalar (Alfabetik Sıralı):\n\n` + (providerListText || 'Henüz kayıtlı usta yok.'));
+
+          let action = confirm(`Hoş geldiniz Sayın ${data.full_name}!\n\nKayıtlı Ustalar (Alfabetik):\n` + (providerListText || 'Henüz usta yok.') + `\n\n[Tamam]'a basarak yeni bir sorun/talep (Fotoğraf/Video ile) bildirebilirsiniz.`);
+
+          if (action) {
+            let problem = prompt("Yaşadığınız sorunu veya talebinizi detaylı yazın:");
+            if (problem) {
+              let mediaUrl = prompt("Fotoğraf veya kısa video bağlantısı (Link / URL) ekleyin (İsteğe bağlı):");
+              
+              const { error: jobError } = await supabaseClient.from('jobs').insert([{
+                customer_name: data.full_name,
+                phone: data.phone,
+                problem: problem,
+                media_url: mediaUrl || 'Medya eklenmedi'
+              }]);
+
+              if (jobError) {
+                alert('Talep oluşturulurken hata: ' + jobError.message);
+              } else {
+                alert('Sorununuz ve medya dosyanız başarıyla kaydedildi! Ustalar şimdi teklif verebilecek.');
+              }
+            }
+          }
         } else {
-          alert(`Hoş geldiniz Sayın ${data.full_name}! Usta Paneline Giriş Başarılı.`);
+          // Usta Girişi: Müşterilerin Açtığı Sorunları (İlanları) Listele
+          const { data: jobs } = await supabaseClient
+            .from('jobs')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          let jobListText = jobs ? jobs.map(j => `• Müşteri: ${j.customer_name} (Tel: ${j.phone})\n  Sorun: ${j.problem}\n  Medya: ${j.media_url}\n-------------------`).join('\n') : '';
+
+          alert(`Hoş geldiniz Usta ${data.full_name}!\n\nMüşterilerin Bildirdiği Güncel Sorunlar ve Talepler:\n\n` + (jobListText || 'Henüz bildirilmiş bir sorun bulunmuyor.'));
         }
       }
     }
