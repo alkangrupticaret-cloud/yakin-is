@@ -21,7 +21,6 @@
     .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .card-provider { border-top: 4px solid #d97706; }
     .card-customer { border-top: 4px solid #2563eb; }
-    .card-admin { border-top: 4px solid #0f172a; }
     
     .card-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
     
@@ -39,14 +38,7 @@
     .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; margin-top: 5px; }
     .btn-provider { background: #d97706; }
     .btn-customer { background: #2563eb; }
-    .btn-admin { background: #0f172a; }
-    .btn-danger { background: #dc2626; font-size: 12px; padding: 6px; width: auto; margin-top: 0; }
     .btn:hover { opacity: 0.9; }
-    
-    .table-container { overflow-x: auto; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 8px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-    th { background: #f8fafc; color: #475569; }
 
     .pwa-install { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 20px; display: none; }
   </style>
@@ -55,7 +47,7 @@
 
   <header>
     <a href="#" class="logo">Yakın-İş (Global)</a>
-    <select id="languageSelect" class="lang-select" onchange="setLanguage(this.value)">
+    <select id="languageSelect" class="lang-select">
       <option value="tr">🇹🇷 TR</option>
       <option value="en">🇺🇸 EN</option>
       <option value="de">🇩🇪 DE</option>
@@ -78,16 +70,16 @@
       </div>
 
       <div id="provider-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: +90..., +49...)"></div>
+        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası"></div>
         <button class="btn btn-provider" onclick="directLogin('provider')">Usta Paneline Giriş Yap</button>
       </div>
 
       <div id="provider-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
-        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası (Ülke kodu ile)"></div>
+        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme / Dükkan Adı"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı, Elektrikçi)"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-location" placeholder="Konum (Örn: Türkiye / Bursa veya Almanya / Berlin)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="p-location" placeholder="Konum (Örn: Türkiye / Bursa)"></div>
         <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
         <button class="btn btn-provider" onclick="registerDirect('provider')">Küresel Usta Profilini Oluştur</button>
       </div>
@@ -102,30 +94,15 @@
       </div>
 
       <div id="customer-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası (Örn: +90...)"></div>
+        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası"></div>
         <button class="btn btn-customer" onclick="directLogin('customer')">Müşteri Paneline Giriş Yap</button>
       </div>
 
       <div id="customer-register" class="form-section">
         <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
         <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="text" class="input-field" id="c-location" placeholder="Konum (Örn: Türkiye / Bursa veya ABD / New York)"></div>
+        <div class="form-group"><input type="text" class="input-field" id="c-location" placeholder="Konum (Örn: Türkiye / Bursa)"></div>
         <button class="btn btn-customer" onclick="registerDirect('customer')">Küresel Müşteri Kaydı Oluştur</button>
-      </div>
-    </div>
-
-    <!-- Yönetici (Admin) Paneli -->
-    <div class="card card-admin">
-      <h2 class="card-title">Yönetici (Admin) Paneli</h2>
-      <div class="form-group"><input type="password" id="admin-pass" class="input-field" placeholder="Admin Şifresi"></div>
-      <button class="btn btn-admin" onclick="openAdminPanel()">Yönetim Paneline Giriş Yap</button>
-      
-      <div id="admin-content" style="display:none; margin-top: 15px;">
-        <h3 style="font-size:14px; margin-bottom:5px; color:#1e293b;">Kayıtlı Ustalar & Silme</h3>
-        <div class="table-container"><table id="admin-providers-table"></table></div>
-
-        <h3 style="font-size:14px; margin: 15px 0 5px; color:#1e293b;">Kayıtlı Müşteriler & Silme</h3>
-        <div class="table-container"><table id="admin-customers-table"></table></div>
       </div>
     </div>
 
@@ -136,11 +113,9 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
     const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-    
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function switchTab(btn, portal, mode) {
@@ -156,13 +131,10 @@
         const fullName = document.getElementById('c-name').value.trim();
         const phone = document.getElementById('c-phone').value.trim();
         const location = document.getElementById('c-location').value.trim() || 'Global';
-
         if (!fullName || !phone) { alert('Lütfen ad soyad ve telefon numaranızı girin!'); return; }
-
         const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'customer', full_name: fullName, phone: phone, specialties: location }]);
         if (error) alert('Kayıt Hatası: ' + error.message);
         else alert('Küresel müşteri kaydınız başarıyla oluşturuldu!');
-
       } else if (portal === 'provider') {
         const fullName = document.getElementById('p-name').value.trim();
         const phone = document.getElementById('p-phone').value.trim();
@@ -170,9 +142,7 @@
         const branch = document.getElementById('p-branch').value.trim();
         const location = document.getElementById('p-location').value.trim() || 'Global';
         const specialties = document.getElementById('p-spec').value.trim();
-
         if (!fullName || !phone || !businessName) { alert('Zorunlu alanları doldurun!'); return; }
-
         const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: `${location} - ${specialties}` }]);
         if (error) alert('Kayıt Hatası: ' + error.message);
         else alert('Küresel usta profiliniz başarıyla oluşturuldu!');
@@ -183,7 +153,6 @@
       const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
       const phone = document.getElementById(phoneId).value.trim();
       if (!phone) { alert('Telefon numaranızı girin!'); return; }
-
       const { data, error } = await supabaseClient.from('profiles').select('*').eq('phone', phone).eq('user_type', portal).maybeSingle();
 
       if (error || !data) {
@@ -193,63 +162,27 @@
           const { data: providers } = await supabaseClient.from('profiles').select('*').eq('user_type', 'provider');
           const sorted = providers ? providers.sort((a,b) => (a.full_name||'').localeCompare(b.full_name||'')) : [];
           let pText = sorted.map(p => `• ${p.full_name} (${p.branch || 'Genel'}) [${p.specialties}] - ${p.phone}`).join('\n');
-
-          let action = confirm(`Hoş geldiniz ${data.full_name}!\n\nKayıtlı Dünya Çapındaki Ustalar (Alfabetik):\n` + (pText || 'Usta yok') + `\n\n[Tamam] - Fotoğraf/Video Destekli Sorun Bildir`);
+          let action = confirm(`Hoş geldiniz ${data.full_name}!\n\nKayıtlı Ustalar:\n` + (pText || 'Usta yok') + `\n\n[Tamam] - Sorun Bildir`);
           if (action) {
-            let prob = prompt("Yaşadığınız sorunu detaylı yazın:");
-            let media = prompt("Fotoğraf veya Video Linki (İsteğe bağlı):");
+            let prob = prompt("Sorununuzu yazın:");
+            let media = prompt("Fotoğraf/Video Linki (İsteğe bağlı):");
             if (prob) {
               await supabaseClient.from('jobs').insert([{ customer_name: data.full_name, phone: data.phone, problem: prob, media_url: media || 'Medya yok', status: 'Bekliyor' }]);
-              alert('Sorununuz dünyaya yayıldı, ustalar teklif verebilecek!');
+              alert('Sorununuz yayınlandı!');
             }
           }
         } else {
           const { data: jobs } = await supabaseClient.from('jobs').select('*').order('created_at', { ascending: false });
-          let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name} (${j.phone})\nSorun: ${j.problem}\nDurum: ${j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
-
-          let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nDünya Çapındaki Güncel İlanlar:\n${jText}\n\nTeklif vermek veya iş durumunu güncellemek istediğiniz ilanın sırasını (1, 2...) yazın:`);
-          
+          let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name}\nSorun: ${j.problem}\nDurum: ${j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
+          let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nGüncel İlanlar:\n${jText}\n\nTeklif vermek istediğiniz ilanın sırasını (1, 2...) yazın:`);
           if (choice && jobs[choice - 1]) {
-            let selectedJob = jobs[choice - 1];
-            let price = prompt("Fiyat teklifiniz (Örn: 50 USD / 1500 TL):", selectedJob.offer_price || '');
-            let status = prompt("İş Durumu Güncelle (Bekliyor / Devam Ediyor / Tamamlandı):", selectedJob.status || 'Bekliyor');
-            
-            await supabaseClient.from('jobs').update({ offer_price: price, offer_provider: data.full_name, status: status }).eq('id', selectedJob.id);
-            alert('Teklifiniz başarıyla kaydedildi!');
+            let sel = jobs[choice - 1];
+            let price = prompt("Fiyat teklifiniz:", sel.offer_price || '');
+            let stat = prompt("İş Durumu (Bekliyor / Devam Ediyor / Tamamlandı):", sel.status || 'Bekliyor');
+            await supabaseClient.from('jobs').update({ offer_price: price, offer_provider: data.full_name, status: stat }).eq('id', sel.id);
+            alert('Teklif kaydedildi!');
           }
         }
-      }
-    }
-
-    async function openAdminPanel() {
-      const pass = document.getElementById('admin-pass').value;
-      if (pass !== '123456') { alert('Hatalı Admin Şifresi!'); return; }
-
-      document.getElementById('admin-content').style.display = 'block';
-      loadAdminData();
-    }
-
-    async function loadAdminData() {
-      const { data: provs } = await supabaseClient.from('profiles').select('*').eq('user_type', 'provider');
-      let pTable = `<tr><th>Ad</th><th>Konum/Branş</th><th>İşlem</th></tr>`;
-      provs?.forEach(p => {
-        pTable += `<tr><td>${p.full_name}</td><td>${p.specialties || '-'}</td><td><button class="btn btn-danger" onclick="deleteUser('${p.id}')">Sil</button></td></tr>`;
-      });
-      document.getElementById('admin-providers-table').innerHTML = pTable;
-
-      const { data: custs } = await supabaseClient.from('profiles').select('*').eq('user_type', 'customer');
-      let cTable = `<tr><th>Ad</th><th>Konum</th><th>İşlem</th></tr>`;
-      custs?.forEach(c => {
-        cTable += `<tr><td>${c.full_name}</td><td>${c.phone}</td><td><button class="btn btn-danger" onclick="deleteUser('${c.id}')">Sil</button></td></tr>`;
-      });
-      document.getElementById('admin-customers-table').innerHTML = cTable;
-    }
-
-    async function deleteUser(id) {
-      if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-        const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
-        if (error) alert('Silme hatası: ' + error.message);
-        else { alert('Kullanıcı silindi!'); loadAdminData(); }
       }
     }
 
@@ -259,7 +192,6 @@
       deferredPrompt = e;
       document.getElementById('installContainer').style.display = 'block';
     });
-
     document.getElementById('installBtn')?.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
