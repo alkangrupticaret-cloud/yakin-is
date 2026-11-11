@@ -1,204 +1,299 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yakın-İş - Küresel Hizmet ve İş Bulma Platformu</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #f4f6f9; color: #333; padding-bottom: 30px; }
-    header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-    .logo { font-size: 20px; font-weight: bold; color: #d97706; text-decoration: none; }
-    .lang-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; outline: none; }
-    
-    .container { max-width: 500px; margin: 20px auto; padding: 0 16px; }
-    
-    .hero-banner { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .hero-banner h1 { font-size: 20px; margin-bottom: 8px; color: #f59e0b; }
-    .hero-banner p { font-size: 13px; color: #cbd5e1; line-height: 1.4; }
-
-    .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .card-provider { border-top: 4px solid #d97706; }
-    .card-customer { border-top: 4px solid #2563eb; }
-    
-    .card-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
-    
-    .tab-group { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 16px; }
-    .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; font-weight: 600; font-size: 14px; color: #64748b; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-    .tab-btn.active { background: #fff; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    
-    .form-group { margin-bottom: 12px; }
-    .input-field { width: 100%; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; }
-    .input-field:focus { border-color: #3b82f6; }
-    
-    .form-section { display: none; }
-    .form-section.active { display: block; }
-
-    .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; transition: opacity 0.2s; margin-top: 5px; }
-    .btn-provider { background: #d97706; }
-    .btn-customer { background: #2563eb; }
-    .btn:hover { opacity: 0.9; }
-
-    .pwa-install { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 20px; display: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#128c7e">
+<title>Yakınİş – Yakınında hizmet, doğrudan iletişim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6f7;color:#172b2a;font-family:Arial,sans-serif;padding-bottom:40px}
+header{background:#fff;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0000000d;position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:800;color:#128c7e}.wrap{max-width:680px;margin:20px auto;padding:0 14px}
+.hero{background:linear-gradient(135deg,#116f67,#128c7e);color:white;border-radius:18px;padding:24px 20px;margin-bottom:18px}
+.hero h1{font-size:23px;margin:0 0 8px}.hero p{line-height:1.5;margin:0;color:#e7fffb;font-size:14px}
+.card{background:white;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #102a2710}
+h2{font-size:19px;margin:0 0 14px}.muted{color:#647575;font-size:13px;line-height:1.5}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d7e1e0;border-radius:10px;font-size:15px;background:#fff;color:#172b2a}
+textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:10px;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer}
+.primary{background:#128c7e;color:#fff;width:100%;margin-top:12px}.secondary{background:#e6f4f1;color:#116f67}.danger{background:#fff0ef;color:#b42318}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;background:#edf2f1;color:#526361}.tabs button.active{background:#128c7e;color:white}
+.hidden{display:none!important}.notice{padding:11px 12px;border-radius:10px;background:#eef7ff;color:#174b75;margin:12px 0;font-size:13px;line-height:1.45}
+.error{background:#fff0ef;color:#9b2520}.success{background:#eaf8f0;color:#17643a}
+.item{border:1px solid #e2eae8;border-radius:12px;padding:13px;margin:10px 0}
+.item h3{font-size:16px;margin:0 0 7px}.item p{font-size:13px;line-height:1.5;margin:5px 0;color:#526361;white-space:pre-wrap}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row button{flex:1}
+hr{border:0;border-top:1px solid #edf1f0;margin:16px 0}
+.small{font-size:12px;color:#6b7b79}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}
+</style>
 </head>
 <body>
+<header><div class="logo">📍 Yakınİş</div><div id="accountArea" class="small">Giriş yapılmadı</div></header>
+<main class="wrap">
+<section class="hero"><h1>İhtiyacın olan hizmet, yakında.</h1><p>Müşteriler iş talebi oluşturur, ustalar doğrudan teklif verir. Aracı yok, komisyon yok.</p></section>
 
-  <header>
-    <a href="#" class="logo">Yakın-İş (Global)</a>
-    <select id="languageSelect" class="lang-select">
-      <option value="tr">🇹🇷 TR</option>
-      <option value="en">🇺🇸 EN</option>
-      <option value="de">🇩🇪 DE</option>
-    </select>
-  </header>
+<section id="authCard" class="card">
+<h2>Yakınİş'e Hoş Geldiniz</h2>
+<div class="tabs">
+<button id="customerTab" class="active" type="button" onclick="setRole('customer')">Müşteri</button>
+<button id="providerTab" type="button" onclick="setRole('provider')">Usta</button>
+</div>
+<div class="tabs">
+<button id="loginTab" class="active" type="button" onclick="setMode('login')">Giriş yap</button>
+<button id="registerTab" type="button" onclick="setMode('register')">Kayıt ol</button>
+</div>
+<div id="loginForm">
+<label>E-posta</label><input id="loginEmail" type="email" autocomplete="email" placeholder="ornek@email.com">
+<label>Şifre</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifreniz">
+<button class="primary" onclick="login()">Giriş yap</button>
+</div>
+<div id="registerForm" class="hidden">
+<label>Ad soyad</label><input id="regName" autocomplete="name" placeholder="Adınız ve soyadınız">
+<label>Telefon</label><input id="regPhone" type="tel" autocomplete="tel" placeholder="05XX XXX XX XX">
+<label>E-posta</label><input id="regEmail" type="email" autocomplete="email" placeholder="ornek@email.com">
+<label>Şifre (en az 6 karakter)</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="Şifre oluşturun">
+<div id="providerFields" class="hidden">
+<label>İşletme adı</label><input id="regBusiness" placeholder="İşletme / dükkan adı">
+<label>Branş</label><input id="regBranch" placeholder="Örn. Tesisatçı, elektrikçi">
+<label>Uzmanlık alanları</label><input id="regSpecialties" placeholder="Örn. kombi, su kaçağı, bakım">
+</div>
+<button class="primary" onclick="register()">Kayıt ol</button>
+<p class="muted" style="margin-top:10px">E-posta doğrulaması açıksa kayıt sonrası gelen kutunuza gelen bağlantıyla hesabınızı doğrulayın.</p>
+</div>
+<div id="authMessage" class="notice hidden" role="status"></div>
+</section>
 
-  <div class="container">
+<section id="appArea" class="hidden">
+<section class="card">
+<div class="topline"><h2 id="welcomeTitle">Hesabım</h2><button class="secondary" onclick="logout()">Çıkış</button></div>
+<p id="profileSummary" class="muted"></p>
+</section>
 
-    <div class="hero-banner">
-      <h1>Dünya Çapında %100 Ücretsiz Hizmet Pazarı</h1>
-      <p>Dünyanın neresinde olursanız olun; müşteriler aradığı ustayı buluyor, ustalar komisyonsuz iş alıyor!</p>
-    </div>
+<section id="customerArea" class="hidden">
+<section class="card">
+<h2>Yeni iş talebi oluştur</h2>
+<label>İş başlığı</label><input id="jobTitle" placeholder="Örn. Mutfak musluğu tamiri">
+<label>Kategori</label><select id="jobCategory"><option value="">Kategori seçin</option><option>Tesisatçı</option><option>Elektrikçi</option><option>Temizlik</option><option>Nakliye</option><option>Oto tamir</option><option>Boyacı</option><option>Özel ders</option><option>Diğer</option></select>
+<label>Açıklama</label><textarea id="jobDescription" placeholder="İhtiyacınızı ve işin detaylarını anlatın"></textarea>
+<label>Şehir</label><input id="jobCity" value="Bursa" placeholder="Şehir">
+<label>İlçe</label><input id="jobDistrict" placeholder="Örn. Osmangazi">
+<button class="primary" onclick="createJob()">İş talebini yayınla</button>
+<div id="jobMessage" class="notice hidden"></div>
+</section>
+<section class="card"><h2>İlanlarım ve gelen teklifler</h2><div id="myJobs"><p class="muted">İlanlar yükleniyor...</p></div></section>
+</section>
 
-    <!-- Usta Portalı -->
-    <div class="card card-provider">
-      <h2 class="card-title">Usta Portalı (Küresel Profil)</h2>
-      <div class="tab-group">
-        <button class="tab-btn active" onclick="switchTab(this, 'provider', 'login')">Giriş Yap</button>
-        <button class="tab-btn" onclick="switchTab(this, 'provider', 'register')">Kaydol</button>
-      </div>
+<section id="providerArea" class="hidden">
+<section class="card"><h2>Aktif iş ilanları</h2><p class="muted">Uygun işe fiyat teklifinizi gönderin.</p><div id="activeJobs"><p class="muted">İlanlar yükleniyor...</p></div></section>
+<section class="card"><h2>Gönderdiğim teklifler</h2><div id="myOffers"><p class="muted">Teklifler yükleniyor...</p></div></section>
+</section>
+</section>
+</main>
 
-      <div id="provider-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="p-login-phone" class="input-field" placeholder="Telefon Numarası"></div>
-        <button class="btn btn-provider" onclick="directLogin('provider')">Usta Paneline Giriş Yap</button>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let selectedRole = 'customer';
+let selectedMode = 'login';
+let currentUser = null;
+let currentProfile = null;
 
-      <div id="provider-register" class="form-section">
-        <div class="form-group"><input type="text" class="input-field" id="p-name" placeholder="Adı Soyadı"></div>
-        <div class="form-group"><input type="tel" class="input-field" id="p-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-biz" placeholder="İşletme / Dükkan Adı"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-branch" placeholder="Branşı (Örn: Tesisatçı, Elektrikçi)"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-location" placeholder="Konum (Örn: Türkiye / Bursa)"></div>
-        <div class="form-group"><input type="text" class="input-field" id="p-spec" placeholder="Uzmanlık Alanları"></div>
-        <button class="btn btn-provider" onclick="registerDirect('provider')">Küresel Usta Profilini Oluştur</button>
-      </div>
-    </div>
-
-    <!-- Müşteri Portalı -->
-    <div class="card card-customer">
-      <h2 class="card-title">Müşteri Portalı (Küresel İlan & Talep)</h2>
-      <div class="tab-group">
-        <button class="tab-btn active" onclick="switchTab(this, 'customer', 'login')">Giriş Yap</button>
-        <button class="tab-btn" onclick="switchTab(this, 'customer', 'register')">Kaydol</button>
-      </div>
-
-      <div id="customer-login" class="form-section active">
-        <div class="form-group"><input type="tel" id="c-login-phone" class="input-field" placeholder="Telefon Numarası"></div>
-        <button class="btn btn-customer" onclick="directLogin('customer')">Müşteri Paneline Giriş Yap</button>
-      </div>
-
-      <div id="customer-register" class="form-section">
-        <div class="form-group"><input type="text" class="input-field" id="c-name" placeholder="Adı Soyadı"></div>
-        <div class="form-group"><input type="tel" class="input-field" id="c-phone" placeholder="Telefon Numarası"></div>
-        <div class="form-group"><input type="text" class="input-field" id="c-location" placeholder="Konum (Örn: Türkiye / Bursa)"></div>
-        <button class="btn btn-customer" onclick="registerDirect('customer')">Küresel Müşteri Kaydı Oluştur</button>
-      </div>
-    </div>
-
-    <div id="installContainer" class="pwa-install">
-      <button id="installBtn" class="btn btn-customer">Uygulamayı Telefonuna Yükle</button>
-    </div>
-
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdWBhYmFzZSIsInJlZiI6Im5id3ZtaHdwdnNteWFpandkZ2FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3OTc0MjQsImV4cCI6MjEwNjM3MzQyNH0.DpwGLlF9MM4_F184bKlqvrGsU8MNSg-VPwKBmzL3xbc';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    function switchTab(btn, portal, mode) {
-      const card = btn.closest('.card');
-      card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      card.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(`${portal}-${mode}`).classList.add('active');
-    }
-
-    async function registerDirect(portal) {
-      if (portal === 'customer') {
-        const fullName = document.getElementById('c-name').value.trim();
-        const phone = document.getElementById('c-phone').value.trim();
-        const location = document.getElementById('c-location').value.trim() || 'Global';
-        if (!fullName || !phone) { alert('Lütfen ad soyad ve telefon numaranızı girin!'); return; }
-        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'customer', full_name: fullName, phone: phone, specialties: location }]);
-        if (error) alert('Kayıt Hatası: ' + error.message);
-        else alert('Küresel müşteri kaydınız başarıyla oluşturuldu!');
-      } else if (portal === 'provider') {
-        const fullName = document.getElementById('p-name').value.trim();
-        const phone = document.getElementById('p-phone').value.trim();
-        const businessName = document.getElementById('p-biz').value.trim();
-        const branch = document.getElementById('p-branch').value.trim();
-        const location = document.getElementById('p-location').value.trim() || 'Global';
-        const specialties = document.getElementById('p-spec').value.trim();
-        if (!fullName || !phone || !businessName) { alert('Zorunlu alanları doldurun!'); return; }
-        const { error } = await supabaseClient.from('profiles').insert([{ user_type: 'provider', full_name: fullName, phone: phone, business_name: businessName, branch: branch, specialties: `${location} - ${specialties}` }]);
-        if (error) alert('Kayıt Hatası: ' + error.message);
-        else alert('Küresel usta profiliniz başarıyla oluşturuldu!');
+function showMessage(id, message, isError=false) {
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=message;
+  el.classList.remove('hidden','error','success');
+  el.classList.add(isError?'error':'success');
+}
+function clearMessage(id){const el=document.getElementById(id);if(el){el.textContent='';el.classList.add('hidden');}}
+function setRole(role){
+  selectedRole=role;
+  document.getElementById('customerTab').classList.toggle('active',role==='customer');
+  document.getElementById('providerTab').classList.toggle('active',role==='provider');
+  document.getElementById('providerFields').classList.toggle('hidden',role!=='provider');
+}
+function setMode(mode){
+  selectedMode=mode;
+  document.getElementById('loginTab').classList.toggle('active',mode==='login');
+  document.getElementById('registerTab').classList.toggle('active',mode==='register');
+  document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');
+  document.getElementById('registerForm').classList.toggle('hidden',mode!=='register');
+  clearMessage('authMessage');
+}
+async function register(){
+  const fullName=document.getElementById('regName').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const email=document.getElementById('regEmail').value.trim().toLowerCase();
+  const password=document.getElementById('regPassword').value;
+  const businessName=document.getElementById('regBusiness').value.trim();
+  const branch=document.getElementById('regBranch').value.trim();
+  const specialties=document.getElementById('regSpecialties').value.trim();
+  if(!fullName||!phone||!email||!password){showMessage('authMessage','Ad soyad, telefon, e-posta ve şifre zorunludur.',true);return;}
+  if(password.length<6){showMessage('authMessage','Şifre en az 6 karakter olmalıdır.',true);return;}
+  if(selectedRole==='provider'&&(!businessName||!branch)){showMessage('authMessage','Usta kaydı için işletme adı ve branş zorunludur.',true);return;}
+  const {data,error}=await db.auth.signUp({
+    email,password,
+    options:{data:{
+      user_type:selectedRole,full_name:fullName,phone,
+      business_name:selectedRole==='provider'?businessName:null,
+      branch:selectedRole==='provider'?branch:null,
+      specialties:selectedRole==='provider'?specialties:null
+    }}
+  });
+  if(error){showMessage('authMessage','Kayıt hatası: '+error.message,true);return;}
+  if(data.session){
+    showMessage('authMessage','Kayıt başarılı. Hesabınız açılıyor.');
+    await loadAccount(data.user);
+  }else{
+    showMessage('authMessage','Kayıt alındı. E-posta adresinize gönderilen doğrulama bağlantısına tıklayın. Ardından bu ekrandan giriş yapabilirsiniz.');
+  }
+}
+async function login(){
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password=document.getElementById('loginPassword').value;
+  if(!email||!password){showMessage('authMessage','E-posta ve şifrenizi girin.',true);return;}
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error){showMessage('authMessage','Giriş yapılamadı: '+error.message,true);return;}
+  await loadAccount(data.user);
+}
+async function loadAccount(user){
+  if(!user)return;
+  const {data:profile,error}=await db.from('profiles').select('id,user_type,full_name,phone,business_name,branch,specialties').eq('id',user.id).maybeSingle();
+  if(error||!profile){
+    showMessage('authMessage','Profil yüklenemedi. E-posta doğrulamasını tamamladıktan sonra tekrar giriş yapın. '+(error?error.message:''),true);
+    return;
+  }
+  if(profile.user_type!=='customer'&&profile.user_type!=='provider'){
+    await db.auth.signOut();showMessage('authMessage','Bu hesap için müşteri veya usta erişimi tanımlı değil.',true);return;
+  }
+  currentUser=user;currentProfile=profile;
+  document.getElementById('authCard').classList.add('hidden');
+  document.getElementById('appArea').classList.remove('hidden');
+  document.getElementById('accountArea').textContent=user.email||'Hesap açık';
+  document.getElementById('welcomeTitle').textContent='Merhaba, '+profile.full_name;
+  document.getElementById('profileSummary').textContent=profile.user_type==='provider'
+    ? (profile.business_name||'')+' · '+(profile.branch||'Usta')
+    : 'Müşteri hesabı';
+  document.getElementById('customerArea').classList.toggle('hidden',profile.user_type!=='customer');
+  document.getElementById('providerArea').classList.toggle('hidden',profile.user_type!=='provider');
+  if(profile.user_type==='customer')await loadMyJobs();
+  else {await loadActiveJobs();await loadMyOffers();}
+}
+async function logout(){
+  await db.auth.signOut();
+  currentUser=null;currentProfile=null;
+  document.getElementById('appArea').classList.add('hidden');
+  document.getElementById('authCard').classList.remove('hidden');
+  document.getElementById('accountArea').textContent='Giriş yapılmadı';
+}
+async function createJob(){
+  if(!currentUser||currentProfile?.user_type!=='customer')return;
+  const title=document.getElementById('jobTitle').value.trim();
+  const category=document.getElementById('jobCategory').value;
+  const description=document.getElementById('jobDescription').value.trim();
+  const city=document.getElementById('jobCity').value.trim();
+  const district=document.getElementById('jobDistrict').value.trim();
+  if(!title||!category||!description||!city||!district){showMessage('jobMessage','Lütfen tüm alanları doldurun.',true);return;}
+  const {error}=await db.from('jobs').insert({customer_id:currentUser.id,title,category,description,city,district});
+  if(error){showMessage('jobMessage','İlan oluşturulamadı: '+error.message,true);return;}
+  ['jobTitle','jobDescription','jobDistrict'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('jobCategory').value='';
+  showMessage('jobMessage','İş talebiniz yayınlandı.');
+  await loadMyJobs();
+}
+async function loadMyJobs(){
+  const box=document.getElementById('myJobs');
+  box.textContent='İlanlar yükleniyor...';
+  const {data:jobs,error}=await db.from('jobs').select('id,title,category,description,city,district,status,created_at').eq('customer_id',currentUser.id).order('created_at',{ascending:false});
+  if(error){box.textContent='İlanlar yüklenemedi: '+error.message;return;}
+  if(!jobs?.length){box.textContent='Henüz iş ilanınız yok.';return;}
+  box.innerHTML='';
+  for(const job of jobs){
+    const card=document.createElement('div');card.className='item';
+    const title=document.createElement('h3');title.textContent=job.title;
+    const info=document.createElement('p');info.textContent=job.category+' · '+job.city+'/'+job.district+' · Durum: '+job.status;
+    const desc=document.createElement('p');desc.textContent=job.description;
+    card.append(title,info,desc);
+    const {data:offers,error:offerError}=await db.from('job_offers').select('id,provider_id,price,message,status,created_at').eq('job_id',job.id).order('created_at',{ascending:false});
+    if(offerError){const p=document.createElement('p');p.textContent='Teklifler yüklenemedi: '+offerError.message;card.append(p);}
+    else if(!offers?.length){const p=document.createElement('p');p.textContent='Henüz teklif gelmedi.';card.append(p);}
+    else for(const offer of offers){
+      const p=document.createElement('p');p.textContent='Teklif: '+offer.price+' TL · '+(offer.message||'Mesaj yok')+' · '+offer.status;card.append(p);
+      if(job.status==='active'&&offer.status==='pending'){
+        const actions=document.createElement('div');actions.className='row';
+        const accept=document.createElement('button');accept.className='secondary';accept.textContent='Teklifi kabul et';accept.onclick=()=>respondOffer(offer.id,'accepted');
+        const reject=document.createElement('button');reject.className='danger';reject.textContent='Reddet';reject.onclick=()=>respondOffer(offer.id,'rejected');
+        actions.append(accept,reject);card.append(actions);
       }
     }
-
-    async function directLogin(portal) {
-      const phoneId = portal === 'customer' ? 'c-login-phone' : 'p-login-phone';
-      const phone = document.getElementById(phoneId).value.trim();
-      if (!phone) { alert('Telefon numaranızı girin!'); return; }
-      const { data, error } = await supabaseClient.from('profiles').select('*').eq('phone', phone).eq('user_type', portal).maybeSingle();
-
-      if (error || !data) {
-        alert(`Bu numarayla kayıtlı ${portal === 'customer' ? 'müşteri' : 'usta'} bulunamadı.`);
-      } else {
-        if (portal === 'customer') {
-          const { data: providers } = await supabaseClient.from('profiles').select('*').eq('user_type', 'provider');
-          const sorted = providers ? providers.sort((a,b) => (a.full_name||'').localeCompare(b.full_name||'')) : [];
-          let pText = sorted.map(p => `• ${p.full_name} (${p.branch || 'Genel'}) [${p.specialties}] - ${p.phone}`).join('\n');
-          let action = confirm(`Hoş geldiniz ${data.full_name}!\n\nKayıtlı Ustalar:\n` + (pText || 'Usta yok') + `\n\n[Tamam] - Sorun Bildir`);
-          if (action) {
-            let prob = prompt("Sorununuzu yazın:");
-            let media = prompt("Fotoğraf/Video Linki (İsteğe bağlı):");
-            if (prob) {
-              await supabaseClient.from('jobs').insert([{ customer_name: data.full_name, phone: data.phone, problem: prob, media_url: media || 'Medya yok', status: 'Bekliyor' }]);
-              alert('Sorununuz yayınlandı!');
-            }
-          }
-        } else {
-          const { data: jobs } = await supabaseClient.from('jobs').select('*').order('created_at', { ascending: false });
-          let jText = jobs ? jobs.map((j, i) => `[${i+1}] Müşteri: ${j.customer_name}\nSorun: ${j.problem}\nDurum: {j.status} | Teklif: ${j.offer_price || 'Yok'}\n-------------------`).join('\n') : 'İlan yok';
-          let choice = prompt(`Hoş geldiniz Usta ${data.full_name}!\n\nGüncel İlanlar:\n${jText}\n\nTeklif vermek istediğiniz ilanın sırasını (1, 2...) yazın:`);
-          if (choice && jobs[choice - 1]) {
-            let sel = jobs[choice - 1];
-            let price = prompt("Fiyat teklifiniz:", sel.offer_price || '');
-            let stat = prompt("İş Durumu (Bekliyor / Devam Ediyor / Tamamlandı):", sel.status || 'Bekliyor');
-            await supabaseClient.from('jobs').update({ offer_price: price, offer_provider: data.full_name, status: stat }).eq('id', sel.id);
-            alert('Teklif kaydedildi!');
-          }
-        }
-      }
-    }
-
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installContainer').style.display = 'block';
-    });
-    document.getElementById('installBtn')?.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt = null;
-        document.getElementById('installContainer').style.display = 'none';
-      }
-    });
-  </script>
+    box.append(card);
+  }
+}
+async function respondOffer(offerId,decision){
+  const {error}=await db.rpc('respond_to_offer',{p_offer_id:offerId,p_decision:decision});
+  if(error){alert('İşlem yapılamadı: '+error.message);return;}
+  alert(decision==='accepted'?'Teklif kabul edildi. Diğer bekleyen teklifler reddedildi.':'Teklif reddedildi.');
+  await loadMyJobs();
+}
+async function loadActiveJobs(){
+  const box=document.getElementById('activeJobs');box.textContent='İlanlar yükleniyor...';
+  const {data:jobs,error}=await db.from('jobs').select('id,title,category,description,city,district,created_at').eq('status','active').order('created_at',{ascending:false});
+  if(error){box.textContent='İlanlar yüklenemedi: '+error.message;return;}
+  if(!jobs?.length){box.textContent='Şu anda aktif ilan yok.';return;}
+  box.innerHTML='';
+  for(const job of jobs){
+    const card=document.createElement('div');card.className='item';
+    const h=document.createElement('h3');h.textContent=job.title;
+    const p=document.createElement('p');p.textContent=job.category+' · '+job.city+'/'+job.district;
+    const d=document.createElement('p');d.textContent=job.description;
+    const price=document.createElement('input');price.type='number';price.min='1';price.step='0.01';price.placeholder='Teklif fiyatınız (TL)';
+    const message=document.createElement('textarea');message.placeholder='Müşteriye mesajınız (isteğe bağlı)';message.style.minHeight='65px';
+    const btn=document.createElement('button');btn.className='primary';btn.textContent='Teklif gönder';
+    btn.onclick=async()=>{
+      const amount=Number(price.value);
+      if(!Number.isFinite(amount)||amount<=0){alert('Geçerli ve sıfırdan büyük bir fiyat girin.');return;}
+      btn.disabled=true;
+      const {error:insertError}=await db.from('job_offers').insert({job_id:job.id,provider_id:currentUser.id,price:amount,message:message.value.trim()||null});
+      btn.disabled=false;
+      if(insertError){alert('Teklif gönderilemedi: '+insertError.message);return;}
+      alert('Teklifiniz müşteriye gönderildi.');await loadMyOffers();
+    };
+    card.append(h,p,d,price,message,btn);box.append(card);
+  }
+}
+async function loadMyOffers(){
+  const box=document.getElementById('myOffers');box.textContent='Teklifler yükleniyor...';
+  const {data:offers,error}=await db.from('job_offers').select('id,job_id,price,message,status,created_at').eq('provider_id',currentUser.id).order('created_at',{ascending:false});
+  if(error){box.textContent='Teklifler yüklenemedi: '+error.message;return;}
+  if(!offers?.length){box.textContent='Henüz teklif göndermediniz.';return;}
+  box.innerHTML='';
+  const ids=[...new Set(offers.map(o=>o.job_id))];
+  const {data:jobs}=await db.from('jobs').select('id,title,city,district,status').in('id',ids);
+  const map=new Map((jobs||[]).map(j=>[j.id,j]));
+  for(const offer of offers){
+    const job=map.get(offer.job_id);const card=document.createElement('div');card.className='item';
+    const h=document.createElement('h3');h.textContent=job?.title||'İş ilanı';
+    const p=document.createElement('p');p.textContent='Teklifiniz: '+offer.price+' TL · Durum: '+offer.status;
+    const d=document.createElement('p');d.textContent=job?(job.city+'/'+job.district+' · İlan durumu: '+job.status):'';
+    const m=document.createElement('p');m.textContent=offer.message||'Mesaj eklenmedi.';
+    card.append(h,p,d,m);box.append(card);
+  }
+}
+db.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_OUT'){
+    currentUser=null;currentProfile=null;
+    document.getElementById('appArea').classList.add('hidden');
+    document.getElementById('authCard').classList.remove('hidden');
+    document.getElementById('accountArea').textContent='Giriş yapılmadı';
+  }
+});
+(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  if(session?.user)await loadAccount(session.user);
+})();
+</script>
 </body>
 </html>
