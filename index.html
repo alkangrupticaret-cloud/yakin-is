@@ -159,14 +159,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let selectedRole = 'customer';
 let currentUser = null;
 let currentProfile = null;
-const initialHash = new URLSearchParams(
-  window.location.hash.replace(/^#/, '')
-);
-const initialParams = new URLSearchParams(window.location.search);
-
-let recoveryMode =
-  initialHash.get('type') === 'recovery' ||
-  initialParams.get('flow') === 'recovery';
+let recoveryMode = false;
 
 function showMessage(id,message,isError=false){
   const el=document.getElementById(id);
