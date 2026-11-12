@@ -193,22 +193,16 @@ function showRecoveryScreen(message='E-posta doğrulandı. Şimdi yeni şifreniz
  showMessage('authMessage',message);
 }
 function setRole(role) {
-  document.getElementById('customerArea').style.display =
-    role === 'customer' ? 'block' : 'none';
+  selectedRole = role;
 
-  document.getElementById('providerArea').style.display =
-    role === 'provider' ? 'block' : 'none';
+  document.getElementById('customerArea').classList.toggle('hidden', role !== 'customer');
+  document.getElementById('providerArea').classList.toggle('hidden', role !== 'provider');
 
-  document.getElementById('roleCustomer').classList.toggle(
-    'active',
-    role === 'customer'
-  );
+  document.getElementById('customerTab').classList.toggle('active', role === 'customer');
+  document.getElementById('providerTab').classList.toggle('active', role === 'provider');
 
-  document.getElementById('roleProvider').classList.toggle(
-    'active',
-    role === 'provider'
-  );
-}
+  document.getElementById('providerFields').classList.toggle('hidden', role !== 'provider');
+                                                  }
 
 function setMode(mode) {
   clearMessage('authMessage');
