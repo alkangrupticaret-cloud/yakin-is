@@ -379,6 +379,43 @@ async function loadAccount(user) {
     return;
   }
 
+  currentUser = user;
+
+  const { data: profile, error } = await db
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    showMessage('authMessage', 'Profil yüklenemedi: ' + error.message, true);
+    return;
+  }
+
+  currentProfile = profile;
+
+  const role = profile?.role || user.user_metadata?.role || 'customer';
+
+  document.getElementById('authCard').classList.add('hidden');
+  document.getElementById('appArea').classList.remove('hidden');
+
+  document.getElementById('accountArea').textContent = user.email || '';
+
+  document.getElementById('welcomeTitle').textContent =
+    role === 'provider' ? 'Usta Panelim' : 'Müşteri Panelim';
+
+  document.getElementById('profileSummary').textContent = user.email || '';
+
+  setRole(role);
+
+  if (role === 'provider') {
+    await loadActiveJobs();
+    await loadMyOffers();
+  } else {
+    await loadMyJobs();
+  }
+}
+
   document.getElementById('authArea').style.display = 'none';
   document.getElementById('appArea').style.display = 'block';
 
