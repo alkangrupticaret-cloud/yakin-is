@@ -1,419 +1,155 @@
-<!DOCTYPE html>
-<!-- YAKINIS BUILD: 2026-11-11-B | yenilenmis arayuz -->
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#128c7e">
-<title>Yakınİş – Yakınında hizmet, doğrudan iletişim</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f6f7;color:#172b2a;font-family:Arial,sans-serif;padding-bottom:40px}
-header{background:#fff;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0000000d;position:sticky;top:0;z-index:5}
-.logo{font-size:22px;font-weight:800;color:#128c7e}
-.wrap{max-width:680px;margin:20px auto;padding:0 14px}
-.hero{background:linear-gradient(135deg,#116f67,#128c7e);color:white;border-radius:18px;padding:24px 20px;margin-bottom:18px}
-.hero h1{font-size:23px;margin:0 0 8px}
-.hero p{line-height:1.5;margin:0;color:#e7fffb;font-size:14px}
-.card{background:white;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #102a2710}
-h2{font-size:19px;margin:0 0 14px}
-.muted{color:#647575;font-size:13px;line-height:1.5}
-label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d7e1e0;border-radius:10px;font-size:15px;background:#fff;color:#172b2a}
-textarea{min-height:90px;resize:vertical}
-button{border:0;border-radius:10px;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer}
-button:disabled{opacity:.6;cursor:not-allowed}
-.primary{background:#128c7e;color:#fff;width:100%;margin-top:12px}
-.secondary{background:#e6f4f1;color:#116f67}
-.danger{background:#fff0ef;color:#b42318}
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tabs button{flex:1;background:#edf2f1;color:#526361}
-.tabs button.active{background:#128c7e;color:white}
-.hidden{display:none!important}
-.notice{padding:11px 12px;border-radius:10px;background:#eef7ff;color:#174b75;margin:12px 0;font-size:13px;line-height:1.45}
-.error{background:#fff0ef;color:#9b2520}
-.success{background:#eaf8f0;color:#17643a}
-.item{border:1px solid #e2eae8;border-radius:12px;padding:13px;margin:10px 0}
-.item h3{font-size:16px;margin:0 0 7px}
-.item p{font-size:13px;line-height:1.5;margin:5px 0;color:#526361;white-space:pre-wrap}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row button{flex:1}
-hr{border:0;border-top:1px solid #edf1f0;margin:16px 0}
-.small{font-size:12px;color:#6b7b79}
-.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.build-tag{display:inline-block;margin-top:14px;padding:6px 10px;border:1px solid #ffffff55;border-radius:20px;color:#e7fffb;font-size:11px;font-weight:700;letter-spacing:.3px}
-footer{max-width:680px;margin:24px auto 0;padding:14px;text-align:center;color:#71817f;font-size:11px}
-.card{transition:box-shadow .2s ease}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #128c7e55;outline-offset:2px}
-</style>
-</head>
-<body>
-<header><div class="logo">📍 Yakınİş</div><div id="accountArea" class="small">Giriş yapılmadı</div></header>
+YAKINİŞ – ŞİFRE SIFIRLAMA DÜZELTMESİ
+BUILD: 2026-11-12-C
 
-<main class="wrap">
-<section class="hero">
-  <h1>İhtiyacın olan hizmet, yakında.</h1>
-  <p>Müşteriler iş talebi oluşturur, ustalar doğrudan teklif verir. Aracı yok, komisyon yok.</p>
-  <span class="build-tag">YENİLENMİŞ SÜRÜM · 11.11.2026</span>
-</section>
+Bu düzeltme, gönderdiğin index.html dosyasındaki mevcut sistemi korur.
+Sorun: Sayfa açılırken getSession() müşteri oturumunu yükleyebiliyor ve
+PASSWORD_RECOVERY olayıyla yarışarak şifre panelinin kapanmasına neden olabiliyor.
 
-<section id="authCard" class="card">
-  <h2>Yakınİş'e Hoş Geldiniz</h2>
+UYGULAMA
+1) index.html dosyasında şu satırı bul:
+   let recoveryMode = false;
 
-  <div id="roleTabs" class="tabs">
-    <button id="customerTab" class="active" type="button" onclick="setRole('customer')">Müşteri</button>
-    <button id="providerTab" type="button" onclick="setRole('provider')">Usta</button>
-  </div>
+   Bununla değiştir:
 
-  <div id="modeTabs" class="tabs">
-    <button id="loginTab" class="active" type="button" onclick="setMode('login')">Giriş yap</button>
-    <button id="registerTab" type="button" onclick="setMode('register')">Kayıt ol</button>
-  </div>
+let recoveryMode = (() => {
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  const queryParams = new URLSearchParams(window.location.search);
+  return hashParams.get('type') === 'recovery' ||
+         queryParams.get('type') === 'recovery';
+})();
 
-  <div id="loginForm">
-    <label>E-posta</label>
-    <input id="loginEmail" type="email" autocomplete="email" placeholder="ornek@email.com">
-    <label>Şifre</label>
-    <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifreniz">
-    <button class="primary" type="button" onclick="login()">Giriş yap</button>
-    <button class="secondary" type="button" style="width:100%;margin-top:10px" onclick="resetPassword()">Şifremi Unuttum</button>
-  </div>
+2) Yukarıdaki satırın hemen altına şu fonksiyonu ekle:
 
-  <div id="registerForm" class="hidden">
-    <label>Ad soyad</label>
-    <input id="regName" autocomplete="name" placeholder="Adınız ve soyadınız">
-    <label>Telefon</label>
-    <input id="regPhone" type="tel" autocomplete="tel" placeholder="05XX XXX XX XX">
-    <label>E-posta</label>
-    <input id="regEmail" type="email" autocomplete="email" placeholder="ornek@email.com">
-    <label>Şifre (en az 6 karakter)</label>
-    <input id="regPassword" type="password" autocomplete="new-password" placeholder="Şifre oluşturun">
+function showRecoveryScreen(message = 'E-posta doğrulandı. Şimdi yeni şifrenizi belirleyin.') {
+  recoveryMode = true;
 
-    <div id="providerFields" class="hidden">
-      <label>İşletme adı</label>
-      <input id="regBusiness" placeholder="İşletme / dükkan adı">
-      <label>Branş</label>
-      <input id="regBranch" placeholder="Örn. Tesisatçı, elektrikçi">
-      <label>Uzmanlık alanları</label>
-      <input id="regSpecialties" placeholder="Örn. kombi, su kaçağı, bakım">
-    </div>
-
-    <button class="primary" type="button" onclick="register()">Kayıt ol</button>
-    <p class="muted" style="margin-top:10px">E-posta doğrulaması açıksa kayıt sonrası gelen kutunuza gelen bağlantıyla hesabınızı doğrulayın.</p>
-  </div>
-
-  <div id="recoveryForm" class="hidden">
-    <h2>Yeni Şifre Belirle</h2>
-    <p class="muted">Hesabınız için yeni bir şifre oluşturun.</p>
-    <label>Yeni şifreniz</label>
-    <input id="newPassword" type="password" minlength="6" autocomplete="new-password" placeholder="En az 6 karakter">
-    <label>Yeni şifrenizi tekrar girin</label>
-    <input id="confirmPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Şifrenizi tekrar yazın">
-    <button class="primary" type="button" onclick="updatePassword()">Şifremi Yenile</button>
-  </div>
-
-  <div id="authMessage" class="notice hidden" role="status"></div>
-</section>
-
-<section id="appArea" class="hidden">
-  <section class="card">
-    <div class="topline"><h2 id="welcomeTitle">Hesabım</h2><button class="secondary" type="button" onclick="logout()">Çıkış</button></div>
-    <p id="profileSummary" class="muted"></p>
-  </section>
-
-  <section id="customerArea" class="hidden">
-    <section class="card">
-      <h2>Yeni iş talebi oluştur</h2>
-      <label>İş başlığı</label>
-      <input id="jobTitle" placeholder="Örn. Mutfak musluğu tamiri">
-      <label>Kategori</label>
-      <select id="jobCategory">
-        <option value="">Kategori seçin</option><option>Tesisatçı</option><option>Elektrikçi</option><option>Temizlik</option><option>Nakliye</option><option>Oto tamir</option><option>Boyacı</option><option>Özel ders</option><option>Diğer</option>
-      </select>
-      <label>Açıklama</label>
-      <textarea id="jobDescription" placeholder="İhtiyacınızı ve işin detaylarını anlatın"></textarea>
-      <label>Şehir</label>
-      <input id="jobCity" value="Bursa" placeholder="Şehir">
-      <label>İlçe</label>
-      <input id="jobDistrict" placeholder="Örn. Osmangazi">
-      <button class="primary" type="button" onclick="createJob()">İş talebini yayınla</button>
-      <div id="jobMessage" class="notice hidden"></div>
-    </section>
-    <section class="card"><h2>İlanlarım ve gelen teklifler</h2><div id="myJobs"><p class="muted">İlanlar yükleniyor...</p></div></section>
-  </section>
-
-  <section id="providerArea" class="hidden">
-    <section class="card"><h2>Aktif iş ilanları</h2><p class="muted">Uygun işe fiyat teklifinizi gönderin.</p><div id="activeJobs"><p class="muted">İlanlar yükleniyor...</p></div></section>
-    <section class="card"><h2>Gönderdiğim teklifler</h2><div id="myOffers"><p class="muted">Teklifler yükleniyor...</p></div></section>
-  </section>
-</section>
-</main>
-<footer>Yakınİş · Yakınında hizmet, doğrudan iletişim · Sürüm 2.1</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = 'https://nbwvmhwpvsmyaijwdgag.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable__-ViqEL-C2dQ-Wu7r4gOaw_N0IWpaUt';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let selectedRole = 'customer';
-let currentUser = null;
-let currentProfile = null;
-let recoveryMode = false;
-
-function showMessage(id,message,isError=false){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.textContent=message;
-  el.classList.remove('hidden','error','success');
-  el.classList.add(isError?'error':'success');
-}
-function clearMessage(id){
-  const el=document.getElementById(id);
-  if(el){el.textContent='';el.classList.add('hidden');}
-}
-function setRole(role){
-  selectedRole=role;
-  document.getElementById('customerTab').classList.toggle('active',role==='customer');
-  document.getElementById('providerTab').classList.toggle('active',role==='provider');
-  document.getElementById('providerFields').classList.toggle('hidden',role!=='provider');
-}
-function setMode(mode){
-  document.getElementById('loginTab').classList.toggle('active',mode==='login');
-  document.getElementById('registerTab').classList.toggle('active',mode==='register');
-  document.getElementById('loginForm').classList.toggle('hidden',mode!=='login');
-  document.getElementById('registerForm').classList.toggle('hidden',mode!=='register');
-  clearMessage('authMessage');
-}
-
-async function register(){
-  const fullName=document.getElementById('regName').value.trim();
-  const phone=document.getElementById('regPhone').value.trim();
-  const email=document.getElementById('regEmail').value.trim().toLowerCase();
-  const password=document.getElementById('regPassword').value;
-  const businessName=document.getElementById('regBusiness').value.trim();
-  const branch=document.getElementById('regBranch').value.trim();
-  const specialties=document.getElementById('regSpecialties').value.trim();
-
-  if(!fullName||!phone||!email||!password){showMessage('authMessage','Ad soyad, telefon, e-posta ve şifre zorunludur.',true);return;}
-  if(password.length<6){showMessage('authMessage','Şifre en az 6 karakter olmalıdır.',true);return;}
-  if(selectedRole==='provider'&&(!businessName||!branch)){showMessage('authMessage','Usta kaydı için işletme adı ve branş zorunludur.',true);return;}
-
-  const {data,error}=await db.auth.signUp({
-    email,password,
-    options:{data:{
-      user_type:selectedRole,full_name:fullName,phone,
-      business_name:selectedRole==='provider'?businessName:null,
-      branch:selectedRole==='provider'?branch:null,
-      specialties:selectedRole==='provider'?specialties:null
-    }}
-  });
-  if(error){showMessage('authMessage','Kayıt hatası: '+error.message,true);return;}
-  if(data.session){
-    showMessage('authMessage','Kayıt başarılı. Hesabınız açılıyor.');
-    await loadAccount(data.user);
-  }else{
-    showMessage('authMessage','Kayıt alındı. E-posta adresinize gönderilen doğrulama bağlantısına tıklayın. Ardından bu ekrandan giriş yapabilirsiniz.');
-  }
-}
-
-async function login(){
-  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
-  const password=document.getElementById('loginPassword').value;
-  if(!email||!password){showMessage('authMessage','E-posta ve şifrenizi girin.',true);return;}
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  if(error){showMessage('authMessage','Giriş yapılamadı: '+error.message,true);return;}
-  await loadAccount(data.user);
-}
-
-async function resetPassword(){
-  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
-  if(!email){showMessage('authMessage','Önce kayıtlı e-posta adresinizi girin.',true);return;}
-  const {error}=await db.auth.resetPasswordForEmail(email,{
-    redirectTo:window.location.origin + window.location.pathname
-  });
-  if(error){showMessage('authMessage','Şifre sıfırlama hatası: '+error.message,true);return;}
-  showMessage('authMessage','Şifre yenileme bağlantısı e-posta adresinize gönderildi. Gelen kutunuzu ve gereksiz e-posta klasörünü kontrol edin.');
-}
-
-async function updatePassword(){
-  const password=document.getElementById('newPassword').value;
-  const confirm=document.getElementById('confirmPassword').value;
-  if(password.length<6){showMessage('authMessage','Yeni şifre en az 6 karakter olmalıdır.',true);return;}
-  if(password!==confirm){showMessage('authMessage','Girdiğiniz şifreler aynı değil.',true);return;}
-  const {error}=await db.auth.updateUser({password});
-  if(error){showMessage('authMessage','Şifre değiştirilemedi: '+error.message,true);return;}
-
-  recoveryMode=false;
-  document.getElementById('recoveryForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.remove('hidden');
-  document.getElementById('roleTabs').classList.remove('hidden');
-  document.getElementById('modeTabs').classList.remove('hidden');
-  document.getElementById('loginPassword').value='';
-  document.getElementById('newPassword').value='';
-  document.getElementById('confirmPassword').value='';
-  showMessage('authMessage','Şifreniz başarıyla yenilendi. Şimdi yeni şifrenizle giriş yapabilirsiniz.');
-  await db.auth.signOut();
-}
-
-async function loadAccount(user){
-  if(!user)return;
-  const {data:profile,error}=await db.from('profiles').select('id,user_type,full_name,phone,business_name,branch,specialties').eq('id',user.id).maybeSingle();
-  if(error||!profile){
-    showMessage('authMessage','Profil yüklenemedi. E-posta doğrulamasını tamamladıktan sonra tekrar giriş yapın. '+(error?error.message:''),true);
-    return;
-  }
-  if(profile.user_type!=='customer'&&profile.user_type!=='provider'){
-    await db.auth.signOut();
-    showMessage('authMessage','Bu hesap için müşteri veya usta erişimi tanımlı değil.',true);
-    return;
-  }
-  currentUser=user;currentProfile=profile;
-  document.getElementById('authCard').classList.add('hidden');
-  document.getElementById('appArea').classList.remove('hidden');
-  document.getElementById('accountArea').textContent=user.email||'Hesap açık';
-  document.getElementById('welcomeTitle').textContent='Merhaba, '+profile.full_name;
-  document.getElementById('profileSummary').textContent=profile.user_type==='provider'
-    ? (profile.business_name||'')+' · '+(profile.branch||'Usta')
-    : 'Müşteri hesabı';
-  document.getElementById('customerArea').classList.toggle('hidden',profile.user_type!=='customer');
-  document.getElementById('providerArea').classList.toggle('hidden',profile.user_type!=='provider');
-  if(profile.user_type==='customer')await loadMyJobs();
-  else {await loadActiveJobs();await loadMyOffers();}
-}
-
-async function logout(){
-  await db.auth.signOut();
-  currentUser=null;currentProfile=null;
   document.getElementById('appArea').classList.add('hidden');
   document.getElementById('authCard').classList.remove('hidden');
-  document.getElementById('accountArea').textContent='Giriş yapılmadı';
+  document.getElementById('roleTabs').classList.add('hidden');
+  document.getElementById('modeTabs').classList.add('hidden');
+  document.getElementById('loginForm').classList.add('hidden');
+  document.getElementById('registerForm').classList.add('hidden');
+  document.getElementById('recoveryForm').classList.remove('hidden');
+
+  showMessage('authMessage', message);
 }
 
-async function createJob(){
-  if(!currentUser||currentProfile?.user_type!=='customer')return;
-  const title=document.getElementById('jobTitle').value.trim();
-  const category=document.getElementById('jobCategory').value;
-  const description=document.getElementById('jobDescription').value.trim();
-  const city=document.getElementById('jobCity').value.trim();
-  const district=document.getElementById('jobDistrict').value.trim();
-  if(!title||!category||!description||!city||!district){showMessage('jobMessage','Lütfen tüm alanları doldurun.',true);return;}
-  const {error}=await db.from('jobs').insert({customer_id:currentUser.id,title,category,description,city,district});
-  if(error){showMessage('jobMessage','İlan oluşturulamadı: '+error.message,true);return;}
-  ['jobTitle','jobDescription','jobDistrict'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('jobCategory').value='';
-  showMessage('jobMessage','İş talebiniz yayınlandı.');
-  await loadMyJobs();
-}
+3) Mevcut updatePassword() fonksiyonunu tamamen sil ve bununla değiştir:
 
-async function loadMyJobs(){
-  const box=document.getElementById('myJobs');
-  box.textContent='İlanlar yükleniyor...';
-  const {data:jobs,error}=await db.from('jobs').select('id,title,category,description,city,district,status,created_at').eq('customer_id',currentUser.id).order('created_at',{ascending:false});
-  if(error){box.textContent='İlanlar yüklenemedi: '+error.message;return;}
-  if(!jobs?.length){box.textContent='Henüz iş ilanınız yok.';return;}
-  box.innerHTML='';
-  for(const job of jobs){
-    const card=document.createElement('div');card.className='item';
-    const title=document.createElement('h3');title.textContent=job.title;
-    const info=document.createElement('p');info.textContent=job.category+' · '+job.city+'/'+job.district+' · Durum: '+job.status;
-    const desc=document.createElement('p');desc.textContent=job.description;
-    card.append(title,info,desc);
-    const {data:offers,error:offerError}=await db.from('job_offers').select('id,provider_id,price,message,status,created_at').eq('job_id',job.id).order('created_at',{ascending:false});
-    if(offerError){const p=document.createElement('p');p.textContent='Teklifler yüklenemedi: '+offerError.message;card.append(p);}
-    else if(!offers?.length){const p=document.createElement('p');p.textContent='Henüz teklif gelmedi.';card.append(p);}
-    else for(const offer of offers){
-      const p=document.createElement('p');p.textContent='Teklif: '+offer.price+' TL · '+(offer.message||'Mesaj yok')+' · '+offer.status;card.append(p);
-      if(job.status==='active'&&offer.status==='pending'){
-        const actions=document.createElement('div');actions.className='row';
-        const accept=document.createElement('button');accept.className='secondary';accept.textContent='Teklifi kabul et';accept.onclick=()=>respondOffer(offer.id,'accepted');
-        const reject=document.createElement('button');reject.className='danger';reject.textContent='Reddet';reject.onclick=()=>respondOffer(offer.id,'rejected');
-        actions.append(accept,reject);card.append(actions);
-      }
+async function updatePassword() {
+  const password = document.getElementById('newPassword').value;
+  const confirm = document.getElementById('confirmPassword').value;
+
+  if (password.length < 6) {
+    showMessage('authMessage', 'Yeni şifre en az 6 karakter olmalıdır.', true);
+    return;
+  }
+
+  if (password !== confirm) {
+    showMessage('authMessage', 'Girdiğiniz şifreler aynı değil.', true);
+    return;
+  }
+
+  const button = document.querySelector('#recoveryForm button');
+  if (button) button.disabled = true;
+
+  try {
+    const { error } = await db.auth.updateUser({ password });
+
+    if (error) {
+      showMessage('authMessage', 'Şifre değiştirilemedi: ' + error.message, true);
+      return;
     }
-    box.append(card);
+
+    // SIGNED_OUT olayı ekranı değiştirmesin.
+    recoveryMode = true;
+    await db.auth.signOut();
+
+    document.getElementById('recoveryForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('roleTabs').classList.remove('hidden');
+    document.getElementById('modeTabs').classList.remove('hidden');
+
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+
+    recoveryMode = false;
+    setMode('login');
+    showMessage('authMessage', 'Şifreniz başarıyla yenilendi. Şimdi yeni şifrenizle giriş yapabilirsiniz.');
+  } catch (err) {
+    showMessage('authMessage', 'Beklenmeyen hata: ' + (err?.message || err), true);
+  } finally {
+    if (button) button.disabled = false;
   }
 }
 
-async function respondOffer(offerId,decision){
-  const {error}=await db.rpc('respond_to_offer',{p_offer_id:offerId,p_decision:decision});
-  if(error){alert('İşlem yapılamadı: '+error.message);return;}
-  alert(decision==='accepted'?'Teklif kabul edildi. Diğer bekleyen teklifler reddedildi.':'Teklif reddedildi.');
-  await loadMyJobs();
-}
+4) Mevcut db.auth.onAuthStateChange(...) bölümünü tamamen bununla değiştir:
 
-async function loadActiveJobs(){
-  const box=document.getElementById('activeJobs');box.textContent='İlanlar yükleniyor...';
-  const {data:jobs,error}=await db.from('jobs').select('id,title,category,description,city,district,created_at').eq('status','active').order('created_at',{ascending:false});
-  if(error){box.textContent='İlanlar yüklenemedi: '+error.message;return;}
-  if(!jobs?.length){box.textContent='Şu anda aktif ilan yok.';return;}
-  box.innerHTML='';
-  for(const job of jobs){
-    const card=document.createElement('div');card.className='item';
-    const h=document.createElement('h3');h.textContent=job.title;
-    const p=document.createElement('p');p.textContent=job.category+' · '+job.city+'/'+job.district;
-    const d=document.createElement('p');d.textContent=job.description;
-    const price=document.createElement('input');price.type='number';price.min='1';price.step='0.01';price.placeholder='Teklif fiyatınız (TL)';
-    const message=document.createElement('textarea');message.placeholder='Müşteriye mesajınız (isteğe bağlı)';message.style.minHeight='65px';
-    const btn=document.createElement('button');btn.className='primary';btn.textContent='Teklif gönder';
-    btn.onclick=async()=>{
-      const amount=Number(price.value);
-      if(!Number.isFinite(amount)||amount<=0){alert('Geçerli ve sıfırdan büyük bir fiyat girin.');return;}
-      btn.disabled=true;
-      const {error:insertError}=await db.from('job_offers').insert({job_id:job.id,provider_id:currentUser.id,price:amount,message:message.value.trim()||null});
-      btn.disabled=false;
-      if(insertError){alert('Teklif gönderilemedi: '+insertError.message);return;}
-      alert('Teklifiniz müşteriye gönderildi.');await loadMyOffers();
-    };
-    card.append(h,p,d,price,message,btn);box.append(card);
+db.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    showRecoveryScreen();
+    return;
   }
-}
 
-async function loadMyOffers(){
-  const box=document.getElementById('myOffers');box.textContent='Teklifler yükleniyor...';
-  const {data:offers,error}=await db.from('job_offers').select('id,job_id,price,message,status,created_at').eq('provider_id',currentUser.id).order('created_at',{ascending:false});
-  if(error){box.textContent='Teklifler yüklenemedi: '+error.message;return;}
-  if(!offers?.length){box.textContent='Henüz teklif göndermediniz.';return;}
-  box.innerHTML='';
-  const ids=[...new Set(offers.map(o=>o.job_id))];
-  const {data:jobs}=await db.from('jobs').select('id,title,city,district,status').in('id',ids);
-  const map=new Map((jobs||[]).map(j=>[j.id,j]));
-  for(const offer of offers){
-    const job=map.get(offer.job_id);const card=document.createElement('div');card.className='item';
-    const h=document.createElement('h3');h.textContent=job?.title||'İş ilanı';
-    const p=document.createElement('p');p.textContent='Teklifiniz: '+offer.price+' TL · Durum: '+offer.status;
-    const d=document.createElement('p');d.textContent=job?(job.city+'/'+job.district+' · İlan durumu: '+job.status):'';
-    const m=document.createElement('p');m.textContent=offer.message||'Mesaj eklenmedi.';
-    card.append(h,p,d,m);box.append(card);
-  }
-}
-
-db.auth.onAuthStateChange((event,session)=>{
-  if(event==='PASSWORD_RECOVERY'){
-    recoveryMode=true;
+  if (event === 'SIGNED_OUT' && !recoveryMode) {
+    currentUser = null;
+    currentProfile = null;
     document.getElementById('appArea').classList.add('hidden');
     document.getElementById('authCard').classList.remove('hidden');
-    document.getElementById('roleTabs').classList.add('hidden');
-    document.getElementById('modeTabs').classList.add('hidden');
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('registerForm').classList.add('hidden');
-    document.getElementById('recoveryForm').classList.remove('hidden');
-    clearMessage('authMessage');
-    showMessage('authMessage','E-posta doğrulandı. Şimdi yeni şifrenizi belirleyin.');
-  }
-
-  if(event==='SIGNED_OUT' && !recoveryMode){
-    currentUser=null;currentProfile=null;
-    document.getElementById('appArea').classList.add('hidden');
-    document.getElementById('authCard').classList.remove('hidden');
-    document.getElementById('accountArea').textContent='Giriş yapılmadı';
+    document.getElementById('accountArea').textContent = 'Giriş yapılmadı';
   }
 });
+
+5) Dosyanın en altındaki mevcut başlangıç kodunu:
 
 (async()=>{
   const {data:{session}}=await db.auth.getSession();
   if(session?.user && !recoveryMode)await loadAccount(session.user);
 })();
-</script>
-</body>
-</html>
+
+Bununla değiştir:
+
+(async () => {
+  // URL şifre yenileme bağlantısından geldiyse müşteri oturumunu yükleme.
+  if (recoveryMode) {
+    showRecoveryScreen();
+    return;
+  }
+
+  const { data, error } = await db.auth.getSession();
+
+  if (error) {
+    showMessage('authMessage', 'Oturum kontrol edilemedi: ' + error.message, true);
+    return;
+  }
+
+  // Oturum yüklenirken URL'de recovery durumu oluşmuşsa hesabı açma.
+  if (recoveryMode) {
+    showRecoveryScreen();
+    return;
+  }
+
+  if (data.session?.user) {
+    await loadAccount(data.session.user);
+  }
+})();
+
+ÖNEMLİ TEST
+- Dosyayı kaydedip GitHub'a yükle.
+- Siteyi normal şekilde açıp eski oturumla test etme.
+- Önce yeni bir şifre sıfırlama e-postası iste.
+- E-postadaki EN SON bağlantıya bas.
+- URL'de type=recovery bulunan bağlantı açıldığında "Yeni Şifre Belirle"
+  ekranı görünmeli ve müşteri paneline geçmemeli.
+- Yeni şifreyi iki kutuya aynı yazıp kaydet.
+
+GÜVENLİK
+- index.html içinde yalnızca Supabase publishable anahtarı bulunabilir.
+- sb_secret anahtarını HTML/JavaScript içine koyma. Daha önce paylaşılan
+  secret anahtarı Supabase panelinden yenile ve eski anahtarı geçersiz kıl.
+- Bu düzeltme veritabanı tablolarını, ilanları, teklifleri veya profilleri silmez.
+
+NOT
+Bu dosya tam index.html değildir; gönderdiğin index.html üzerinde yapılacak
+5 kesin değişikliği içerir. Diğer HTML ve uygulama fonksiyonlarına dokunma.
