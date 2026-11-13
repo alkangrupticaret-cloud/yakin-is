@@ -839,6 +839,18 @@ db.auth.onAuthStateChange((event, session) => {
   }
 
   if (event === 'SIGNED_OUT' && !recoveryMode) {
+    currentUser = null;
+    currentProfile = null;
+
+    document.getElementById('appArea').classList.add('hidden');
+    document.getElementById('authCard').classList.remove('hidden');
+    document.getElementById('accountArea').textContent = 'Giriş yapılmadı';
+
+    setMode('login');
+  }
+});
+
+  if (event === 'SIGNED_OUT' && !recoveryMode) {
     document.getElementById('appArea').style.display = 'none';
     document.getElementById('authArea').style.display = 'block';
     setMode('login');
