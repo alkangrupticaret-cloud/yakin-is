@@ -302,6 +302,31 @@ async function login() {
     return;
   }
 
+  try {
+    const { data, error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      showMessage('authMessage', error.message, true);
+      return;
+    }
+
+    if (data.user) {
+      await loadAccount(data.user);
+    }
+
+  } catch (error) {
+    showMessage('authMessage', 'Giriş hatası: ' + error.message, true);
+  }
+ }
+
+  if (!email || !password) {
+    showMessage('authMessage', 'E-posta ve şifrenizi girin.', true);
+    return;
+  }
+
   const { data, error } = await db.auth.signInWithPassword({
     email,
     password
