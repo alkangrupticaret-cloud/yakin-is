@@ -515,6 +515,21 @@ async function logout() {
   const { error } = await db.auth.signOut();
 
   if (error) {
+    showMessage('authMessage', 'Çıkış yapılamadı: ' + error.message, true);
+    return;
+  }
+
+  currentUser = null;
+  currentProfile = null;
+
+  document.getElementById('appArea').classList.add('hidden');
+  document.getElementById('authCard').classList.remove('hidden');
+  document.getElementById('accountArea').textContent = 'Giriş yapılmadı';
+
+  setMode('login');
+}
+
+  if (error) {
     showMessage('appMessage', 'Çıkış yapılamadı: ' + error.message, true);
     return;
   }
